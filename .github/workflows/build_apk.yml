@@ -30,34 +30,48 @@ jobs:
 
       - name: Clean Recreate Android Folder via Flutter
         run: |
-          # Backup assets/icons if needed, then remove faulty android directory
           rm -rf android
-          # Let Flutter generate the official, pristine Android scaffold
           flutter create . --org in.dweepdiary --project-name dweepdiary --platforms=android
 
-      - name: Configure Android for Dweep Diary
+      - name: Configure Android, Kotlin 1.9.24, minSdk 24, and AdMob
         run: |
           python3 -c "
           import re
 
-          # 1. Update android/app/build.gradle for minSdk 24 and applicationId
+          # 1. Update android/settings.gradle to Kotlin 1.9.24 (required by modern plugins like OneSignal)
+          settings_gradle = 'android/settings.gradle'
+          with open(settings_gradle, 'r', encoding='utf-8') as f:
+              s_content = f.read()
+
+          # Replace kotlin plugin version with 1.9.24
+          s_content = re.sub(
+              r'id\s+[\"\\\']org\.jetbrains\.kotlin\.android[\"\\\']\s+version\s+[\"\\\'][^\"\\\']+[\"\\\']',
+              'id \"org.jetbrains.kotlin.android\" version \"1.9.24\"',
+              s_content
+          )
+          with open(settings_gradle, 'w', encoding='utf-8') as f:
+              f.write(s_content)
+          print('settings.gradle updated with Kotlin 1.9.24')
+
+          # 2. Update android/app/build.gradle for minSdk 24 and multiDex
           app_gradle = 'android/app/build.gradle'
           with open(app_gradle, 'r', encoding='utf-8') as f:
-              content = f.read()
+              a_content = f.read()
 
           # Set minSdk to 24 (required by flutter_tts)
-          content = re.sub(r'minSdkVersion\s*=\s*flutter\.minSdkVersion', 'minSdkVersion = 24', content)
-          content = re.sub(r'minSdk\s*=\s*flutter\.minSdkVersion', 'minSdk = 24', content)
-          content = re.sub(r'minSdk\s+\d+', 'minSdk 24', content)
+          a_content = re.sub(r'minSdkVersion\s*=\s*flutter\.minSdkVersion', 'minSdkVersion = 24', a_content)
+          a_content = re.sub(r'minSdk\s*=\s*flutter\.minSdkVersion', 'minSdk = 24', a_content)
+          a_content = re.sub(r'minSdk\s+\d+', 'minSdk 24', a_content)
 
           # Ensure multiDexEnabled
-          if 'multiDexEnabled' not in content:
-              content = content.replace('defaultConfig {', 'defaultConfig {\n        multiDexEnabled true')
+          if 'multiDexEnabled' not in a_content:
+              a_content = a_content.replace('defaultConfig {', 'defaultConfig {\n        multiDexEnabled true')
 
           with open(app_gradle, 'w', encoding='utf-8') as f:
-              f.write(content)
+              f.write(a_content)
+          print('app/build.gradle updated with minSdk 24 and multiDex')
 
-          # 2. Update AndroidManifest.xml for AdMob and Permissions
+          # 3. Update AndroidManifest.xml for AdMob and Permissions
           manifest_path = 'android/app/src/main/AndroidManifest.xml'
           with open(manifest_path, 'r', encoding='utf-8') as f:
               m_content = f.read()
@@ -72,13 +86,11 @@ jobs:
 
           with open(manifest_path, 'w', encoding='utf-8') as f:
               f.write(m_content)
-
-          print('Android project successfully configured!')
+          print('AndroidManifest updated successfully!')
           "
 
       - name: Copy App Launcher Icons
         run: |
-          # Copy high-res icon to mipmap folders
           mkdir -p android/app/src/main/res/mipmap-hdpi
           mkdir -p android/app/src/main/res/mipmap-mdpi
           mkdir -p android/app/src/main/res/mipmap-xhdpi

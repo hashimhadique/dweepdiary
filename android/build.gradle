@@ -1,2 +1,18 @@
-// Top-level build file - configuration for all sub-projects/modules.
-// Plugin versions are now managed in settings.gradle (Flutter 3.19+ format)
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+rootProject.buildDir = "../build"
+subprojects {
+    project.buildDir = "${rootProject.buildDir}/${project.name}"
+}
+subprojects {
+    project.evaluationDependsOn(":app")
+}
+
+tasks.register("clean", Delete) {
+    delete rootProject.buildDir
+}

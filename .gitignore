@@ -41,3 +41,4 @@ ios/Runner/GeneratedPluginRegistrant.*
 # Local env
 .env
 .env.local
+*.bat

@@ -1,0 +1,366 @@
+<!-- Copy for user to double-click and open anytime in browser -->
+<!DOCTYPE html>
+<html lang="ml">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dweep Diary Mobile App Live Preview</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Manjari:wght@400;700&display=swap');
+    body { font-family: 'Manjari', sans-serif; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col items-center justify-center p-4">
+
+  <div class="max-w-md w-full mb-3 flex items-center justify-between text-xs text-slate-400 px-2">
+    <div class="flex items-center space-x-2">
+      <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+      <span class="font-medium text-slate-200">Dweep Diary Live Mobile App</span>
+    </div>
+    <span class="bg-sky-500/20 text-sky-400 px-2 py-0.5 rounded-full border border-sky-500/30">Sky Blue & White Theme</span>
+  </div>
+
+  <!-- Mobile Phone Mockup Frame -->
+  <div class="relative w-full max-w-[390px] h-[780px] bg-slate-950 rounded-[44px] p-3 shadow-2xl border-4 border-slate-700/80 ring-1 ring-white/10 flex flex-col">
+    
+    <div class="relative w-full h-full bg-[#F8FAFC] text-slate-800 rounded-[34px] overflow-hidden flex flex-col shadow-inner select-none">
+      
+      <!-- Top Status Bar -->
+      <div class="bg-white pt-2 px-6 pb-1 flex justify-between items-center text-[12px] font-semibold text-slate-700 z-30">
+        <span>09:41</span>
+        <div class="w-24 h-4 bg-slate-900 rounded-full"></div>
+        <div class="flex items-center space-x-1.5">
+          <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zm6-4a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zm6-3a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"/></svg>
+          <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M17.778 8.222c-4.296-4.296-11.26-4.296-15.556 0A1 1 0 01.808 6.808c5.076-5.077 13.308-5.077 18.384 0a1 1 0 01-1.414 1.414zM14.95 11.05a7 7 0 00-9.9 0 1 1 0 01-1.414-1.414 9 9 0 0112.728 0 1 1 0 01-1.414 1.414zm-2.829 2.828a3 3 0 00-4.242 0 1 1 0 01-1.415-1.414 5 5 0 017.072 0 1 1 0 01-1.415 1.414zM9 16a1 1 0 112 0 1 1 0 01-2 0z" clip-rule="evenodd"/></svg>
+          <div class="w-5 h-2.5 border border-slate-700 rounded-sm p-0.5 flex items-center">
+            <div class="w-full h-full bg-slate-700 rounded-2xs"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- App Header Bar with Dweep Diary Official Logo -->
+      <header class="bg-white border-b border-slate-200/80 px-4 py-2 flex items-center justify-between z-20 shadow-xs">
+        <div class="flex items-center space-x-2">
+          <img src="https://i0.wp.com/dweepdiary.in/wp-content/uploads/2024/12/cropped-cropped-cropped-Dweeodiarylogo-1.png?w=400" 
+               alt="Dweep Diary Logo" 
+               class="h-8 object-contain"
+               onerror="this.src='https://i0.wp.com/dweepdiary.in/wp-content/uploads/2024/12/cropped-cropped-Dweeodiarylogo.png'">
+        </div>
+        <div class="flex items-center space-x-2">
+          <button onclick="alert('തിരയൽ ഫീച്ചർ ആപ്പിൽ ലഭ്യമാണ്.')" class="p-1.5 rounded-full text-slate-600 hover:bg-sky-50 transition active:scale-95">
+            <svg class="w-5 h-5 text-[#0099E6]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          </button>
+          <button onclick="switchTab('bookmarks')" class="p-1.5 rounded-full text-slate-600 hover:bg-sky-50 transition active:scale-95">
+            <svg class="w-5 h-5 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- View 1: Home Feed -->
+      <div id="view-home" class="flex-1 overflow-y-auto no-scrollbar pb-20">
+        
+        <!-- Breaking News Flash Ticker -->
+        <div class="mx-3 mt-2 bg-[#E1F5FE] border border-[#0099E6]/30 rounded-lg p-2 flex items-center space-x-2 cursor-pointer hover:bg-sky-100 transition" onclick="openArticle(0)">
+          <span class="bg-red-500 text-white text-[10px] font-black px-1.5 py-0.5 rounded uppercase tracking-wider animate-pulse">FLASH</span>
+          <p class="text-xs font-bold text-[#0077B6] truncate flex-1">ലക്ഷദ്വീപ് ഗെയിംസ്: നീന്തൽ മത്സരത്തിനിടെ അപകടത്തിൽപ്പെട്ട പെൺകുട്ടിയെ രക്ഷപ്പെടുത്തി</p>
+          <svg class="w-4 h-4 text-[#0077B6]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </div>
+
+        <!-- Featured News Carousel Card -->
+        <div class="mx-3 mt-2.5 relative rounded-2xl overflow-hidden shadow-md cursor-pointer group" onclick="openArticle(0)">
+          <img id="carousel-img" src="https://i0.wp.com/dweepdiary.in/wp-content/uploads/2026/11/file_000000009d208230a37619cb3f0948ac.webp?fit=600%2C400" 
+               class="w-full h-48 object-cover group-hover:scale-105 transition duration-500">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
+          <div class="absolute top-3 left-3 bg-red-600 text-white text-[11px] font-bold px-2 py-0.5 rounded-md flex items-center space-x-1 shadow">
+            <span>⚡ ബ്രേക്കിംഗ്</span>
+          </div>
+          <div class="absolute bottom-3 left-3 right-3 text-white">
+            <span class="text-[11px] font-semibold text-sky-300">NEWS • കവരത്തി</span>
+            <h3 class="text-sm font-bold leading-snug line-clamp-2 mt-0.5">
+              ലക്ഷദ്വീപ് ഗെയിംസ്: നീന്തൽ മത്സരത്തിനിടെ അപകടത്തിൽപ്പെട്ട പെൺകുട്ടിയെ രക്ഷപ്പെടുത്തി ഡോ. വാഖിദ്
+            </h3>
+          </div>
+        </div>
+
+        <!-- Category Filter Tabs -->
+        <div class="mt-3 px-3 flex space-x-2 overflow-x-auto no-scrollbar">
+          <button class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-[#0099E6] text-white shadow-xs whitespace-nowrap">എല്ലാം</button>
+          <button class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white border border-slate-200 text-slate-700 whitespace-nowrap hover:bg-slate-50">ലക്ഷദ്വീപ്</button>
+          <button class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white border border-slate-200 text-slate-700 whitespace-nowrap hover:bg-slate-50">രാഷ്ട്രീയം</button>
+          <button class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white border border-slate-200 text-slate-700 whitespace-nowrap hover:bg-slate-50">കായികം</button>
+          <button class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white border border-slate-200 text-slate-700 whitespace-nowrap hover:bg-slate-50">തൊഴിൽ</button>
+        </div>
+
+        <!-- AdMob / Sponsored Banner Slot -->
+        <div class="mx-3 mt-3 bg-white border border-slate-200 rounded-xl p-2.5 shadow-2xs flex items-center justify-between">
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-lg bg-sky-100 flex items-center justify-center text-[#0099E6] font-bold text-xs">ADS</div>
+            <div>
+              <div class="text-[10px] font-bold text-amber-600 uppercase tracking-wider">SPONSORED</div>
+              <div class="text-xs font-bold text-slate-800">Dweep Diary Official Ads Slot</div>
+            </div>
+          </div>
+          <button class="text-xs font-bold bg-[#0099E6] text-white px-2.5 py-1 rounded-md">Visit</button>
+        </div>
+
+        <!-- Latest News List -->
+        <div class="mt-3 px-3 space-y-3">
+          
+          <div class="bg-white rounded-2xl p-3 border border-slate-200/80 shadow-2xs hover:shadow-md transition cursor-pointer" onclick="openArticle(1)">
+            <div class="flex space-x-3">
+              <img src="https://i0.wp.com/dweepdiary.in/wp-content/uploads/2026/11/df-fd.webp?fit=300%2C200" 
+                   class="w-24 h-24 rounded-xl object-cover flex-shrink-0">
+              <div class="flex-1 flex flex-col justify-between">
+                <div>
+                  <span class="text-[10px] font-bold text-[#0099E6] uppercase">POLITICS • അഗത്തി</span>
+                  <h4 class="text-xs font-bold text-slate-900 leading-snug line-clamp-2 mt-0.5">
+                    അഗത്തിയിൽ സർവ്വകക്ഷി ഐക്യയോഗത്തിന് പിന്നാലെ 22 പേർക്കെതിരെ പെറ്റി കേസ്
+                  </h4>
+                </div>
+                <div class="flex items-center justify-between text-[11px] text-slate-400 mt-2">
+                  <span>2 മണിക്കൂർ മുൻപ്</span>
+                  <button class="text-emerald-600 font-semibold flex items-center space-x-1" onclick="event.stopPropagation(); shareWhatsApp(1)">
+                    <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
+                    <span>Share</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-2xl p-3 border border-slate-200/80 shadow-2xs hover:shadow-md transition cursor-pointer" onclick="openArticle(2)">
+            <div class="flex space-x-3">
+              <img src="https://i0.wp.com/dweepdiary.in/wp-content/uploads/2026/11/fad02fc4-be69-4ca7-855c-25ac76435e50.webp?fit=300%2C200" 
+                   class="w-24 h-24 rounded-xl object-cover flex-shrink-0">
+              <div class="flex-1 flex flex-col justify-between">
+                <div>
+                  <span class="text-[10px] font-bold text-[#0099E6] uppercase">NEWS • ചെത്ലത്ത്</span>
+                  <h4 class="text-xs font-bold text-slate-900 leading-snug line-clamp-2 mt-0.5">
+                    ടൗൺ പ്ലാനിങ് റെഗുലേഷനെതിരെ ചെത്ലത്തിലും പ്രതിഷേധം; ഖാളിമാരുടെ നേതൃത്വത്തിൽ സംഗമം
+                  </h4>
+                </div>
+                <div class="flex items-center justify-between text-[11px] text-slate-400 mt-2">
+                  <span>4 മണിക്കൂർ മുൻപ്</span>
+                  <button class="text-emerald-600 font-semibold flex items-center space-x-1" onclick="event.stopPropagation(); shareWhatsApp(2)">
+                    <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
+                    <span>Share</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- View 2: Shorts Mode -->
+      <div id="view-shorts" class="hidden flex-1 bg-black text-white p-4 flex flex-col justify-between pb-24 relative">
+        <div class="flex justify-between items-center z-10">
+          <span class="bg-[#0099E6] text-white text-[11px] font-bold px-2 py-0.5 rounded-full">ഇൻഷോർട്ട്സ് 60 വാക്കുകൾ</span>
+          <span class="text-xs text-white/60">1 / 10</span>
+        </div>
+        <div class="absolute inset-0 opacity-40">
+          <img src="https://i0.wp.com/dweepdiary.in/wp-content/uploads/2026/11/file_000000009d208230a37619cb3f0948ac.webp" class="w-full h-full object-cover">
+        </div>
+        <div class="relative z-10 mt-auto space-y-3">
+          <h3 class="text-base font-bold leading-snug">
+            ലക്ഷദ്വീപ് ഗെയിംസ്: നീന്തൽ മത്സരത്തിനിടെ അപകടത്തിൽപ്പെട്ട പെൺകുട്ടിയെ രക്ഷപ്പെടുത്തി ഡോ. വാഖിദ്
+          </h3>
+          <p class="text-xs text-slate-200 leading-relaxed">
+            കവരത്തി: 35-ാമത് ലക്ഷദ്വീപ് ഗെയിംസിന്റെ ഭാഗമായി നടന്ന നീന്തൽ മത്സരത്തിനിടെ ദേഹാസ്വാസ്ഥ്യം അനുഭവപ്പെട്ട പെൺകുട്ടിയെ സമയബന്ധിതമായി രക്ഷപ്പെടുത്തി. ഡോ. വാഖിദിന്റെ കൃത്യമായ ഇടപെടൽ വലിയൊരു ദുരന്തം ഒഴിവാക്കി.
+          </p>
+          <div class="pt-2">
+            <button onclick="openArticle(0)" class="w-full py-2 bg-white/20 backdrop-blur-md rounded-xl text-xs font-bold border border-white/30 text-center hover:bg-white/30 transition">
+              പൂർണ്ണ വാർത്ത വായിക്കുക →
+            </button>
+          </div>
+          <div class="text-center text-[10px] text-white/40">▲ മുകളിലേക്ക് സ്വൈപ്പ് ചെയ്യുക</div>
+        </div>
+      </div>
+
+      <!-- View 3: Bookmarks -->
+      <div id="view-bookmarks" class="hidden flex-1 overflow-y-auto p-4 pb-24">
+        <h3 class="text-sm font-bold text-slate-800 mb-3">സേവ് ചെയ്ത വാർത്തകൾ (ഓഫ്‌ലൈൻ)</h3>
+        <div class="bg-white rounded-2xl p-3 border border-slate-200/80 shadow-2xs cursor-pointer" onclick="openArticle(0)">
+          <div class="flex space-x-3">
+            <img src="https://i0.wp.com/dweepdiary.in/wp-content/uploads/2026/11/file_000000009d208230a37619cb3f0948ac.webp" class="w-16 h-16 rounded-xl object-cover">
+            <div>
+              <span class="text-[9px] font-bold text-[#0099E6]">SAVED</span>
+              <h4 class="text-xs font-bold text-slate-900 line-clamp-2">ലക്ഷദ്വീപ് ഗെയിംസ്: പെൺകുട്ടിയെ രക്ഷപ്പെടുത്തി ഡോ. വാഖിദ്</h4>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- View 4: Full Article Detail Modal -->
+      <div id="view-detail" class="hidden absolute inset-0 bg-white z-40 flex flex-col overflow-y-auto no-scrollbar pb-20">
+        <div class="sticky top-0 bg-white/95 backdrop-blur-md border-b border-slate-100 px-4 py-2 flex items-center justify-between z-10">
+          <button onclick="closeArticle()" class="p-1 rounded-full hover:bg-slate-100">
+            <svg class="w-5 h-5 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
+          </button>
+          <div class="flex items-center space-x-2">
+            <button id="tts-btn" onclick="toggleAudio()" class="px-2.5 py-1 rounded-full bg-sky-50 text-[#0099E6] text-xs font-bold flex items-center space-x-1 border border-sky-200">
+              <svg id="tts-icon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/></svg>
+              <span id="tts-text">കേൾക്കുക</span>
+            </button>
+            <button onclick="toggleFontSize()" class="p-1.5 rounded-full hover:bg-slate-100 text-slate-700 font-bold text-xs">
+              A<sup>+</sup>/A<sup>-</sup>
+            </button>
+            <button onclick="shareWhatsApp(0)" class="p-1.5 rounded-full text-emerald-600 hover:bg-emerald-50">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="p-4 space-y-3">
+          <div class="flex items-center space-x-2">
+            <span class="bg-sky-100 text-[#0099E6] text-[10px] font-bold px-2 py-0.5 rounded-full">വാർത്തകൾ</span>
+            <span class="text-[11px] text-slate-400">02 Nov 2026</span>
+          </div>
+          <h2 id="detail-title" class="text-base font-bold text-slate-900 leading-snug">
+            ലക്ഷദ്വീപ് ഗെയിംസ്: നീന്തൽ മത്സരത്തിനിടെ അപകടത്തിൽപ്പെട്ട പെൺകുട്ടിയെ രക്ഷപ്പെടുത്തി ഡോ. വാഖിദ്
+          </h2>
+          <img id="detail-img" src="https://i0.wp.com/dweepdiary.in/wp-content/uploads/2026/11/file_000000009d208230a37619cb3f0948ac.webp" 
+               class="w-full h-48 rounded-xl object-cover shadow-sm">
+          
+          <div id="audio-wave" class="hidden bg-sky-50 border border-[#0099E6] rounded-xl p-2.5 flex items-center justify-between text-xs font-bold text-[#0077B6]">
+            <div class="flex items-center space-x-2">
+              <span class="w-2 h-2 rounded-full bg-[#0099E6] animate-ping"></span>
+              <span>വാർത്ത കേൾക്കുന്നു... (മലയാളം വോയ്സ്)</span>
+            </div>
+            <button onclick="toggleAudio()" class="text-red-500">സ്റ്റോപ്പ്</button>
+          </div>
+
+          <p id="detail-content" class="text-xs text-slate-700 leading-relaxed font-normal transition-all duration-200">
+            കവരത്തി: 35-ാമത് ലക്ഷദ്വീപ് ഗെയിംസിന്റെ ഭാഗമായി നടന്ന നീന്തൽ മത്സരത്തിനിടെ അപകടത്തിൽപ്പെട്ട പെൺകുട്ടിക്ക് രക്ഷകനായി ഡോ. വാഖിദ്. മത്സരത്തിൽ പങ്കെടുത്തുകൊണ്ടിരിക്കെ വെള്ളത്തിൽ വെച്ച് ദേഹാസ്വാസ്ഥ്യം അനുഭവപ്പെട്ട പെൺകുട്ടിയെ സമയോചിതമായി ഇടപെട്ട് രക്ഷപ്പെടുത്തുകയായിരുന്നു. ലക്ഷദ്വീപ് ഗെയിംസിന്റെ ഭാഗമായി സംഘടിപ്പിച്ച കായികമത്സരത്തിനിടെ മാനുഷികതയും സേവനസന്നദ്ധതയും ഉയർത്തിപ്പിടിച്ച അദ്ദേഹത്തിന്റെ ഇടപെടൽ ശ്രദ്ധേയമായി.
+          </p>
+
+          <div class="pt-3">
+            <button onclick="shareWhatsApp(0)" class="w-full py-2.5 bg-[#25D366] text-white rounded-xl text-xs font-bold flex items-center justify-center space-x-2 shadow-sm">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
+              <span>സുഹൃത്തുക്കൾക്ക് വാട്സാപ്പിൽ അയക്കാം</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Navigation Bar -->
+      <nav class="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200/80 px-6 py-2 flex justify-around items-center z-30">
+        <button id="nav-home" onclick="switchTab('home')" class="flex flex-col items-center space-y-0.5 text-[#0099E6]">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/></svg>
+          <span class="text-[10px] font-bold">വാർത്തകൾ</span>
+        </button>
+
+        <button id="nav-shorts" onclick="switchTab('shorts')" class="flex flex-col items-center space-y-0.5 text-slate-400 hover:text-[#0099E6]">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <span class="text-[10px] font-semibold">ഇൻഷോർട്ട്സ്</span>
+        </button>
+
+        <button id="nav-bookmarks" onclick="switchTab('bookmarks')" class="flex flex-col items-center space-y-0.5 text-slate-400 hover:text-[#0099E6]">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>
+          <span class="text-[10px] font-semibold">സേവ് ചെയ്തവ</span>
+        </button>
+      </nav>
+
+    </div>
+  </div>
+
+  <script>
+    const articles = [
+      {
+        title: "ലക്ഷദ്വീപ് ഗെയിംസ്: നീന്തൽ മത്സരത്തിനിടെ അപകടത്തിൽപ്പെട്ട പെൺകുട്ടിയെ രക്ഷപ്പെടുത്തി ഡോ. വാഖിദ്",
+        img: "https://i0.wp.com/dweepdiary.in/wp-content/uploads/2026/11/file_000000009d208230a37619cb3f0948ac.webp",
+        content: "കവരത്തി: 35-ാമത് ലക്ഷദ്വീപ് ഗെയിംസിന്റെ ഭാഗമായി നടന്ന നീന്തൽ മത്സരത്തിനിടെ അപകടത്തിൽപ്പെട്ട പെൺകുട്ടിക്ക് രക്ഷകനായി ഡോ. വാഖിദ്. മത്സരത്തിൽ പങ്കെടുത്തുകൊണ്ടിരിക്കെ വെള്ളത്തിൽ വെച്ച് ദേഹാസ്വാസ്ഥ്യം അനുഭവപ്പെട്ട പെൺകുട്ടിയെ സമയോചിതമായി ഇടപെട്ട് രക്ഷപ്പെടുത്തുകയായിരുന്നു. ലക്ഷദ്വീപ് ഗെയിംസിന്റെ ഭാഗമായി സംഘടിപ്പിച്ച കായികമത്സരത്തിനിടെ മാനുഷികതയും സേവനസന്നദ്ധതയും ഉയർത്തിപ്പിടിച്ച അദ്ദേഹത്തിന്റെ ഇടപെടൽ ശ്രദ്ധേയമായി.",
+        link: "https://dweepdiary.in/?p=4290"
+      },
+      {
+        title: "അഗത്തിയിൽ സർവ്വകക്ഷി ഐക്യയോഗത്തിന് പിന്നാലെ 22 പേർക്കെതിരെ പെറ്റി കേസ്",
+        img: "https://i0.wp.com/dweepdiary.in/wp-content/uploads/2026/11/df-fd.webp",
+        content: "അഗത്തി: ലക്ഷദ്വീപ് ഭരണകൂടത്തിന്റെ ജനദ്രോഹ നടപടികൾക്കെതിരെ അഗത്തിയിൽ വിവിധ രാഷ്ട്രീയ പാർട്ടികളെയും മതസംഘടനകളെയും തൊഴിലാളി യൂണിയനുകളെയും ഒരുമിപ്പിച്ച് സംഘടിപ്പിച്ച ഐക്യയോഗത്തിന് പിന്നാലെ 22 പേർക്കെതിരെ പെറ്റി കേസ് ചുമത്തി പോലീസ് നടപടി. ലക്ഷദ്വീപ് ഭരണകൂടത്തിന്റെ ജനവിരുദ്ധ നയങ്ങൾക്കെതിരെ ഭിന്നതകൾ മാറ്റിവെച്ച് എല്ലാവരെയും ഒരുമിപ്പിക്കാൻ കഴിഞ്ഞത് ശ്രദ്ധേയമായ നീക്കമായാണ് സംഘാടകർ വിലയിരുത്തുന്നത്.",
+        link: "https://dweepdiary.in/?p=4284"
+      },
+      {
+        title: "ടൗൺ പ്ലാനിങ് റെഗുലേഷനെതിരെ ചെത്ലത്തിലും പ്രതിഷേധം; ഖാളിമാരുടെ നേതൃത്വത്തിൽ പ്രതിഷേധ സംഗമം",
+        img: "https://i0.wp.com/dweepdiary.in/wp-content/uploads/2026/11/fad02fc4-be69-4ca7-855c-25ac76435e50.webp",
+        content: "ചെത്ലത്ത്: ലക്ഷദ്വീപ് ഭരണകൂടത്തിന്റെ ടൗൺ ആൻഡ് കൺട്രി പ്ലാനിങ് റെഗുലേഷനെതിരെ ചെത്ലത്ത് ദ്വീപിലും പ്രതിഷേധം സംഘടിപ്പിച്ചു. ദ്വീപിലെ സ്കൂൾ ഗ്രൗണ്ടിൽ ഖാളിമാരുടെ നേതൃത്വത്തിലാണ് പ്രതിഷേധ പരിപാടി നടന്നത്. ജനങ്ങളുടെ ഭൂമിയിലുള്ള അവകാശങ്ങളെയും പരമ്പരാഗത ജീവിതരീതികളെയും ബാധിക്കുമെന്ന ആശങ്ക ഉയർന്നതിനെ തുടർന്നാണ് പ്രതിഷേധം.",
+        link: "https://dweepdiary.in/?p=4281"
+      }
+    ];
+
+    let currentFontSize = 13;
+    let isSpeaking = false;
+
+    function switchTab(tab) {
+      document.getElementById('view-home').classList.add('hidden');
+      document.getElementById('view-shorts').classList.add('hidden');
+      document.getElementById('view-bookmarks').classList.add('hidden');
+      document.getElementById('view-detail').classList.add('hidden');
+
+      document.getElementById('nav-home').className = "flex flex-col items-center space-y-0.5 text-slate-400";
+      document.getElementById('nav-shorts').className = "flex flex-col items-center space-y-0.5 text-slate-400";
+      document.getElementById('nav-bookmarks').className = "flex flex-col items-center space-y-0.5 text-slate-400";
+
+      if (tab === 'home') {
+        document.getElementById('view-home').classList.remove('hidden');
+        document.getElementById('nav-home').className = "flex flex-col items-center space-y-0.5 text-[#0099E6]";
+      } else if (tab === 'shorts') {
+        document.getElementById('view-shorts').classList.remove('hidden');
+        document.getElementById('nav-shorts').className = "flex flex-col items-center space-y-0.5 text-[#0099E6]";
+      } else if (tab === 'bookmarks') {
+        document.getElementById('view-bookmarks').classList.remove('hidden');
+        document.getElementById('nav-bookmarks').className = "flex flex-col items-center space-y-0.5 text-[#0099E6]";
+      }
+    }
+
+    function openArticle(index) {
+      const art = articles[index];
+      document.getElementById('detail-title').innerText = art.title;
+      document.getElementById('detail-img').src = art.img;
+      document.getElementById('detail-content').innerText = art.content;
+      document.getElementById('view-detail').classList.remove('hidden');
+    }
+
+    function closeArticle() {
+      if (isSpeaking) toggleAudio();
+      document.getElementById('view-detail').classList.add('hidden');
+    }
+
+    function toggleFontSize() {
+      const el = document.getElementById('detail-content');
+      currentFontSize = (currentFontSize >= 16) ? 12 : currentFontSize + 2;
+      el.style.fontSize = currentFontSize + 'px';
+    }
+
+    function toggleAudio() {
+      const wave = document.getElementById('audio-wave');
+      const text = document.getElementById('tts-text');
+      isSpeaking = !isSpeaking;
+
+      if (isSpeaking) {
+        wave.classList.remove('hidden');
+        text.innerText = 'നിർത്തുക';
+        if ('speechSynthesis' in window) {
+          const ut = new SpeechSynthesisUtterance(document.getElementById('detail-title').innerText);
+          ut.rate = 0.9;
+          window.speechSynthesis.speak(ut);
+        }
+      } else {
+        wave.classList.add('hidden');
+        text.innerText = 'കേൾക്കുക';
+        if ('speechSynthesis' in window) {
+          window.speechSynthesis.cancel();
+        }
+      }
+    }
+
+    function shareWhatsApp(index) {
+      const art = articles[index];
+      const text = encodeURIComponent(art.title + '\n\nകൂടുതൽ വായിക്കാം: ' + art.link + '\n\nതത്സമയ വാർത്തകൾക്ക് Dweep Diary മൊബൈൽ ആപ്പ് ഉപയോഗിക്കൂ.');
+      window.open('https://api.whatsapp.com/send?text=' + text, '_blank');
+    }
+  </script>
+</body>
+</html>

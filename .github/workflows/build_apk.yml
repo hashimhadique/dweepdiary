@@ -27,24 +27,40 @@ jobs:
         with:
           flutter-version: '3.24.5'
           channel: 'stable'
-          cache: false
 
-      - name: Doctor check
-        run: flutter doctor -v
+      - name: Ensure Android Files via Flutter
+        run: |
+          flutter create . --org in.dweepdiary --platforms=android
+          # Ensure minSdk is 24 for flutter_tts compatibility
+          sed -i 's/minSdkVersion = flutter.minSdkVersion/minSdkVersion = 24/g' android/app/build.gradle || true
+          sed -i 's/minSdk = flutter.minSdkVersion/minSdk = 24/g' android/app/build.gradle || true
+          sed -i 's/minSdk [0-9]*/minSdk 24/g' android/app/build.gradle || true
+
+      - name: Inject AdMob App ID into AndroidManifest
+        run: |
+          python3 -c "
+          manifest_path = 'android/app/src/main/AndroidManifest.xml'
+          with open(manifest_path, 'r', encoding='utf-8') as f:
+              content = f.read()
+          admob_meta = '<meta-data android:name=\"com.google.android.gms.ads.APPLICATION_ID\" android:value=\"ca-app-pub-9969872629451816~3787335139\"/>'
+          if 'com.google.android.gms.ads.APPLICATION_ID' not in content:
+              content = content.replace('</application>', f'    {admob_meta}\n    </application>')
+          if 'android.permission.INTERNET' not in content:
+              content = content.replace('<application', '<uses-permission android:name=\"android.permission.INTERNET\"/>\n    <uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\"/>\n    <application')
+          with open(manifest_path, 'w', encoding='utf-8') as f:
+              f.write(content)
+          print('AndroidManifest updated successfully!')
+          "
 
       - name: Get Dependencies
         run: flutter pub get
 
-      - name: Make gradlew executable
-        run: chmod +x android/gradlew
-
       - name: Build Release APK
-        run: flutter build apk --release --verbose
+        run: flutter build apk --release
 
       - name: Upload Release APK
-        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: dweepdiary-release-apk
-          path: build/app/outputs/flutter-apk/*.apk
+          path: build/app/outputs/flutter-apk/app-release.apk
           retention-days: 30

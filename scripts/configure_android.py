@@ -61,7 +61,7 @@ if os.path.exists(app_gradle):
     content = re.sub(r'minSdk\s+\d+', 'minSdk 24', content)
 
     if 'multiDexEnabled' not in content:
-        content = content.replace('defaultConfig {', 'defaultConfig {\n        multiDexEnabled true\n        ndk {\n            abiFilters "armeabi-v7a", "arm64-v8a"\n        }')
+        content = content.replace('defaultConfig {', 'defaultConfig {\n        multiDexEnabled true')
 
     with open(app_gradle, 'w', encoding='utf-8') as f:
         f.write(content)

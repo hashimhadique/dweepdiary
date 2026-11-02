@@ -9,13 +9,11 @@ if os.path.exists(settings_file):
     with open(settings_file, 'r', encoding='utf-8') as f:
         content = f.read()
     
-    # Replace kotlin android version with 1.9.24
     new_content = re.sub(
         r'id\s*\(?["\']org\.jetbrains\.kotlin\.android["\']\)?\s*version\s*["\'][^"\']+["\']',
         'id "org.jetbrains.kotlin.android" version "1.9.24"',
         content
     )
-    # If not matched by regex, perform fallback string replace
     if new_content == content:
         new_content = re.sub(r'version\s*["\']1\.[0-9]+\.[0-9]+["\']', 'version "1.9.24"', content)
         
@@ -23,7 +21,36 @@ if os.path.exists(settings_file):
         f.write(new_content)
     print("SUCCESS: android/settings.gradle updated with Kotlin 1.9.24")
 
-# 2. Update android/app/build.gradle for minSdk 24 and multiDex
+# 2. Update android/build.gradle to force stdlib resolution and skip metadata check
+build_gradle = os.path.join('android', 'build.gradle')
+if os.path.exists(build_gradle):
+    with open(build_gradle, 'r', encoding='utf-8') as f:
+        bg_content = f.read()
+
+    extra_rules = """
+allprojects {
+    configurations.all {
+        resolutionStrategy {
+            force "org.jetbrains.kotlin:kotlin-stdlib:1.9.24"
+            force "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.24"
+            force "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.24"
+        }
+    }
+    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+        kotlinOptions {
+            freeCompilerArgs += [
+                "-Xskip-metadata-version-check"
+            ]
+        }
+    }
+}
+"""
+    bg_content = bg_content + "\n" + extra_rules
+    with open(build_gradle, 'w', encoding='utf-8') as f:
+        f.write(bg_content)
+    print("SUCCESS: android/build.gradle configured with compiler flags & forced stdlib 1.9.24")
+
+# 3. Update android/app/build.gradle for minSdk 24 and multiDex
 app_gradle = os.path.join('android', 'app', 'build.gradle')
 if os.path.exists(app_gradle):
     with open(app_gradle, 'r', encoding='utf-8') as f:
@@ -40,7 +67,7 @@ if os.path.exists(app_gradle):
         f.write(content)
     print("SUCCESS: android/app/build.gradle updated with minSdk 24 and multiDex")
 
-# 3. Update AndroidManifest.xml for AdMob and Permissions
+# 4. Update AndroidManifest.xml for AdMob and Permissions
 manifest_file = os.path.join('android', 'app', 'src', 'main', 'AndroidManifest.xml')
 if os.path.exists(manifest_file):
     with open(manifest_file, 'r', encoding='utf-8') as f:

@@ -57,7 +57,7 @@ class _SearchScreenState extends State<SearchScreen> {
           controller: _searchController,
           autofocus: true,
           decoration: InputDecoration(
-            hintText: 'വാർത്തകൾ തിരയുക...',
+            hintText: 'Search news...',
             hintStyle: const TextStyle(color: AppColors.textSecondary, fontSize: 15),
             border: InputBorder.none,
             suffixIcon: _searchController.text.isNotEmpty
@@ -92,7 +92,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       Icon(Icons.search_off_rounded, size: 64, color: AppColors.textSecondary.withOpacity(0.5)),
                       const SizedBox(height: 12),
                       const Text(
-                        'വാർത്തകളൊന്നും കണ്ടെത്താനായില്ല',
+                        'No articles found',
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,

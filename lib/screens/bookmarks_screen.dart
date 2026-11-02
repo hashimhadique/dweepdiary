@@ -38,7 +38,7 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
       backgroundColor: AppColors.background,
       appBar: AppBar(
         title: const Text(
-          'സേവ് ചെയ്ത വാർത്തകൾ',
+          'Saved Articles',
           style: TextStyle(
             color: AppColors.textPrimary,
             fontWeight: FontWeight.bold,
@@ -66,7 +66,7 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
                       ),
                       const SizedBox(height: 16),
                       const Text(
-                        'വാർത്തകളൊന്നും സേവ് ചെയ്തിട്ടില്ല',
+                        'No Saved Articles',
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -75,7 +75,7 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
                       ),
                       const SizedBox(height: 6),
                       const Text(
-                        'പിന്നീട് വായിക്കാൻ വാർത്തകൾ ബുക്ക്മാർക്ക് ചെയ്യാം',
+                        'Bookmark articles to read them offline later',
                         style: TextStyle(
                           fontSize: 13,
                           color: AppColors.textSecondary,

@@ -111,7 +111,7 @@ class _FeaturedSliderState extends State<FeaturedSlider> {
                               Icon(Icons.bolt, color: Colors.white, size: 14),
                               SizedBox(width: 4),
                               Text(
-                                'ബ്രേക്കിംഗ് ന്യൂസ്',
+                                'BREAKING',
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 11,

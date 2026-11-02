@@ -65,7 +65,7 @@ class PostModel {
     }
 
     // 5. Category from _embedded
-    String categoryName = 'വാർത്തകൾ';
+    String categoryName = 'News';
     int categoryId = 5;
     try {
       final embedded = json['_embedded'];
@@ -73,7 +73,7 @@ class PostModel {
         final termList = embedded['wp:term'] as List;
         if (termList.isNotEmpty && termList[0] is List && (termList[0] as List).isNotEmpty) {
           final firstCategory = termList[0][0];
-          categoryName = firstCategory['name'] ?? 'വാർത്തകൾ';
+          categoryName = firstCategory['name'] ?? 'News';
           categoryId = firstCategory['id'] ?? 5;
         }
       }

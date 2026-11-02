@@ -28,7 +28,7 @@ class CategoryTabs extends StatelessWidget {
           if (index == 0) {
             final isAllSelected = selectedCategoryId == null;
             return _buildChip(
-              label: 'എല്ലാം',
+              label: 'All',
               isSelected: isAllSelected,
               onTap: () => onSelectCategory(null),
             );
@@ -38,7 +38,7 @@ class CategoryTabs extends StatelessWidget {
           final isSelected = selectedCategoryId == category.id;
 
           return _buildChip(
-            label: category.displayNameMalayalam,
+            label: category.displayName,
             isSelected: isSelected,
             onTap: () => onSelectCategory(category.id),
           );

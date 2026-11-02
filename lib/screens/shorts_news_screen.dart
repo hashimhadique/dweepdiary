@@ -60,11 +60,11 @@ class _ShortsNewsScreenState extends State<ShortsNewsScreen> {
             children: [
               const Icon(Icons.article_outlined, size: 64, color: AppColors.textSecondary),
               const SizedBox(height: 12),
-              const Text('വാർത്തകൾ ലഭ്യമല്ല'),
+              const Text('No stories available'),
               const SizedBox(height: 12),
               ElevatedButton(
                 onPressed: _loadShortsNews,
-                child: const Text('വീണ്ടും ശ്രമിക്കുക'),
+                child: const Text('Retry'),
               ),
             ],
           ),
@@ -193,7 +193,7 @@ class _ShortsNewsScreenState extends State<ShortsNewsScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              'പൂർണ്ണ വാർത്ത വായിക്കുക',
+                              'Read Full Story',
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             SizedBox(width: 6),
@@ -206,7 +206,7 @@ class _ShortsNewsScreenState extends State<ShortsNewsScreen> {
                       // Swipe hint
                       const Center(
                         child: Text(
-                          'മുകളിലേക്ക് സ്വൈപ്പ് ചെയ്യുക ▲',
+                          'Swipe up for next ▲',
                           style: TextStyle(color: Colors.white38, fontSize: 11),
                         ),
                       ),

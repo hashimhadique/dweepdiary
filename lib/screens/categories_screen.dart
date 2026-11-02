@@ -76,7 +76,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
         backgroundColor: AppColors.surface,
         elevation: 0.8,
         title: const Text(
-          'വാർത്താ വിഭാഗങ്ങൾ',
+          'Categories',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             color: AppColors.textPrimary,
@@ -95,7 +95,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                       const Icon(Icons.category_outlined, size: 60, color: AppColors.textSecondary),
                       const SizedBox(height: 12),
                       const Text(
-                        'വിഭാഗങ്ങൾ ലോഡ് ചെയ്യാൻ കഴിഞ്ഞില്ല',
+                        'Unable to load categories',
                         style: TextStyle(color: AppColors.textSecondary, fontSize: 16),
                       ),
                       const SizedBox(height: 16),
@@ -105,7 +105,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                           backgroundColor: AppColors.primary,
                           foregroundColor: Colors.white,
                         ),
-                        child: const Text('വീണ്ടും ശ്രമിക്കുക'),
+                        child: const Text('Retry'),
                       ),
                     ],
                   ),
@@ -167,7 +167,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    cat.malayalamName,
+                                    cat.displayName,
                                     style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 15,
@@ -178,7 +178,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                   ),
                                   const SizedBox(height: 2),
                                   Text(
-                                    '${cat.count} വാർത്തകൾ',
+                                    '${cat.count} Articles',
                                     style: TextStyle(
                                       fontSize: 11,
                                       fontWeight: FontWeight.w600,

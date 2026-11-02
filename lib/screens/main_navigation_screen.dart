@@ -54,22 +54,22 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             NavigationDestination(
               icon: Icon(Icons.newspaper_outlined),
               selectedIcon: Icon(Icons.newspaper_rounded, color: AppColors.primary),
-              label: 'വാർത്തകൾ',
+              label: 'News',
             ),
             NavigationDestination(
               icon: Icon(Icons.grid_view_outlined),
               selectedIcon: Icon(Icons.grid_view_rounded, color: AppColors.primary),
-              label: 'വിഭാഗങ്ങൾ',
+              label: 'Categories',
             ),
             NavigationDestination(
               icon: Icon(Icons.play_arrow_outlined),
               selectedIcon: Icon(Icons.play_arrow_rounded, color: AppColors.primary),
-              label: 'ഇൻഷോർട്ട്സ്',
+              label: 'Shorts',
             ),
             NavigationDestination(
               icon: Icon(Icons.bookmark_border_rounded),
               selectedIcon: Icon(Icons.bookmark_rounded, color: AppColors.primary),
-              label: 'സേവ് ചെയ്തവ',
+              label: 'Saved',
             ),
           ],
         ),

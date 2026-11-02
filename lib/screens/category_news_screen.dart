@@ -95,7 +95,7 @@ class _CategoryNewsScreenState extends State<CategoryNewsScreen> {
         backgroundColor: AppColors.surface,
         elevation: 0.8,
         title: Text(
-          widget.category.malayalamName,
+          widget.category.displayName,
           style: const TextStyle(
             fontWeight: FontWeight.bold,
             color: AppColors.textPrimary,
@@ -116,7 +116,7 @@ class _CategoryNewsScreenState extends State<CategoryNewsScreen> {
                         const Icon(Icons.inbox_rounded, size: 60, color: AppColors.textSecondary),
                         const SizedBox(height: 12),
                         Text(
-                          '${widget.category.malayalamName} വിഭാഗത്തിൽ വാർത്തകൾ ലഭ്യമല്ല',
+                          'No articles found in ${widget.category.displayName}',
                           style: const TextStyle(fontSize: 16, color: AppColors.textSecondary),
                           textAlign: TextAlign.center,
                         ),
@@ -141,7 +141,6 @@ class _CategoryNewsScreenState extends State<CategoryNewsScreen> {
                         );
                       }
 
-                      // Insert an ad every 5 items
                       if (index > 0 && index % 5 == 0) {
                         return const AdBannerWidget();
                       }

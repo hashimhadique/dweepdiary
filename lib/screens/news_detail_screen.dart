@@ -62,7 +62,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            newStatus ? 'വാർത്ത സേവ് ചെയ്തു' : 'ബുക്ക്മാർക്ക് നീക്കം ചെയ്തു',
+            newStatus ? 'Article saved to bookmarks' : 'Bookmark removed',
           ),
           duration: const Duration(seconds: 2),
           backgroundColor: AppColors.primary,
@@ -112,7 +112,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
         actions: [
           // 1. Text-to-Speech Audio Play/Stop Button
           IconButton(
-            tooltip: _isPlayingAudio ? 'ഓഡിയോ നിർത്തുക' : 'വാർത്ത കേൾക്കുക',
+            tooltip: _isPlayingAudio ? 'Stop Audio' : 'Listen',
             icon: Icon(
               _isPlayingAudio ? Icons.volume_up_rounded : Icons.volume_up_outlined,
               color: _isPlayingAudio ? AppColors.primary : AppColors.textPrimary,
@@ -122,7 +122,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
 
           // 2. Adjust Font Size Dialog
           IconButton(
-            tooltip: 'ഫോണ്ട് മാറ്റുക',
+            tooltip: 'Font Size',
             icon: const Icon(Icons.format_size_rounded, color: AppColors.textPrimary),
             onPressed: () {
               showModalBottomSheet(
@@ -138,7 +138,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           const Text(
-                            'അക്ഷരങ്ങളുടെ വലുപ്പം ക്രമീകരിക്കുക',
+                            'Adjust Reading Font Size',
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -191,7 +191,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
 
           // 3. Bookmark Article
           IconButton(
-            tooltip: 'സേവ് ചെയ്യുക',
+            tooltip: 'Bookmark',
             icon: Icon(
               _isBookmarked ? Icons.bookmark_rounded : Icons.bookmark_border_rounded,
               color: _isBookmarked ? AppColors.primary : AppColors.textPrimary,
@@ -201,11 +201,11 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
 
           // 4. WhatsApp / Social Share
           IconButton(
-            tooltip: 'ഷെയർ ചെയ്യുക',
+            tooltip: 'Share',
             icon: const Icon(Icons.share_rounded, color: AppColors.textPrimary),
             onPressed: () {
               Share.share(
-                '${widget.post.cleanTitle}\n\nകൂടുതൽ വായിക്കാൻ: ${widget.post.link}\n\nലക്ഷദ്വീപ് വാർത്തകൾ തത്സമയം അറിയാൻ Dweep Diary മൊബൈൽ ആപ്പ് ഉപയോഗിക്കൂ.',
+                '${widget.post.cleanTitle}\n\nRead more: ${widget.post.link}\n\nDownload Dweep Diary Mobile App: https://dweepdiary.in',
               );
             },
           ),
@@ -313,7 +313,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                     const SizedBox(width: 8),
                     const Expanded(
                       child: Text(
-                        'വാർത്ത കേൾക്കുന്നു...',
+                        'Playing audio news...',
                         style: TextStyle(
                           color: AppColors.primaryDark,
                           fontWeight: FontWeight.bold,
@@ -355,7 +355,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
               child: Column(
                 children: [
                   const Text(
-                    'ഈ വാർത്ത സുഹൃത്തുക്കൾക്കും പങ്കുവെക്കൂ',
+                    'Share this story with friends',
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
@@ -374,12 +374,12 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                     ),
                     icon: const Icon(Icons.chat_bubble_rounded),
                     label: const Text(
-                      'വാട്സാപ്പിൽ പങ്കുവെക്കുക',
+                      'Share on WhatsApp',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                     onPressed: () {
                       Share.share(
-                        '${widget.post.cleanTitle}\n\nകൂടുതൽ വായിക്കാം: ${widget.post.link}\n\nവാർത്തകൾ തത്സമയം അറിയാൻ Dweep Diary മൊബൈൽ ആപ്പ് ഉപയോഗിക്കൂ.',
+                        '${widget.post.cleanTitle}\n\nRead more: ${widget.post.link}\n\nDownload Dweep Diary Mobile App: https://dweepdiary.in',
                       );
                     },
                   ),

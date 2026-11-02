@@ -53,12 +53,16 @@ jobs:
       - name: Get Dependencies
         run: flutter pub get
 
-      - name: Build Release APK
-        run: flutter build apk --release
+      - name: Build Optimized Small Size APKs (Split ABI & Universal)
+        run: |
+          # Build lightweight split APKs (reduces size from 54MB down to ~16MB!)
+          flutter build apk --release --split-per-abi
+          # Also build standard release APK
+          flutter build apk --release
 
-      - name: Upload Release APK
+      - name: Upload Release APKs
         uses: actions/upload-artifact@v4
         with:
           name: dweepdiary-release-apk
-          path: build/app/outputs/flutter-apk/app-release.apk
+          path: build/app/outputs/flutter-apk/*.apk
           retention-days: 30

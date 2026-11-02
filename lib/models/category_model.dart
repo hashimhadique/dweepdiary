@@ -20,31 +20,37 @@ class CategoryModel {
     );
   }
 
-  // Helpful display name in Malayalam if needed
-  String get displayNameMalayalam {
-    switch (slug.toLowerCase()) {
-      case 'news':
-        return 'വാർത്തകൾ';
-      case 'politics':
-        return 'രാഷ്ട്രീയം';
-      case 'feature-stories':
-        return 'ഫീച്ചർ സ്റ്റോറികൾ';
-      case 'education':
-        return 'വിദ്യാഭ്യാസം';
-      case 'religious':
-        return 'മതപരം';
-      case 'sports':
-        return 'കായികം';
-      case 'literature':
-        return 'സാഹിത്യം';
-      case 'editorial':
-        return 'എഡിറ്റോറിയൽ';
-      case 'jobs':
-        return 'തൊഴിൽ';
-      case 'death':
-        return 'ചരമം';
+  /// Clean English Display Name for categories
+  String get displayName {
+    final upper = name.trim().toUpperCase();
+    switch (upper) {
+      case 'NEWS':
+        return 'News';
+      case 'POLITICS':
+        return 'Politics';
+      case 'SPORTS':
+        return 'Sports';
+      case 'EDUCATION':
+        return 'Education';
+      case 'RELIGIOUS':
+        return 'Religious';
+      case 'FEATURE STORIES':
+        return 'Features';
+      case 'LITERATURE':
+        return 'Literature';
+      case 'EDITORIAL':
+        return 'Editorial';
+      case 'JOBS':
+        return 'Jobs';
+      case 'DEATH':
+        return 'Obituary';
       default:
-        return name;
+        // Capitalize first letter
+        if (name.isEmpty) return 'General';
+        return name[0].toUpperCase() + name.substring(1).toLowerCase();
     }
   }
+
+  // Keep for backwards compatibility
+  String get malayalamName => displayName;
 }

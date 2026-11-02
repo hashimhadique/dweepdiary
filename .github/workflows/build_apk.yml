@@ -33,61 +33,9 @@ jobs:
           rm -rf android
           flutter create . --org in.dweepdiary --project-name dweepdiary --platforms=android
 
-      - name: Configure Android, Kotlin 1.9.24, minSdk 24, and AdMob
+      - name: Configure Android for Dweep Diary
         run: |
-          python3 -c "
-          import re
-
-          # 1. Update android/settings.gradle to Kotlin 1.9.24 (required by modern plugins like OneSignal)
-          settings_gradle = 'android/settings.gradle'
-          with open(settings_gradle, 'r', encoding='utf-8') as f:
-              s_content = f.read()
-
-          # Replace kotlin plugin version with 1.9.24
-          s_content = re.sub(
-              r'id\s+[\"\\\']org\.jetbrains\.kotlin\.android[\"\\\']\s+version\s+[\"\\\'][^\"\\\']+[\"\\\']',
-              'id \"org.jetbrains.kotlin.android\" version \"1.9.24\"',
-              s_content
-          )
-          with open(settings_gradle, 'w', encoding='utf-8') as f:
-              f.write(s_content)
-          print('settings.gradle updated with Kotlin 1.9.24')
-
-          # 2. Update android/app/build.gradle for minSdk 24 and multiDex
-          app_gradle = 'android/app/build.gradle'
-          with open(app_gradle, 'r', encoding='utf-8') as f:
-              a_content = f.read()
-
-          # Set minSdk to 24 (required by flutter_tts)
-          a_content = re.sub(r'minSdkVersion\s*=\s*flutter\.minSdkVersion', 'minSdkVersion = 24', a_content)
-          a_content = re.sub(r'minSdk\s*=\s*flutter\.minSdkVersion', 'minSdk = 24', a_content)
-          a_content = re.sub(r'minSdk\s+\d+', 'minSdk 24', a_content)
-
-          # Ensure multiDexEnabled
-          if 'multiDexEnabled' not in a_content:
-              a_content = a_content.replace('defaultConfig {', 'defaultConfig {\n        multiDexEnabled true')
-
-          with open(app_gradle, 'w', encoding='utf-8') as f:
-              f.write(a_content)
-          print('app/build.gradle updated with minSdk 24 and multiDex')
-
-          # 3. Update AndroidManifest.xml for AdMob and Permissions
-          manifest_path = 'android/app/src/main/AndroidManifest.xml'
-          with open(manifest_path, 'r', encoding='utf-8') as f:
-              m_content = f.read()
-
-          admob_tag = '<meta-data android:name=\"com.google.android.gms.ads.APPLICATION_ID\" android:value=\"ca-app-pub-9969872629451816~3787335139\"/>'
-          if 'com.google.android.gms.ads.APPLICATION_ID' not in m_content:
-              m_content = m_content.replace('</application>', f'    {admob_tag}\n    </application>')
-
-          perms = '<uses-permission android:name=\"android.permission.INTERNET\"/>\n    <uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\"/>\n'
-          if 'android.permission.INTERNET' not in m_content:
-              m_content = m_content.replace('<application', f'{perms}    <application')
-
-          with open(manifest_path, 'w', encoding='utf-8') as f:
-              f.write(m_content)
-          print('AndroidManifest updated successfully!')
-          "
+          python3 scripts/configure_android.py
 
       - name: Copy App Launcher Icons
         run: |

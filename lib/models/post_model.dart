@@ -45,17 +45,19 @@ class PostModel {
       parsedDate = DateTime.tryParse(json['date']) ?? DateTime.now();
     }
 
-    // 4. Featured Image from _embedded
-    String? imageUrl;
-    try {
-      final embedded = json['_embedded'];
-      if (embedded != null && embedded['wp:featuredmedia'] != null) {
-        final mediaList = embedded['wp:featuredmedia'] as List;
-        if (mediaList.isNotEmpty) {
-          imageUrl = mediaList[0]['source_url'];
+    // 4. Featured Image: direct jetpack / featured_image_src, fallback to _embedded
+    String? imageUrl = json['featured_image_src'] ?? json['jetpack_featured_media_url'];
+    if (imageUrl == null || imageUrl.isEmpty) {
+      try {
+        final embedded = json['_embedded'];
+        if (embedded != null && embedded['wp:featuredmedia'] != null) {
+          final mediaList = embedded['wp:featuredmedia'] as List;
+          if (mediaList.isNotEmpty) {
+            imageUrl = mediaList[0]['source_url'];
+          }
         }
-      }
-    } catch (_) {}
+      } catch (_) {}
+    }
 
     // Fallback: search <img> tag in content
     if (imageUrl == null || imageUrl.isEmpty) {

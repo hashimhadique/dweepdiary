@@ -186,7 +186,47 @@ class _HomeScreenState extends State<HomeScreen> {
           ? const Center(
               child: CircularProgressIndicator(color: AppColors.primary),
             )
-          : RefreshIndicator(
+          : _allPosts.isEmpty
+              ? Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(24.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.signal_wifi_connected_no_internet_4_rounded,
+                            size: 64, color: AppColors.textSecondary),
+                        const SizedBox(height: 16),
+                        const Text(
+                          'വാർത്തകൾ ലഭ്യമാക്കാൻ കഴിഞ്ഞില്ല',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.textPrimary,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        const Text(
+                          'ഇന്റർനെറ്റ് കണക്ഷൻ പരിശോധിക്കുക',
+                          style: TextStyle(color: AppColors.textSecondary),
+                        ),
+                        const SizedBox(height: 20),
+                        ElevatedButton.icon(
+                          onPressed: _loadInitialData,
+                          icon: const Icon(Icons.refresh_rounded),
+                          label: const Text('വീണ്ടും ശ്രമിക്കുക'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.primary,
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              : RefreshIndicator(
               color: AppColors.primary,
               onRefresh: _loadInitialData,
               child: CustomScrollView(

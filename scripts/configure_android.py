@@ -73,6 +73,9 @@ if os.path.exists(manifest_file):
     with open(manifest_file, 'r', encoding='utf-8') as f:
         content = f.read()
 
+    if 'android:usesCleartextTraffic' not in content:
+        content = content.replace('<application', '<application\n        android:usesCleartextTraffic="true"')
+
     admob_tag = '        <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="ca-app-pub-9969872629451816~3787335139"/>\n'
     if 'com.google.android.gms.ads.APPLICATION_ID' not in content:
         content = content.replace('</application>', admob_tag + '    </application>')

@@ -9,26 +9,38 @@ class ApiService {
   factory ApiService() => _instance;
   ApiService._internal();
 
-  // Custom HTTP headers to ensure requests pass through security filters
+  // Valid standard mobile User-Agent to seamlessly pass hosting Mod_Security filters
   static const Map<String, String> _headers = {
-    'Accept': 'application/json',
-    'User-Agent': 'DweepDiaryApp/1.0.0 (Flutter; Android/iOS)',
+    'Accept': 'application/json, text/plain, */*',
+    'User-Agent':
+        'Mozilla/5.0 (Linux; Android 13; Mobile) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36',
   };
+
+  /// Helper to build query URL correctly handling '?' and '&'
+  String _buildUrl(String endpoint, Map<String, String> params) {
+    final separator = endpoint.contains('?') ? '&' : '?';
+    final queryString = params.entries
+        .map((e) => '${e.key}=${Uri.encodeComponent(e.value)}')
+        .join('&');
+    return '$endpoint$separator$queryString';
+  }
 
   /// Fetch latest news posts with pagination and embedded images/terms
   Future<List<PostModel>> fetchLatestPosts({int page = 1, int perPage = 10}) async {
-    final uri = Uri.parse(
-      '${AppConstants.postsEndpoint}?_embed&page=$page&per_page=$perPage',
-    );
+    final url = _buildUrl(AppConstants.postsEndpoint, {
+      '_embed': '',
+      'page': page.toString(),
+      'per_page': perPage.toString(),
+    });
 
     try {
-      final response = await http.get(uri, headers: _headers);
+      final response = await http.get(Uri.parse(url), headers: _headers);
 
       if (response.statusCode == 200) {
         final List<dynamic> jsonList = jsonDecode(response.body);
         return jsonList.map((item) => PostModel.fromJson(item)).toList();
       } else {
-        throw Exception('Failed to load posts. Status: ${response.statusCode}');
+        throw Exception('Failed to load posts (Status: ${response.statusCode})');
       }
     } catch (e) {
       throw Exception('Network error: $e');
@@ -41,18 +53,21 @@ class ApiService {
     int page = 1,
     int perPage = 10,
   }) async {
-    final uri = Uri.parse(
-      '${AppConstants.postsEndpoint}?_embed&categories=$categoryId&page=$page&per_page=$perPage',
-    );
+    final url = _buildUrl(AppConstants.postsEndpoint, {
+      '_embed': '',
+      'categories': categoryId.toString(),
+      'page': page.toString(),
+      'per_page': perPage.toString(),
+    });
 
     try {
-      final response = await http.get(uri, headers: _headers);
+      final response = await http.get(Uri.parse(url), headers: _headers);
 
       if (response.statusCode == 200) {
         final List<dynamic> jsonList = jsonDecode(response.body);
         return jsonList.map((item) => PostModel.fromJson(item)).toList();
       } else {
-        throw Exception('Failed to load category posts. Status: ${response.statusCode}');
+        throw Exception('Failed to load category posts (Status: ${response.statusCode})');
       }
     } catch (e) {
       throw Exception('Network error: $e');
@@ -61,21 +76,21 @@ class ApiService {
 
   /// Fetch categories with active post counts
   Future<List<CategoryModel>> fetchCategories() async {
-    final uri = Uri.parse(
-      '${AppConstants.categoriesEndpoint}?per_page=30&hide_empty=true',
-    );
+    final url = _buildUrl(AppConstants.categoriesEndpoint, {
+      'per_page': '30',
+      'hide_empty': 'true',
+    });
 
     try {
-      final response = await http.get(uri, headers: _headers);
+      final response = await http.get(Uri.parse(url), headers: _headers);
 
       if (response.statusCode == 200) {
         final List<dynamic> jsonList = jsonDecode(response.body);
         final categories = jsonList.map((item) => CategoryModel.fromJson(item)).toList();
-        // Sort with popular categories first
         categories.sort((a, b) => b.count.compareTo(a.count));
         return categories;
       } else {
-        throw Exception('Failed to load categories');
+        throw Exception('Failed to load categories (Status: ${response.statusCode})');
       }
     } catch (e) {
       throw Exception('Category network error: $e');
@@ -84,18 +99,21 @@ class ApiService {
 
   /// Search news posts by keyword
   Future<List<PostModel>> searchPosts({required String query, int page = 1}) async {
-    final uri = Uri.parse(
-      '${AppConstants.postsEndpoint}?_embed&search=${Uri.encodeComponent(query)}&page=$page&per_page=15',
-    );
+    final url = _buildUrl(AppConstants.postsEndpoint, {
+      '_embed': '',
+      'search': query,
+      'page': page.toString(),
+      'per_page': '15',
+    });
 
     try {
-      final response = await http.get(uri, headers: _headers);
+      final response = await http.get(Uri.parse(url), headers: _headers);
 
       if (response.statusCode == 200) {
         final List<dynamic> jsonList = jsonDecode(response.body);
         return jsonList.map((item) => PostModel.fromJson(item)).toList();
       } else {
-        throw Exception('Failed to search posts. Status: ${response.statusCode}');
+        throw Exception('Failed to search posts (Status: ${response.statusCode})');
       }
     } catch (e) {
       throw Exception('Search network error: $e');

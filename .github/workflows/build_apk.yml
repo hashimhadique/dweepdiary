@@ -28,29 +28,67 @@ jobs:
           flutter-version: '3.24.5'
           channel: 'stable'
 
-      - name: Ensure Android Files via Flutter
+      - name: Clean Recreate Android Folder via Flutter
         run: |
-          flutter create . --org in.dweepdiary --platforms=android
-          # Ensure minSdk is 24 for flutter_tts compatibility
-          sed -i 's/minSdkVersion = flutter.minSdkVersion/minSdkVersion = 24/g' android/app/build.gradle || true
-          sed -i 's/minSdk = flutter.minSdkVersion/minSdk = 24/g' android/app/build.gradle || true
-          sed -i 's/minSdk [0-9]*/minSdk 24/g' android/app/build.gradle || true
+          # Backup assets/icons if needed, then remove faulty android directory
+          rm -rf android
+          # Let Flutter generate the official, pristine Android scaffold
+          flutter create . --org in.dweepdiary --project-name dweepdiary --platforms=android
 
-      - name: Inject AdMob App ID into AndroidManifest
+      - name: Configure Android for Dweep Diary
         run: |
           python3 -c "
+          import re
+
+          # 1. Update android/app/build.gradle for minSdk 24 and applicationId
+          app_gradle = 'android/app/build.gradle'
+          with open(app_gradle, 'r', encoding='utf-8') as f:
+              content = f.read()
+
+          # Set minSdk to 24 (required by flutter_tts)
+          content = re.sub(r'minSdkVersion\s*=\s*flutter\.minSdkVersion', 'minSdkVersion = 24', content)
+          content = re.sub(r'minSdk\s*=\s*flutter\.minSdkVersion', 'minSdk = 24', content)
+          content = re.sub(r'minSdk\s+\d+', 'minSdk 24', content)
+
+          # Ensure multiDexEnabled
+          if 'multiDexEnabled' not in content:
+              content = content.replace('defaultConfig {', 'defaultConfig {\n        multiDexEnabled true')
+
+          with open(app_gradle, 'w', encoding='utf-8') as f:
+              f.write(content)
+
+          # 2. Update AndroidManifest.xml for AdMob and Permissions
           manifest_path = 'android/app/src/main/AndroidManifest.xml'
           with open(manifest_path, 'r', encoding='utf-8') as f:
-              content = f.read()
-          admob_meta = '<meta-data android:name=\"com.google.android.gms.ads.APPLICATION_ID\" android:value=\"ca-app-pub-9969872629451816~3787335139\"/>'
-          if 'com.google.android.gms.ads.APPLICATION_ID' not in content:
-              content = content.replace('</application>', f'    {admob_meta}\n    </application>')
-          if 'android.permission.INTERNET' not in content:
-              content = content.replace('<application', '<uses-permission android:name=\"android.permission.INTERNET\"/>\n    <uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\"/>\n    <application')
+              m_content = f.read()
+
+          admob_tag = '<meta-data android:name=\"com.google.android.gms.ads.APPLICATION_ID\" android:value=\"ca-app-pub-9969872629451816~3787335139\"/>'
+          if 'com.google.android.gms.ads.APPLICATION_ID' not in m_content:
+              m_content = m_content.replace('</application>', f'    {admob_tag}\n    </application>')
+
+          perms = '<uses-permission android:name=\"android.permission.INTERNET\"/>\n    <uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\"/>\n'
+          if 'android.permission.INTERNET' not in m_content:
+              m_content = m_content.replace('<application', f'{perms}    <application')
+
           with open(manifest_path, 'w', encoding='utf-8') as f:
-              f.write(content)
-          print('AndroidManifest updated successfully!')
+              f.write(m_content)
+
+          print('Android project successfully configured!')
           "
+
+      - name: Copy App Launcher Icons
+        run: |
+          # Copy high-res icon to mipmap folders
+          mkdir -p android/app/src/main/res/mipmap-hdpi
+          mkdir -p android/app/src/main/res/mipmap-mdpi
+          mkdir -p android/app/src/main/res/mipmap-xhdpi
+          mkdir -p android/app/src/main/res/mipmap-xxhdpi
+          mkdir -p android/app/src/main/res/mipmap-xxxhdpi
+          cp assets/images/app_icon.png android/app/src/main/res/mipmap-hdpi/ic_launcher.png || true
+          cp assets/images/app_icon.png android/app/src/main/res/mipmap-mdpi/ic_launcher.png || true
+          cp assets/images/app_icon.png android/app/src/main/res/mipmap-xhdpi/ic_launcher.png || true
+          cp assets/images/app_icon.png android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png || true
+          cp assets/images/app_icon.png android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png || true
 
       - name: Get Dependencies
         run: flutter pub get

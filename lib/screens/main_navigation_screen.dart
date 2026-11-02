@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../constants/app_colors.dart';
 import 'home_screen.dart';
+import 'categories_screen.dart';
 import 'shorts_news_screen.dart';
 import 'bookmarks_screen.dart';
 
@@ -16,6 +17,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
 
   final List<Widget> _screens = const [
     HomeScreen(),
+    CategoriesScreen(),
     ShortsNewsScreen(),
     BookmarksScreen(),
   ];
@@ -53,6 +55,11 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
               icon: Icon(Icons.newspaper_outlined),
               selectedIcon: Icon(Icons.newspaper_rounded, color: AppColors.primary),
               label: 'വാർത്തകൾ',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.grid_view_outlined),
+              selectedIcon: Icon(Icons.grid_view_rounded, color: AppColors.primary),
+              label: 'വിഭാഗങ്ങൾ',
             ),
             NavigationDestination(
               icon: Icon(Icons.play_arrow_outlined),

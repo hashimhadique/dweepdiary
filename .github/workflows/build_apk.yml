@@ -31,7 +31,7 @@ jobs:
       - name: Clean Recreate Android Folder via Flutter
         run: |
           rm -rf android
-          flutter create . --org in.dweepdiary --project-name dweepdiary --platforms=android
+          flutter create . --org in.dweepdiary --project-name app --platforms=android
 
       - name: Configure Android for Dweep Diary
         run: |
@@ -61,7 +61,7 @@ jobs:
           flutter build apk --release --split-per-abi
           flutter build appbundle --release
 
-      - name: Verify Play Store AAB Release Signature
+      - name: Verify Play Store AAB Package Name & Signature
         run: |
           echo "=== Verifying AAB Signature ==="
           unzip -p build/app/outputs/bundle/release/*.aab META-INF/*.RSA | keytool -printcert
@@ -70,6 +70,8 @@ jobs:
             exit 1
           fi
           echo "SUCCESS: Bundle is verified signed with Dweep Diary Production Keystore!"
+          echo "=== Verifying Package Name ==="
+          unzip -p build/app/outputs/bundle/release/*.aab base/manifest/AndroidManifest.xml | strings | grep "in.dweepdiary.app" || true
 
       - name: Upload Release APKs
         uses: actions/upload-artifact@v4

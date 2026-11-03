@@ -60,6 +60,10 @@ if os.path.exists(app_gradle):
     content = re.sub(r'minSdk\s*=\s*flutter\.minSdkVersion', 'minSdk = 24', content)
     content = re.sub(r'minSdk\s+\d+', 'minSdk 24', content)
 
+    # Enforce package name in.dweepdiary.app
+    content = re.sub(r'applicationId\s*=?\s*["\'][^"\']+["\']', 'applicationId "in.dweepdiary.app"', content)
+    content = re.sub(r'namespace\s*=?\s*["\'][^"\']+["\']', 'namespace "in.dweepdiary.app"', content)
+
     if 'multiDexEnabled' not in content:
         content = content.replace('defaultConfig {', 'defaultConfig {\n        multiDexEnabled true')
 
@@ -136,8 +140,24 @@ if os.path.exists(manifest_file):
     if 'dweepdiary.in' not in content:
         content = content.replace('</activity>', deep_link_filters + '        </activity>')
 
+    if 'package="in.dweepdiary.app"' not in content:
+        content = re.sub(r'<manifest\s+xmlns:android="http://schemas.android.com/apk/res/android"', '<manifest xmlns:android="http://schemas.android.com/apk/res/android"\n    package="in.dweepdiary.app"', content)
+
     with open(manifest_file, 'w', encoding='utf-8') as f:
         f.write(content)
     print("SUCCESS: AndroidManifest.xml updated with AdMob, permissions, and Deep Links")
+
+# 5. Ensure MainActivity.kt is located in in/dweepdiary/app
+kt_target_dir = os.path.join('android', 'app', 'src', 'main', 'kotlin', 'in', 'dweepdiary', 'app')
+os.makedirs(kt_target_dir, exist_ok=True)
+kt_file = os.path.join(kt_target_dir, 'MainActivity.kt')
+with open(kt_file, 'w', encoding='utf-8') as f:
+    f.write("package in.dweepdiary.app\n\nimport io.flutter.embedding.android.FlutterActivity\n\nclass MainActivity: FlutterActivity()\n")
+
+wrong_kt_dir = os.path.join('android', 'app', 'src', 'main', 'kotlin', 'in', 'dweepdiary', 'dweepdiary')
+if os.path.exists(wrong_kt_dir):
+    import shutil
+    shutil.rmtree(wrong_kt_dir)
+print("SUCCESS: MainActivity.kt configured under package in.dweepdiary.app")
 
 print("--- Android Configuration Complete! ---")

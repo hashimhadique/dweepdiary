@@ -172,10 +172,11 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
     if (success) {
       final newComment = CommentModel(
         id: DateTime.now().millisecondsSinceEpoch,
+        postId: widget.post.id,
         authorName: name.isEmpty ? 'Reader' : name,
-        content: text,
         date: DateTime.now(),
-        authorAvatarUrl: '',
+        content: text,
+        cleanContent: text,
       );
       setState(() {
         _comments.insert(0, newComment);
@@ -193,10 +194,11 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
       // Even if WordPress holds it for moderation or returns hold
       final pendingComment = CommentModel(
         id: DateTime.now().millisecondsSinceEpoch,
+        postId: widget.post.id,
         authorName: name.isEmpty ? 'Reader' : name,
-        content: text,
         date: DateTime.now(),
-        authorAvatarUrl: '',
+        content: text,
+        cleanContent: text,
       );
       setState(() {
         _comments.insert(0, pendingComment);

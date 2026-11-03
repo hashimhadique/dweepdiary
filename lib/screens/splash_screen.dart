@@ -87,57 +87,64 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
             children: [
               const Spacer(),
 
-              // Animated App Icon & Logo
+              // Animated Official App Icon
               ScaleTransition(
                 scale: _scaleAnimation,
                 child: FadeTransition(
                   opacity: _fadeAnimation,
                   child: Container(
-                    padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
-                      color: Colors.white,
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.2),
+                          color: Colors.black.withOpacity(0.25),
                           blurRadius: 24,
-                          offset: const Offset(0, 10),
+                          offset: const Offset(0, 8),
                         ),
                       ],
                     ),
                     child: ClipOval(
                       child: Image.asset(
                         'assets/images/app_icon.png',
-                        width: 100,
-                        height: 100,
-                        fit: BoxFit.cover,
+                        width: 140,
+                        height: 140,
+                        fit: BoxFit.contain,
                         errorBuilder: (context, error, stackTrace) => const Icon(
                           Icons.newspaper_rounded,
-                          size: 70,
-                          color: AppColors.primary,
+                          size: 80,
+                          color: Colors.white,
                         ),
                       ),
                     ),
                   ),
                 ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 28),
 
-              // Title: Dweep Diary
+              // Title: Dweep Diary & Tagline
               FadeTransition(
                 opacity: _fadeAnimation,
                 child: Column(
                   children: [
-                    const Text(
-                      'DWEEP DIARY',
-                      style: TextStyle(
-                        fontSize: 26,
-                        fontWeight: FontWeight.w900,
-                        letterSpacing: 2.0,
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                      decoration: BoxDecoration(
                         color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.15),
+                            blurRadius: 10,
+                          ),
+                        ],
+                      ),
+                      child: Image.asset(
+                        'assets/images/logo.png',
+                        height: 40,
+                        fit: BoxFit.contain,
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 12),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
                       decoration: BoxDecoration(
@@ -145,7 +152,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: const Text(
-                        'ദ്വീപ് ഡയറി • ലക്ഷദ്വീപിന്റെ വാർത്താ ജാലകം',
+                        'ലക്ഷദ്വീപിന്റെ ആദ്യ ഓൺലൈൻ ദിനപത്രം',
                         style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,

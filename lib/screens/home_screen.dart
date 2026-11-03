@@ -154,23 +154,34 @@ class _HomeScreenState extends State<HomeScreen> {
         titleSpacing: 16,
         title: Row(
           children: [
-            Image.asset(
-              'assets/images/logo.png',
-              height: 36,
-              fit: BoxFit.contain,
-              errorBuilder: (context, error, stackTrace) => Row(
-                children: [
-                  const Icon(Icons.newspaper_rounded, color: AppColors.primary, size: 28),
-                  const SizedBox(width: 8),
-                  Text(
-                    'Dweep Diary',
-                    style: TextStyle(
-                      color: isDark ? Colors.white : AppColors.primaryDark,
-                      fontWeight: FontWeight.w900,
-                      fontSize: 20,
+            Container(
+              padding: isDark
+                  ? const EdgeInsets.symmetric(horizontal: 8, vertical: 3)
+                  : EdgeInsets.zero,
+              decoration: isDark
+                  ? BoxDecoration(
+                      color: Colors.white.withOpacity(0.92),
+                      borderRadius: BorderRadius.circular(8),
+                    )
+                  : null,
+              child: Image.asset(
+                'assets/images/logo.png',
+                height: 34,
+                fit: BoxFit.contain,
+                errorBuilder: (context, error, stackTrace) => Row(
+                  children: [
+                    const Icon(Icons.newspaper_rounded, color: AppColors.primary, size: 28),
+                    const SizedBox(width: 8),
+                    Text(
+                      'Dweep Diary',
+                      style: TextStyle(
+                        color: isDark ? Colors.white : AppColors.primaryDark,
+                        fontWeight: FontWeight.w900,
+                        fontSize: 20,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ],

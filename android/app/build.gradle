@@ -15,7 +15,7 @@ def flutterVersionName = localProperties.getProperty("flutter.versionName") ?: "
 
 android {
     namespace "in.dweepdiary.app"
-    compileSdk flutter.compileSdkVersion
+    compileSdk 36
     ndkVersion flutter.ndkVersion
 
     compileOptions {
@@ -30,7 +30,7 @@ android {
     defaultConfig {
         applicationId "in.dweepdiary.app"
         minSdk 24
-        targetSdk flutter.targetSdkVersion
+        targetSdk 36
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         multiDexEnabled true
@@ -50,6 +50,9 @@ android {
             signingConfig signingConfigs.release
             minifyEnabled false
             shrinkResources false
+            ndk {
+                debugSymbolLevel 'FULL'
+            }
         }
     }
 }

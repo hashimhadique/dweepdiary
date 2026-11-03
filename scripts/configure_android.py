@@ -60,6 +60,12 @@ if os.path.exists(app_gradle):
     content = re.sub(r'minSdk\s*=\s*flutter\.minSdkVersion', 'minSdk = 24', content)
     content = re.sub(r'minSdk\s+\d+', 'minSdk 24', content)
 
+    # Target SDK 36 and Compile SDK 36 for Google Play Console requirement
+    content = re.sub(r'compileSdk\s*=\s*\w+(\.\w+)?', 'compileSdk = 36', content)
+    content = re.sub(r'compileSdk\s+flutter\.compileSdkVersion', 'compileSdk 36', content)
+    content = re.sub(r'targetSdk\s*=\s*\w+(\.\w+)?', 'targetSdk = 36', content)
+    content = re.sub(r'targetSdk\s+flutter\.targetSdkVersion', 'targetSdk 36', content)
+
     # Enforce package name in.dweepdiary.app
     content = re.sub(r'applicationId\s*=?\s*["\'][^"\']+["\']', 'applicationId "in.dweepdiary.app"', content)
     content = re.sub(r'namespace\s*=?\s*["\'][^"\']+["\']', 'namespace "in.dweepdiary.app"', content)
@@ -67,7 +73,7 @@ if os.path.exists(app_gradle):
     if 'multiDexEnabled' not in content:
         content = content.replace('defaultConfig {', 'defaultConfig {\n        multiDexEnabled true')
 
-    # Configure Production Release Signing Key
+    # Configure Production Release Signing Key and Native Debug Symbols
     signing_block = """
     signingConfigs {
         release {
@@ -87,6 +93,10 @@ if os.path.exists(app_gradle):
     # Double check: ensure signingConfigs.release is explicitly attached to release buildType
     if 'signingConfigs.release' not in content:
         content = re.sub(r'(buildTypes\s*\{\s*release\s*\{)', r'\1\n            signingConfig = signingConfigs.release', content)
+
+    # Add native debug symbols for Play Store
+    if 'debugSymbolLevel' not in content:
+        content = re.sub(r'(signingConfig\s*=?\s*signingConfigs\.release)', r'\1\n            ndk {\n                debugSymbolLevel "FULL"\n            }', content)
 
     with open(app_gradle, 'w', encoding='utf-8') as f:
         f.write(content)
@@ -114,10 +124,14 @@ if os.path.exists(manifest_file):
     perms = '''    <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
-    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
 '''
     if 'android.permission.POST_NOTIFICATIONS' not in content:
         content = content.replace('<application', perms + '    <application')
+
+    # Remove any media permissions to comply with Play Store photo picker policy
+    content = re.sub(r'\s*<uses-permission android:name="android\.permission\.READ_MEDIA_IMAGES"\s*/>', '', content)
+    content = re.sub(r'\s*<uses-permission android:name="android\.permission\.READ_EXTERNAL_STORAGE"\s*/>', '', content)
+    content = re.sub(r'\s*<uses-permission android:name="android\.permission\.WRITE_EXTERNAL_STORAGE"\s*/>', '', content)
 
     deep_link_filters = '''            <!-- Deep Linking for dweepdiary.in and www.dweepdiary.in -->
             <intent-filter>

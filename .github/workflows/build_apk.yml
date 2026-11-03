@@ -53,6 +53,10 @@ jobs:
           cp assets/images/app_icon.png android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png || true
           cp assets/images/app_icon.png android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png || true
 
+      - name: Install Android Platform 36
+        run: |
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platforms;android-36" || true
+
       - name: Get Dependencies
         run: flutter pub get
 

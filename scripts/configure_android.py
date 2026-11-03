@@ -152,7 +152,7 @@ kt_target_dir = os.path.join('android', 'app', 'src', 'main', 'kotlin', 'in', 'd
 os.makedirs(kt_target_dir, exist_ok=True)
 kt_file = os.path.join(kt_target_dir, 'MainActivity.kt')
 with open(kt_file, 'w', encoding='utf-8') as f:
-    f.write("package in.dweepdiary.app\n\nimport io.flutter.embedding.android.FlutterActivity\n\nclass MainActivity: FlutterActivity()\n")
+    f.write("package `in`.dweepdiary.app\n\nimport io.flutter.embedding.android.FlutterActivity\n\nclass MainActivity: FlutterActivity()\n")
 
 wrong_kt_dir = os.path.join('android', 'app', 'src', 'main', 'kotlin', 'in', 'dweepdiary', 'dweepdiary')
 if os.path.exists(wrong_kt_dir):

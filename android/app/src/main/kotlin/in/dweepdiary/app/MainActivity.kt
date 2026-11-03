@@ -1,4 +1,4 @@
-package in.dweepdiary.app
+package `in`.dweepdiary.app
 
 import io.flutter.embedding.android.FlutterActivity
 

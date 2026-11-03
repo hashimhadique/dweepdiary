@@ -80,7 +80,11 @@ if os.path.exists(manifest_file):
     if 'com.google.android.gms.ads.APPLICATION_ID' not in content:
         content = content.replace('</application>', admob_tag + '    </application>')
 
-    perms = '    <uses-permission android:name="android.permission.INTERNET"/>\n    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>\n'
+    perms = '''    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
+'''
     if 'android.permission.INTERNET' not in content:
         content = content.replace('<application', perms + '    <application')
 

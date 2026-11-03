@@ -53,7 +53,7 @@ class _AdBannerWidgetState extends State<AdBannerWidget> {
 
   void _loadBannerAd() {
     _bannerAd = BannerAd(
-      adUnitId: AppConstants.adMobBannerIdAndroid,
+      adUnitId: AppConstants.activeBannerId,
       request: const AdRequest(),
       size: AdSize.banner,
       listener: BannerAdListener(

@@ -1,4 +1,7 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../constants/app_colors.dart';
 import '../constants/app_constants.dart';
@@ -15,6 +18,9 @@ class _SubmitNewsScreenState extends State<SubmitNewsScreen> {
   final TextEditingController _storyController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
+
+  final ImagePicker _picker = ImagePicker();
+  List<XFile> _selectedImages = [];
 
   final List<String> _islands = [
     'Kavaratti (കവരത്തി)',
@@ -46,6 +52,36 @@ class _SubmitNewsScreenState extends State<SubmitNewsScreen> {
     _nameController.dispose();
     _phoneController.dispose();
     super.dispose();
+  }
+
+  Future<void> _pickImage(ImageSource source) async {
+    try {
+      if (source == ImageSource.camera) {
+        final photo = await _picker.pickImage(source: ImageSource.camera, imageQuality: 85);
+        if (photo != null) {
+          setState(() {
+            _selectedImages.add(photo);
+          });
+        }
+      } else {
+        final photos = await _picker.pickMultiImage(imageQuality: 85);
+        if (photos.isNotEmpty) {
+          setState(() {
+            _selectedImages.addAll(photos);
+          });
+        }
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Could not access photos')),
+      );
+    }
+  }
+
+  void _removeImage(int index) {
+    setState(() {
+      _selectedImages.removeAt(index);
+    });
   }
 
   Future<void> _sendToWhatsAppDesk() async {
@@ -87,9 +123,26 @@ ${phone.isEmpty ? 'Not provided' : phone}
 $story
 
 ━━━━━━━━━━━━━━━━━━━━
-📸 *Note:* Attached photos/videos can be sent directly in this chat for verification.
+Official Editorial Desk: ${AppConstants.whatsAppEditorialNumber}
 ''';
 
+    // If user attached images, share via native share sheet with WhatsApp priority
+    if (_selectedImages.isNotEmpty) {
+      try {
+        await Share.shareXFiles(
+          _selectedImages,
+          text: message,
+          subject: title,
+        );
+      } catch (_) {
+        _openWhatsAppDirect(message);
+      }
+    } else {
+      _openWhatsAppDirect(message);
+    }
+  }
+
+  Future<void> _openWhatsAppDirect(String message) async {
     final cleanPhone = AppConstants.whatsAppEditorialNumber.replaceAll(RegExp(r'[^0-9]'), '');
     final uri = Uri.parse(
       'https://wa.me/$cleanPhone?text=${Uri.encodeComponent(message)}',
@@ -174,6 +227,15 @@ $story
                             fontSize: 12,
                             height: 1.5,
                             color: isDark ? AppColors.darkTextSecondary : AppColors.textPrimary,
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          'WhatsApp Desk: ${AppConstants.whatsAppEditorialNumber}',
+                          style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF1EBE5D),
                           ),
                         ),
                       ],
@@ -295,6 +357,87 @@ $story
             ),
             const SizedBox(height: 16),
 
+            // Photos Section (Add from Gallery / Camera)
+            Text(
+              'Attach News Photos / ചിത്രങ്ങൾ ചേർക്കാം (${_selectedImages.length})',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 13,
+                color: isDark ? AppColors.darkTextPrimary : AppColors.textPrimary,
+              ),
+            ),
+            const SizedBox(height: 8),
+
+            Row(
+              children: [
+                OutlinedButton.icon(
+                  onPressed: () => _pickImage(ImageSource.gallery),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: AppColors.primary,
+                    side: const BorderSide(color: AppColors.primary),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  ),
+                  icon: const Icon(Icons.photo_library_rounded, size: 18),
+                  label: const Text('Gallery'),
+                ),
+                const SizedBox(width: 10),
+                OutlinedButton.icon(
+                  onPressed: () => _pickImage(ImageSource.camera),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: AppColors.primary,
+                    side: const BorderSide(color: AppColors.primary),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  ),
+                  icon: const Icon(Icons.camera_alt_rounded, size: 18),
+                  label: const Text('Camera'),
+                ),
+              ],
+            ),
+
+            if (_selectedImages.isNotEmpty) ...[
+              const SizedBox(height: 10),
+              SizedBox(
+                height: 85,
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: _selectedImages.length,
+                  separatorBuilder: (_, __) => const SizedBox(width: 8),
+                  itemBuilder: (context, index) {
+                    return Stack(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: Image.file(
+                            File(_selectedImages[index].path),
+                            width: 85,
+                            height: 85,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        Positioned(
+                          top: 2,
+                          right: 2,
+                          child: InkWell(
+                            onTap: () => _removeImage(index),
+                            child: Container(
+                              padding: const EdgeInsets.all(3),
+                              decoration: const BoxDecoration(
+                                color: Colors.black54,
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(Icons.close_rounded, size: 14, color: Colors.white),
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ),
+            ],
+
+            const SizedBox(height: 16),
+
             // Reporter Name & Phone
             Row(
               children: [
@@ -374,33 +517,6 @@ $story
             ),
             const SizedBox(height: 24),
 
-            // Photo instructions card
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: const Color(0xFF25D366).withOpacity(0.08),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: const Color(0xFF25D366).withOpacity(0.3)),
-              ),
-              child: const Row(
-                children: [
-                  Icon(Icons.add_a_photo_rounded, color: Color(0xFF1EBE5D), size: 24),
-                  SizedBox(width: 10),
-                  Expanded(
-                    child: Text(
-                      'ചിത്രങ്ങളും വീഡിയോകളും താഴെയുള്ള ബട്ടൺ ക്ലിക്ക് ചെയ്യുമ്പോൾ തുറക്കുന്ന വാട്സ്ആപ്പ് ചാറ്റിൽ നേരിട്ട് അറ്റാച്ച് ചെയ്ത് അയക്കാവുന്നതാണ്.',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Color(0xFF1EBE5D),
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 20),
-
             // WhatsApp Direct Submission Button
             ElevatedButton.icon(
               onPressed: _sendToWhatsAppDesk,
@@ -414,10 +530,12 @@ $story
                 ),
               ),
               icon: const Icon(Icons.send_rounded, size: 20),
-              label: const Text(
-                'Send to WhatsApp Editorial Desk',
-                style: TextStyle(
-                  fontSize: 15,
+              label: Text(
+                _selectedImages.isNotEmpty
+                    ? 'Send News & ${_selectedImages.length} Photos via WhatsApp'
+                    : 'Send to Dweep Diary WhatsApp Desk',
+                style: const TextStyle(
+                  fontSize: 14.5,
                   fontWeight: FontWeight.bold,
                   letterSpacing: 0.3,
                 ),

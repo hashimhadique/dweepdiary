@@ -11,6 +11,7 @@ class AdService {
   InterstitialAd? _interstitialAd;
   bool _isInterstitialLoading = false;
   int _articleOpenCounter = 0;
+  DateTime? _lastInterstitialShownTime;
 
   Map<String, dynamic>? _customSponsorAd;
   Map<String, dynamic>? get customSponsorAd => _customSponsorAd;
@@ -33,11 +34,15 @@ class AdService {
     if (_isInterstitialLoading || _interstitialAd != null) return;
     _isInterstitialLoading = true;
 
+    final unitId = AppConstants.activeInterstitialId;
+    debugPrint('AdService: Loading Interstitial Ad unit $unitId...');
+
     InterstitialAd.load(
-      adUnitId: AppConstants.adMobInterstitialIdAndroid,
+      adUnitId: unitId,
       request: const AdRequest(),
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (ad) {
+          debugPrint('AdService: InterstitialAd loaded successfully!');
           _interstitialAd = ad;
           _isInterstitialLoading = false;
           _setupInterstitialCallbacks(ad);
@@ -45,7 +50,11 @@ class AdService {
         onAdFailedToLoad: (error) {
           _interstitialAd = null;
           _isInterstitialLoading = false;
-          debugPrint('InterstitialAd failed to load: $error');
+          debugPrint('AdService: InterstitialAd failed to load: $error');
+          // Retry after 15 seconds
+          Future.delayed(const Duration(seconds: 15), () {
+            if (_interstitialAd == null) _loadInterstitialAd();
+          });
         },
       ),
     );
@@ -56,6 +65,7 @@ class AdService {
       onAdDismissedFullScreenContent: (ad) {
         ad.dispose();
         _interstitialAd = null;
+        _lastInterstitialShownTime = DateTime.now();
         _loadInterstitialAd(); // Preload next interstitial
       },
       onAdFailedToShowFullScreenContent: (ad, error) {
@@ -69,13 +79,24 @@ class AdService {
   /// Call this whenever an article is opened
   void onArticleOpened() {
     _articleOpenCounter++;
-    if (_articleOpenCounter % AppConstants.interstitialAdInterval == 0) {
+
+    // Check if cooldown elapsed
+    final now = DateTime.now();
+    final canShowByTime = _lastInterstitialShownTime == null ||
+        now.difference(_lastInterstitialShownTime!).inSeconds >=
+            AppConstants.minInterstitialIntervalSeconds;
+
+    // Show if interval reached OR time elapsed
+    if (_articleOpenCounter % AppConstants.interstitialAdInterval == 0 && canShowByTime) {
       showInterstitialAd();
+    } else if (_interstitialAd == null) {
+      _loadInterstitialAd();
     }
   }
 
   void showInterstitialAd() {
     if (_interstitialAd != null) {
+      _lastInterstitialShownTime = DateTime.now();
       _interstitialAd!.show();
       _interstitialAd = null;
     } else {

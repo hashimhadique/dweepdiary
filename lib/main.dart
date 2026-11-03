@@ -4,9 +4,12 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'constants/app_colors.dart';
 import 'constants/app_constants.dart';
+import 'services/deep_link_service.dart';
 import 'services/notification_service.dart';
 import 'services/theme_service.dart';
 import 'screens/splash_screen.dart';
+
+final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,6 +26,9 @@ void main() async {
 
   // Initialize Theme Service
   await ThemeService().init();
+
+  // Initialize Deep Link Service (for WhatsApp & Browser news links)
+  DeepLinkService().init(rootNavigatorKey);
 
   // Initialize OneSignal Push Notifications
   await NotificationService().initialize();
@@ -46,6 +52,7 @@ class DweepDiaryApp extends StatelessWidget {
       valueListenable: ThemeService().themeModeNotifier,
       builder: (context, currentThemeMode, _) {
         return MaterialApp(
+          navigatorKey: rootNavigatorKey,
           title: AppConstants.appName,
           debugShowCheckedModeBanner: false,
           themeMode: currentThemeMode,

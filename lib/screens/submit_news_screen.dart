@@ -126,33 +126,31 @@ $story
 Official Editorial Desk: ${AppConstants.whatsAppEditorialNumber}
 ''';
 
-    // If user attached images, share via native share sheet with WhatsApp priority
-    if (_selectedImages.isNotEmpty) {
-      try {
-        await Share.shareXFiles(
-          _selectedImages,
-          text: message,
-          subject: title,
-        );
-      } catch (_) {
-        _openWhatsAppDirect(message);
-      }
-    } else {
-      _openWhatsAppDirect(message);
-    }
-  }
-
-  Future<void> _openWhatsAppDirect(String message) async {
-    final cleanPhone = AppConstants.whatsAppEditorialNumber.replaceAll(RegExp(r'[^0-9]'), '');
-    final uri = Uri.parse(
-      'https://wa.me/$cleanPhone?text=${Uri.encodeComponent(message)}',
-    );
+    // Always open WhatsApp directly with Dweep Diary Editorial Desk (+918289883750)
+    // without ever opening the contact picker!
+    final cleanPhone = '918289883750';
+    final directWaUri = Uri.parse('whatsapp://send?phone=$cleanPhone&text=${Uri.encodeComponent(message)}');
+    final webWaUri = Uri.parse('https://wa.me/$cleanPhone?text=${Uri.encodeComponent(message)}');
 
     try {
-      if (await canLaunchUrl(uri)) {
-        await launchUrl(uri, mode: LaunchMode.externalApplication);
+      if (await canLaunchUrl(directWaUri)) {
+        await launchUrl(directWaUri, mode: LaunchMode.externalApplication);
+      } else if (await canLaunchUrl(webWaUri)) {
+        await launchUrl(webWaUri, mode: LaunchMode.externalApplication);
       } else {
-        await launchUrl(uri, mode: LaunchMode.platformDefault);
+        await launchUrl(webWaUri, mode: LaunchMode.platformDefault);
+      }
+
+      if (_selectedImages.isNotEmpty && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'Dweep Diary WhatsApp തുറന്നു. തിരഞ്ഞെടുത്ത ചിത്രങ്ങൾ അയക്കാൻ ചാറ്റിലെ 📎 (Attach) ഐക്കൺ ക്ലിക്ക് ചെയ്യുക.',
+            ),
+            duration: Duration(seconds: 5),
+            backgroundColor: Color(0xFF1EBE5D),
+          ),
+        );
       }
     } catch (_) {
       ScaffoldMessenger.of(context).showSnackBar(

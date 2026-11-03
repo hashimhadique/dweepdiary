@@ -170,19 +170,44 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
     setState(() => _isSubmittingComment = false);
 
     if (success) {
+      final newComment = CommentModel(
+        id: DateTime.now().millisecondsSinceEpoch,
+        authorName: name.isEmpty ? 'Reader' : name,
+        content: text,
+        date: DateTime.now(),
+        authorAvatarUrl: '',
+      );
+      setState(() {
+        _comments.insert(0, newComment);
+      });
       _commentController.clear();
+      FocusScope.of(context).unfocus();
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Comment submitted successfully!'),
+          content: Text('കമന്റ് വിജയകരമായി പോസ്റ്റ് ചെയ്തു!'),
           backgroundColor: AppColors.tagGreen,
+          duration: Duration(seconds: 3),
         ),
       );
-      _loadComments();
     } else {
+      // Even if WordPress holds it for moderation or returns hold
+      final pendingComment = CommentModel(
+        id: DateTime.now().millisecondsSinceEpoch,
+        authorName: name.isEmpty ? 'Reader' : name,
+        content: text,
+        date: DateTime.now(),
+        authorAvatarUrl: '',
+      );
+      setState(() {
+        _comments.insert(0, pendingComment);
+      });
+      _commentController.clear();
+      FocusScope.of(context).unfocus();
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Thank you! Your comment is received.'),
+          content: Text('കമന്റ് ലഭിച്ചു. പരിശോധിച്ച് പ്രസിദ്ധീകരിക്കുന്നതാണ്.'),
           backgroundColor: AppColors.primary,
+          duration: Duration(seconds: 3),
         ),
       );
     }

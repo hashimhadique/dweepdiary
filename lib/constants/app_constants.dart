@@ -23,15 +23,18 @@ class AppConstants {
 
   // Real Production AdMob Unit IDs (From your AdMob Dashboard)
   static const String adMobBannerIdAndroid = 'ca-app-pub-9969872629451816/5777792395';
-  static const String adMobInterstitialIdAndroid = 'ca-app-pub-9969872629451816/5777792395';
+  static const String adMobInterstitialIdAndroid = 'ca-app-pub-9969872629451816/9462102139';
+  static const String adMobNativeIdAndroid = 'ca-app-pub-9969872629451816/3073174790';
 
   // Google Safe Test IDs (fallback for dev testing)
   static const String _testBannerId = 'ca-app-pub-3940256099942544/6300978111';
   static const String _testInterstitialId = 'ca-app-pub-3940256099942544/1033173712';
+  static const String _testNativeId = 'ca-app-pub-3940256099942544/2247696110';
 
   // Dynamic getters based on useTestAds flag
   static String get activeBannerId => useTestAds ? _testBannerId : adMobBannerIdAndroid;
   static String get activeInterstitialId => useTestAds ? _testInterstitialId : adMobInterstitialIdAndroid;
+  static String get activeNativeId => useTestAds ? _testNativeId : adMobNativeIdAndroid;
 
   // Frequency of showing Interstitial ad (show on every 2nd article open)
   static const int interstitialAdInterval = 2;

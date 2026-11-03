@@ -167,7 +167,24 @@ class ApiService {
       if (response.statusCode == 200) {
         final List<dynamic> jsonList = jsonDecode(response.body);
         final categories = jsonList.map((item) => CategoryModel.fromJson(item)).toList();
-        categories.sort((a, b) => b.count.compareTo(a.count));
+        
+        // Custom Priority: News (1) -> Politics (2) -> Jobs (3) -> Others by post count
+        int getCategoryPriority(CategoryModel cat) {
+          final s = cat.slug.toLowerCase().trim();
+          final n = cat.name.toLowerCase().trim();
+          if (s == 'news' || n == 'news' || n.contains('വാർത്ത')) return 1;
+          if (s == 'politics' || n == 'politics' || n.contains('പൊളിറ്റിക്സ്') || n.contains('രാഷ്ട്രീയം')) return 2;
+          if (s == 'jobs' || s == 'job' || n == 'jobs' || n == 'job' || n.contains('തൊഴിൽ') || n.contains('കരിയർ')) return 3;
+          return 100;
+        }
+
+        categories.sort((a, b) {
+          final pA = getCategoryPriority(a);
+          final pB = getCategoryPriority(b);
+          if (pA != pB) return pA.compareTo(pB);
+          return b.count.compareTo(a.count);
+        });
+
         return categories;
       } else {
         throw Exception('Failed to load categories (Status: ${response.statusCode})');

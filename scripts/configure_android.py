@@ -85,11 +85,32 @@ if os.path.exists(manifest_file):
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
 '''
-    if 'android.permission.INTERNET' not in content:
+    if 'android.permission.POST_NOTIFICATIONS' not in content:
         content = content.replace('<application', perms + '    <application')
+
+    deep_link_filters = '''            <!-- Deep Linking for dweepdiary.in and www.dweepdiary.in -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="http" android:host="dweepdiary.in" />
+                <data android:scheme="https" android:host="dweepdiary.in" />
+                <data android:scheme="http" android:host="www.dweepdiary.in" />
+                <data android:scheme="https" android:host="www.dweepdiary.in" />
+            </intent-filter>
+            <!-- Custom scheme deep link: dweepdiary://... -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="dweepdiary" />
+            </intent-filter>
+'''
+    if 'dweepdiary.in' not in content:
+        content = content.replace('</activity>', deep_link_filters + '        </activity>')
 
     with open(manifest_file, 'w', encoding='utf-8') as f:
         f.write(content)
-    print("SUCCESS: AndroidManifest.xml updated with AdMob and permissions")
+    print("SUCCESS: AndroidManifest.xml updated with AdMob, permissions, and Deep Links")
 
 print("--- Android Configuration Complete! ---")

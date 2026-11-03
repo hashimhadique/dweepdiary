@@ -41,6 +41,7 @@ jobs:
         run: |
           mkdir -p android/app
           cp keystore/upload-keystore.jks android/app/upload-keystore.jks || true
+          cp keystore/upload-keystore.jks android/upload-keystore.jks || true
           mkdir -p android/app/src/main/res/mipmap-hdpi
           mkdir -p android/app/src/main/res/mipmap-mdpi
           mkdir -p android/app/src/main/res/mipmap-xhdpi
@@ -59,6 +60,16 @@ jobs:
         run: |
           flutter build apk --release --split-per-abi
           flutter build appbundle --release
+
+      - name: Verify Play Store AAB Release Signature
+        run: |
+          echo "=== Verifying AAB Signature ==="
+          unzip -p build/app/outputs/bundle/release/*.aab META-INF/*.RSA | keytool -printcert
+          if unzip -p build/app/outputs/bundle/release/*.aab META-INF/*.RSA | keytool -printcert | grep -i "Android Debug"; then
+            echo "ERROR: Bundle was signed with Debug key! Aborting."
+            exit 1
+          fi
+          echo "SUCCESS: Bundle is verified signed with Dweep Diary Production Keystore!"
 
       - name: Upload Release APKs
         uses: actions/upload-artifact@v4

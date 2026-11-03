@@ -77,11 +77,22 @@ if os.path.exists(app_gradle):
     if 'signingConfigs {' not in content:
         content = content.replace('buildTypes {', signing_block + '\n    buildTypes {')
 
-    content = content.replace('signingConfig signingConfigs.debug', 'signingConfig signingConfigs.release')
+    # Replace any variation of debug signingConfig in release buildType (with or without '=')
+    content = re.sub(r'signingConfig\s*=?\s*signingConfigs\.debug', 'signingConfig = signingConfigs.release', content)
+
+    # Double check: ensure signingConfigs.release is explicitly attached to release buildType
+    if 'signingConfigs.release' not in content:
+        content = re.sub(r'(buildTypes\s*\{\s*release\s*\{)', r'\1\n            signingConfig = signingConfigs.release', content)
 
     with open(app_gradle, 'w', encoding='utf-8') as f:
         f.write(content)
     print("SUCCESS: android/app/build.gradle updated with minSdk 24, multiDex, and Production Release Signing")
+
+    # Also create key.properties
+    key_props = os.path.join('android', 'key.properties')
+    with open(key_props, 'w', encoding='utf-8') as f:
+        f.write("storePassword=dweepdiary2026\nkeyPassword=dweepdiary2026\nkeyAlias=upload\nstoreFile=upload-keystore.jks\n")
+    print("SUCCESS: android/key.properties written")
 
 # 4. Update AndroidManifest.xml for AdMob and Permissions
 manifest_file = os.path.join('android', 'app', 'src', 'main', 'AndroidManifest.xml')

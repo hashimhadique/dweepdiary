@@ -85,6 +85,28 @@
           </div>
         </div>
 
+        <!-- Quick Services Row (Ship Updates & Submit News) -->
+        <div class="mt-3 px-3 grid grid-cols-2 gap-2">
+          <div onclick="openShipUpdates()" class="bg-white dark:bg-slate-800 p-2.5 rounded-xl border border-sky-200 dark:border-slate-700 shadow-2xs flex items-center space-x-2 cursor-pointer hover:shadow-md transition">
+            <div class="w-8 h-8 rounded-lg bg-sky-100 dark:bg-sky-950 flex items-center justify-center text-[#0077B6]">
+              🚢
+            </div>
+            <div>
+              <div class="text-[11px] font-bold text-slate-800 dark:text-slate-100">Ship Updates</div>
+              <div class="text-[9px] text-[#0077B6] font-semibold">IRCTC Live Alerts</div>
+            </div>
+          </div>
+          <div onclick="openSubmitNews()" class="bg-white dark:bg-slate-800 p-2.5 rounded-xl border border-emerald-200 dark:border-slate-700 shadow-2xs flex items-center space-x-2 cursor-pointer hover:shadow-md transition">
+            <div class="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-950 flex items-center justify-center text-emerald-600">
+              ✍️
+            </div>
+            <div>
+              <div class="text-[11px] font-bold text-slate-800 dark:text-slate-100">Submit News</div>
+              <div class="text-[9px] text-emerald-600 font-semibold">WhatsApp Desk</div>
+            </div>
+          </div>
+        </div>
+
         <!-- Category Horizontal Filter Tabs -->
         <div class="mt-3 px-3 flex space-x-2 overflow-x-auto no-scrollbar">
           <button class="px-3 py-1 rounded-full text-xs font-bold bg-[#0099E6] text-white shadow-xs whitespace-nowrap">All</button>
@@ -362,6 +384,102 @@
         </div>
       </div>
 
+      <!-- View 7: Ship Updates Modal (IRCTC Live) -->
+      <div id="view-ship" class="hidden absolute inset-0 bg-white dark:bg-slate-900 z-40 flex flex-col overflow-y-auto no-scrollbar pb-10">
+        <div class="sticky top-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-100 dark:border-slate-800 px-4 py-2.5 flex items-center justify-between z-10">
+          <button onclick="closeShipUpdates()" class="p-1 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800">
+            <svg class="w-5 h-5 text-slate-700 dark:text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
+          </button>
+          <span class="text-xs font-bold text-slate-900 dark:text-slate-100">Ship Updates & Alerts</span>
+          <button onclick="window.open('https://lakshadweep.irctc.co.in/alert-announcements', '_blank')" class="text-xs font-bold text-[#0077B6]">Open IRCTC ↗</button>
+        </div>
+        <div class="p-4 space-y-3">
+          <div class="bg-gradient-to-r from-sky-700 to-cyan-600 rounded-2xl p-4 text-white shadow-md">
+            <div class="text-[9px] font-black uppercase tracking-wider text-sky-200">OFFICIAL IRCTC PORTAL</div>
+            <h3 class="text-base font-bold mt-1 malayalam-font">ലക്ഷദ്വീപ് കപ്പൽ സർവീസ് അറിയിപ്പുകൾ</h3>
+            <p class="text-xs text-sky-100 mt-1">യാത്രാക്കപ്പലുകളുടെ സമയക്രമം, ടിക്കറ്റ് ബുക്കിംഗ്, ഷെഡ്യൂൾ വിവരങ്ങൾ തത്സമയം കാണാം.</p>
+            <button onclick="window.open('https://lakshadweep.irctc.co.in/alert-announcements', '_blank')" class="mt-3 w-full py-2 bg-white text-sky-800 rounded-xl text-xs font-bold shadow-sm flex items-center justify-center space-x-1">
+              <span>🚢 Open Live IRCTC Alerts Page</span>
+            </button>
+          </div>
+          <div class="bg-slate-50 dark:bg-slate-800 p-3 rounded-xl border border-slate-200 dark:border-slate-700">
+            <div class="text-xs font-bold text-slate-900 dark:text-slate-100 mb-1.5">Passenger Ships in Service</div>
+            <div class="text-[11px] text-slate-600 dark:text-slate-300 space-y-1">
+              <div>• MV Kavaratti (700 Passengers)</div>
+              <div>• MV Corals & MV Lagoon (400 Passengers)</div>
+              <div>• MV Arabian Sea & MV Lakshadweep Sea (250 Passengers)</div>
+              <div>• High Speed Crafts (Parali, Cheriyapani)</div>
+            </div>
+          </div>
+          <div class="bg-slate-50 dark:bg-slate-800 p-3 rounded-xl border border-slate-200 dark:border-slate-700">
+            <div class="text-xs font-bold text-slate-900 dark:text-slate-100 mb-1">Port Helpline Numbers</div>
+            <div class="text-[11px] text-slate-600 dark:text-slate-300 space-y-1">
+              <div>📞 Kochi Port Office: 0484-2666111</div>
+              <div>📞 Beypore Port Office: 0495-2414074</div>
+              <div>📞 Kavaratti Control Room: 04896-262255</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- View 8: Submit News Modal (WhatsApp Desk) -->
+      <div id="view-submit" class="hidden absolute inset-0 bg-white dark:bg-slate-900 z-40 flex flex-col overflow-y-auto no-scrollbar pb-10">
+        <div class="sticky top-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-100 dark:border-slate-800 px-4 py-2.5 flex items-center justify-between z-10">
+          <button onclick="closeSubmitNews()" class="p-1 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800">
+            <svg class="w-5 h-5 text-slate-700 dark:text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
+          </button>
+          <span class="text-xs font-bold text-slate-900 dark:text-slate-100">Submit News (വാർത്തകൾ അയക്കാം)</span>
+          <span class="text-xs text-emerald-500 font-bold">WhatsApp Desk</span>
+        </div>
+        <div class="p-4 space-y-3 text-xs">
+          <div class="bg-sky-50 dark:bg-slate-800 p-3 rounded-xl border border-sky-200 dark:border-slate-700 text-sky-900 dark:text-sky-200">
+            <div class="font-bold">Editorial Verification Notice:</div>
+            <div class="text-[11px] mt-0.5 text-slate-600 dark:text-slate-300">നിങ്ങൾ അയക്കുന്ന വാർത്തകളും ചിത്രങ്ങളും ദ്വീപ് ഡയറി എഡിറ്റോറിയൽ ഡെസ്ക് പരിശോധിച്ച് ഉറപ്പുവരുത്തിയ ശേഷം മാത്രമേ പ്രസിദ്ധീകരിക്കുകയുള്ളൂ.</div>
+          </div>
+          <div>
+            <label class="font-bold text-slate-800 dark:text-slate-200 block mb-1">Headline / തലക്കെട്ട് *</label>
+            <input type="text" id="sub-title" placeholder="ഉദാ: ലക്ഷദ്വീപിൽ പുതിയ യാത്രാക്കപ്പൽ സർവീസ്..." class="w-full p-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100">
+          </div>
+          <div>
+            <label class="font-bold text-slate-800 dark:text-slate-200 block mb-1">Island / പ്രദേശം *</label>
+            <select id="sub-island" class="w-full p-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100">
+              <option>Kavaratti (കവരത്തി)</option>
+              <option>Agatti (അഗത്തി)</option>
+              <option>Amini (അമിനി)</option>
+              <option>Andrott (ആന്ത്രോത്ത്)</option>
+              <option>Kalpeni (കൽപ്പേനി)</option>
+              <option>Kiltan (കിൽത്താൻ)</option>
+              <option>Chetlat (ചെത്ലത്ത്)</option>
+              <option>Kadmat (കടമത്ത്)</option>
+              <option>Minicoy (മിനിക്കോയ്)</option>
+              <option>Bitra (ബിത്ര)</option>
+              <option>Kochi (കൊച്ചി)</option>
+            </select>
+          </div>
+          <div>
+            <label class="font-bold text-slate-800 dark:text-slate-200 block mb-1">News Details / വിവരങ്ങൾ *</label>
+            <textarea id="sub-story" rows="4" placeholder="വിശദമായ വാർത്ത ഇവിടെ രേഖപ്പെടുത്തുക..." class="w-full p-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100"></textarea>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="font-bold text-slate-800 dark:text-slate-200 block mb-1">Your Name</label>
+              <input type="text" id="sub-name" placeholder="Name" class="w-full p-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100">
+            </div>
+            <div>
+              <label class="font-bold text-slate-800 dark:text-slate-200 block mb-1">Phone / WhatsApp</label>
+              <input type="text" id="sub-phone" placeholder="Phone" class="w-full p-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100">
+            </div>
+          </div>
+          <div class="p-2.5 bg-emerald-50 dark:bg-slate-800 rounded-xl border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 text-[11px] flex items-center space-x-2">
+            <span>📸</span>
+            <span>വാർത്തയുടെ ചിത്രങ്ങളും വീഡിയോകളും വാട്സ്ആപ്പ് ചാറ്റിൽ നേരിട്ട് അറ്റാച്ച് ചെയ്ത് അയക്കുക.</span>
+          </div>
+          <button onclick="sendNewsWhatsApp()" class="w-full py-3 bg-[#25D366] text-white rounded-xl text-xs font-bold shadow-md flex items-center justify-center space-x-2">
+            <span>📤 Send to WhatsApp Editorial Desk</span>
+          </button>
+        </div>
+      </div>
+
       <!-- Bottom Navigation Bar (5 English Tabs) -->
       <nav id="bottom-nav" class="absolute bottom-0 left-0 right-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-t border-slate-200/80 dark:border-slate-800 px-3 py-2 flex justify-between items-center z-30 transition-colors">
         <button id="nav-home" onclick="switchTab('home')" class="flex flex-col items-center space-y-0.5 text-[#0099E6]">
@@ -474,6 +592,37 @@
       document.getElementById('detail-img').src = art.img;
       document.getElementById('detail-content').innerText = art.content;
       document.getElementById('view-detail').classList.remove('hidden');
+    }
+
+    function openShipUpdates() {
+      document.getElementById('view-ship').classList.remove('hidden');
+    }
+
+    function closeShipUpdates() {
+      document.getElementById('view-ship').classList.add('hidden');
+    }
+
+    function openSubmitNews() {
+      document.getElementById('view-submit').classList.remove('hidden');
+    }
+
+    function closeSubmitNews() {
+      document.getElementById('view-submit').classList.add('hidden');
+    }
+
+    function sendNewsWhatsApp() {
+      const title = document.getElementById('sub-title').value.trim();
+      const island = document.getElementById('sub-island').value;
+      const story = document.getElementById('sub-story').value.trim();
+      const name = document.getElementById('sub-name').value.trim() || 'Reader';
+      const phone = document.getElementById('sub-phone').value.trim() || 'Not given';
+
+      if (!title || !story) {
+        return alert('Please enter both Headline and Details');
+      }
+
+      const msg = encodeURIComponent(`📰 *DWEEP DIARY - CITIZEN NEWS SUBMISSION*\n-----------------------------------------\n📌 *Headline:* ${title}\n📍 *Island:* ${island}\n👤 *Reporter:* ${name}\n📞 *Phone:* ${phone}\n\n📝 *Details:*\n${story}\n\n(Photos/videos attached in chat)`);
+      window.open('https://wa.me/918075306357?text=' + msg, '_blank');
     }
 
     function closeArticle() {

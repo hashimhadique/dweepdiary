@@ -33,5 +33,8 @@ class AppConstants {
 
   // Contact & Social
   static const String contactEmail = 'contact@dweepdiary.in';
+  static const String whatsAppEditorialNumber = '+918075306357'; // Dweep Diary Official WhatsApp Desk
+  static const String shipAlertsUrl = 'https://lakshadweep.irctc.co.in/alert-announcements';
+  static const String shipBookingUrl = 'https://lakshadweep.irctc.co.in';
   static const String shareAppText = 'Get the latest news from Lakshadweep and Kerala. Download the Dweep Diary Mobile App: https://dweepdiary.in';
 }

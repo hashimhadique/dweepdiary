@@ -11,6 +11,8 @@ import '../widgets/news_card.dart';
 import '../widgets/ad_banner_widget.dart';
 import 'search_screen.dart';
 import 'community_screen.dart';
+import 'ship_updates_screen.dart';
+import 'submit_news_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -324,6 +326,165 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: FeaturedSlider(posts: _allPosts),
                           ),
                         ),
+
+                      // Quick Lakshadweep Services (Ship Updates & Submit News)
+                      SliverToBoxAdapter(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                          child: Row(
+                            children: [
+                              // 1. Ship Updates Button Card
+                              Expanded(
+                                child: InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => const ShipUpdatesScreen(),
+                                      ),
+                                    );
+                                  },
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                                    decoration: BoxDecoration(
+                                      color: isDark ? AppColors.darkSurface : Colors.white,
+                                      borderRadius: BorderRadius.circular(12),
+                                      border: Border.all(
+                                        color: isDark
+                                            ? const Color(0xFF334155)
+                                            : const Color(0xFF0077B6).withOpacity(0.25),
+                                      ),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: const Color(0xFF0077B6)
+                                              .withOpacity(isDark ? 0.15 : 0.06),
+                                          blurRadius: 6,
+                                          offset: const Offset(0, 2),
+                                        ),
+                                      ],
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          padding: const EdgeInsets.all(7),
+                                          decoration: BoxDecoration(
+                                            color: const Color(0xFF0077B6).withOpacity(0.12),
+                                            borderRadius: BorderRadius.circular(8),
+                                          ),
+                                          child: const Icon(Icons.directions_boat_rounded,
+                                              color: Color(0xFF0077B6), size: 18),
+                                        ),
+                                        const SizedBox(width: 8),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                'Ship Updates',
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 12,
+                                                  color: isDark
+                                                      ? AppColors.darkTextPrimary
+                                                      : AppColors.textPrimary,
+                                                ),
+                                              ),
+                                              const Text(
+                                                'IRCTC Live',
+                                                style: TextStyle(
+                                                  fontSize: 10,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: Color(0xFF0077B6),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+
+                              // 2. Submit News Button Card
+                              Expanded(
+                                child: InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => const SubmitNewsScreen(),
+                                      ),
+                                    );
+                                  },
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                                    decoration: BoxDecoration(
+                                      color: isDark ? AppColors.darkSurface : Colors.white,
+                                      borderRadius: BorderRadius.circular(12),
+                                      border: Border.all(
+                                        color: isDark
+                                            ? const Color(0xFF334155)
+                                            : const Color(0xFF25D366).withOpacity(0.3),
+                                      ),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: const Color(0xFF25D366)
+                                              .withOpacity(isDark ? 0.15 : 0.06),
+                                          blurRadius: 6,
+                                          offset: const Offset(0, 2),
+                                        ),
+                                      ],
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          padding: const EdgeInsets.all(7),
+                                          decoration: BoxDecoration(
+                                            color: const Color(0xFF25D366).withOpacity(0.12),
+                                            borderRadius: BorderRadius.circular(8),
+                                          ),
+                                          child: const Icon(Icons.send_rounded,
+                                              color: Color(0xFF1EBE5D), size: 18),
+                                        ),
+                                        const SizedBox(width: 8),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                'Submit News',
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 12,
+                                                  color: isDark
+                                                      ? AppColors.darkTextPrimary
+                                                      : AppColors.textPrimary,
+                                                ),
+                                              ),
+                                              const Text(
+                                                'WhatsApp Desk',
+                                                style: TextStyle(
+                                                  fontSize: 10,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: Color(0xFF1EBE5D),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
 
                       // 3. Category Horizontal Filter Tabs
                       if (_categories.isNotEmpty)

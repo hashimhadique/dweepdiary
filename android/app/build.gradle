@@ -36,9 +36,18 @@ android {
         multiDexEnabled true
     }
 
+    signingConfigs {
+        release {
+            keyAlias 'upload'
+            keyPassword 'dweepdiary2026'
+            storeFile file('upload-keystore.jks')
+            storePassword 'dweepdiary2026'
+        }
+    }
+
     buildTypes {
         release {
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
             minifyEnabled false
             shrinkResources false
         }

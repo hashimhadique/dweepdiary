@@ -16,6 +16,7 @@ android/captures/
 android/key.properties
 *.keystore
 *.jks
+!keystore/upload-keystore.jks
 
 # iOS
 ios/Pods/

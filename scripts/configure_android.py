@@ -63,9 +63,25 @@ if os.path.exists(app_gradle):
     if 'multiDexEnabled' not in content:
         content = content.replace('defaultConfig {', 'defaultConfig {\n        multiDexEnabled true')
 
+    # Configure Production Release Signing Key
+    signing_block = """
+    signingConfigs {
+        release {
+            keyAlias 'upload'
+            keyPassword 'dweepdiary2026'
+            storeFile file('upload-keystore.jks')
+            storePassword 'dweepdiary2026'
+        }
+    }
+"""
+    if 'signingConfigs {' not in content:
+        content = content.replace('buildTypes {', signing_block + '\n    buildTypes {')
+
+    content = content.replace('signingConfig signingConfigs.debug', 'signingConfig signingConfigs.release')
+
     with open(app_gradle, 'w', encoding='utf-8') as f:
         f.write(content)
-    print("SUCCESS: android/app/build.gradle updated with minSdk 24 and multiDex")
+    print("SUCCESS: android/app/build.gradle updated with minSdk 24, multiDex, and Production Release Signing")
 
 # 4. Update AndroidManifest.xml for AdMob and Permissions
 manifest_file = os.path.join('android', 'app', 'src', 'main', 'AndroidManifest.xml')

@@ -3,56 +3,62 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dweep Diary Mobile App Live Preview</title>
+  <title>Dweep Diary Mobile App Live Preview (Updated)</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Manjari:wght@400;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap');
-    body { font-family: 'Plus Jakarta Sans', 'Manjari', sans-serif; }
+    @import url('https://fonts.googleapis.com/css2?family=Anek+Malayalam:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap');
+    body { font-family: 'Plus Jakarta Sans', 'Anek Malayalam', sans-serif; }
+    .malayalam-font { font-family: 'Anek Malayalam', sans-serif; }
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col items-center justify-center p-4">
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col items-center justify-center p-3 select-none">
 
-  <div class="max-w-md w-full mb-3 flex items-center justify-between text-xs text-slate-400 px-2">
+  <!-- Header Controls -->
+  <div class="max-w-md w-full mb-2 flex items-center justify-between text-xs text-slate-400 px-2">
     <div class="flex items-center space-x-2">
       <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-      <span class="font-medium text-slate-200">Dweep Diary Live Mobile App</span>
+      <span class="font-bold text-slate-200">Dweep Diary 2.0</span>
+      <span class="text-[10px] bg-sky-500/20 text-sky-300 px-2 py-0.5 rounded-full border border-sky-400/30">Anek Malayalam • Dark Mode • Ads</span>
     </div>
-    <span class="bg-sky-500/20 text-sky-400 px-2 py-0.5 rounded-full border border-sky-500/30">Sky Blue & White Theme</span>
+    <button onclick="toggleDarkMode()" id="dark-toggle-btn" class="bg-slate-800 hover:bg-slate-700 text-amber-300 px-2.5 py-1 rounded-full border border-slate-600 flex items-center space-x-1 transition">
+      <span>🌙 Dark Mode</span>
+    </button>
   </div>
 
   <!-- Mobile Phone Mockup Frame -->
-  <div class="relative w-full max-w-[390px] h-[780px] bg-slate-950 rounded-[44px] p-3 shadow-2xl border-4 border-slate-700/80 ring-1 ring-white/10 flex flex-col">
+  <div class="relative w-full max-w-[390px] h-[800px] bg-slate-950 rounded-[44px] p-3 shadow-2xl border-4 border-slate-700/80 ring-1 ring-white/10 flex flex-col">
     
-    <div class="relative w-full h-full bg-[#F8FAFC] text-slate-800 rounded-[34px] overflow-hidden flex flex-col shadow-inner select-none">
+    <div id="phone-container" class="relative w-full h-full bg-[#F8FAFC] text-slate-800 rounded-[34px] overflow-hidden flex flex-col shadow-inner transition-colors duration-300">
       
       <!-- Top Status Bar -->
-      <div class="bg-white pt-2 px-6 pb-1 flex justify-between items-center text-[12px] font-semibold text-slate-700 z-30">
+      <div id="phone-status" class="bg-white pt-2 px-6 pb-1 flex justify-between items-center text-[12px] font-semibold text-slate-700 z-30 transition-colors">
         <span>09:41</span>
-        <div class="w-24 h-4 bg-slate-900 rounded-full"></div>
+        <div class="w-20 h-4 bg-slate-900 rounded-full"></div>
         <div class="flex items-center space-x-1.5">
           <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zm6-4a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zm6-3a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"/></svg>
-          <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M17.778 8.222c-4.296-4.296-11.26-4.296-15.556 0A1 1 0 01.808 6.808c5.076-5.077 13.308-5.077 18.384 0a1 1 0 01-1.414 1.414zM14.95 11.05a7 7 0 00-9.9 0 1 1 0 01-1.414-1.414 9 9 0 0112.728 0 1 1 0 01-1.414 1.414zm-2.829 2.828a3 3 0 00-4.242 0 1 1 0 01-1.415-1.414 5 5 0 017.072 0 1 1 0 01-1.415 1.414zM9 16a1 1 0 112 0 1 1 0 01-2 0z" clip-rule="evenodd"/></svg>
-          <div class="w-5 h-2.5 border border-slate-700 rounded-sm p-0.5 flex items-center">
-            <div class="w-full h-full bg-slate-700 rounded-2xs"></div>
+          <div class="w-5 h-2.5 border border-current rounded-sm p-0.5 flex items-center">
+            <div class="w-full h-full bg-current rounded-2xs"></div>
           </div>
         </div>
       </div>
 
-      <!-- App Header Bar with Dweep Diary Official Logo -->
-      <header class="bg-white border-b border-slate-200/80 px-4 py-2 flex items-center justify-between z-20 shadow-xs">
+      <!-- App Header Bar with Dweep Diary Logo -->
+      <header id="phone-header" class="bg-white border-b border-slate-200/80 px-4 py-2 flex items-center justify-between z-20 shadow-xs transition-colors">
         <div class="flex items-center space-x-2">
-          <img src="https://i0.wp.com/dweepdiary.in/wp-content/uploads/2024/12/cropped-cropped-cropped-Dweeodiarylogo-1.png?w=400" 
-               alt="Dweep Diary Logo" 
-               class="h-8 object-contain">
+          <div class="w-7 h-7 rounded-full bg-[#0099E6] flex items-center justify-center text-white font-black text-xs shadow-xs">DD</div>
+          <div>
+            <span class="font-extrabold text-[#0077B6] tracking-tight text-sm">DWEEP DIARY</span>
+            <div class="text-[9px] text-slate-400 font-semibold malayalam-font -mt-0.5">ദ്വീപ് ഡയറി • ലക്ഷദ്വീപ്</div>
+          </div>
         </div>
-        <div class="flex items-center space-x-2">
-          <button onclick="alert('Search feature is active in the mobile app!')" class="p-1.5 rounded-full text-slate-600 hover:bg-sky-50 transition active:scale-95">
-            <svg class="w-5 h-5 text-[#0099E6]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        <div class="flex items-center space-x-1">
+          <button onclick="switchTab('community')" class="p-1.5 rounded-full text-slate-600 hover:text-[#0099E6] transition" title="Discussions">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
           </button>
-          <button onclick="switchTab('bookmarks')" class="p-1.5 rounded-full text-slate-600 hover:bg-sky-50 transition active:scale-95">
-            <svg class="w-5 h-5 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>
+          <button onclick="toggleDarkMode()" class="p-1.5 rounded-full text-slate-600 hover:text-amber-400 transition" title="Toggle Theme">
+            <span id="theme-icon">🌙</span>
           </button>
         </div>
       </header>
@@ -61,67 +67,68 @@
       <div id="view-home" class="flex-1 overflow-y-auto no-scrollbar pb-20">
         
         <!-- Breaking News Flash Ticker -->
-        <div class="mx-3 mt-2 bg-[#E1F5FE] border border-[#0099E6]/30 rounded-lg p-2 flex items-center space-x-2 cursor-pointer hover:bg-sky-100 transition" onclick="openArticle(0)">
+        <div id="flash-bar" class="mx-3 mt-2 bg-[#E1F5FE] border border-[#0099E6]/30 rounded-lg p-2 flex items-center space-x-2 cursor-pointer hover:bg-sky-100 transition" onclick="openArticle(0)">
           <span class="bg-red-500 text-white text-[10px] font-black px-1.5 py-0.5 rounded uppercase tracking-wider animate-pulse">FLASH</span>
-          <p class="text-xs font-bold text-[#0077B6] truncate flex-1">ലക്ഷദ്വീപ് ഗെയിംസ്: നീന്തൽ മത്സരത്തിനിടെ അപകടത്തിൽപ്പെട്ട പെൺകുട്ടിയെ രക്ഷപ്പെടുത്തി</p>
+          <p class="text-xs font-bold text-[#0077B6] truncate flex-1 malayalam-font">ലക്ഷദ്വീപ് ഗെയിംസ്: നീന്തൽ മത്സരത്തിനിടെ അപകടത്തിൽപ്പെട്ട പെൺകുട്ടിയെ രക്ഷപ്പെടുത്തി</p>
           <svg class="w-4 h-4 text-[#0077B6]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
         </div>
 
         <!-- Featured News Carousel Card -->
         <div class="mx-3 mt-2.5 relative rounded-2xl overflow-hidden shadow-md cursor-pointer group" onclick="openArticle(0)">
-          <img id="carousel-img" src="https://i0.wp.com/dweepdiary.in/wp-content/uploads/2026/11/file_000000009d208230a37619cb3f0948ac.webp?fit=600%2C400" 
-               class="w-full h-48 object-cover group-hover:scale-105 transition duration-500">
-          <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
+          <img src="https://i0.wp.com/dweepdiary.in/wp-content/uploads/2026/11/file_000000009d208230a37619cb3f0948ac.webp?fit=600%2C400" 
+               class="w-full h-44 object-cover group-hover:scale-105 transition duration-500">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent"></div>
           <div class="absolute top-3 left-3 bg-red-600 text-white text-[11px] font-bold px-2 py-0.5 rounded-md flex items-center space-x-1 shadow">
             <span>⚡ BREAKING</span>
           </div>
           <div class="absolute bottom-3 left-3 right-3 text-white">
             <span class="text-[11px] font-semibold text-sky-300">News • Kavaratti</span>
-            <h3 class="text-sm font-bold leading-snug line-clamp-2 mt-0.5">
+            <h3 class="text-sm font-bold leading-snug line-clamp-2 mt-0.5 malayalam-font">
               ലക്ഷദ്വീപ് ഗെയിംസ്: നീന്തൽ മത്സരത്തിനിടെ അപകടത്തിൽപ്പെട്ട പെൺകുട്ടിയെ രക്ഷപ്പെടുത്തി ഡോ. വാഖിദ്
             </h3>
           </div>
         </div>
 
-        <!-- Category Filter Tabs -->
+        <!-- Category Horizontal Filter Tabs -->
         <div class="mt-3 px-3 flex space-x-2 overflow-x-auto no-scrollbar">
-          <button class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-[#0099E6] text-white shadow-xs whitespace-nowrap">All</button>
-          <button class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white border border-slate-200 text-slate-700 whitespace-nowrap hover:bg-slate-50">News</button>
-          <button class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white border border-slate-200 text-slate-700 whitespace-nowrap hover:bg-slate-50">Politics</button>
-          <button class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white border border-slate-200 text-slate-700 whitespace-nowrap hover:bg-slate-50">Sports</button>
-          <button class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white border border-slate-200 text-slate-700 whitespace-nowrap hover:bg-slate-50">Education</button>
-          <button class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white border border-slate-200 text-slate-700 whitespace-nowrap hover:bg-slate-50">Jobs</button>
+          <button class="px-3 py-1 rounded-full text-xs font-bold bg-[#0099E6] text-white shadow-xs whitespace-nowrap">All</button>
+          <button class="px-3 py-1 rounded-full text-xs font-semibold bg-white border border-slate-200 text-slate-700 whitespace-nowrap hover:bg-slate-50">News</button>
+          <button class="px-3 py-1 rounded-full text-xs font-semibold bg-white border border-slate-200 text-slate-700 whitespace-nowrap hover:bg-slate-50">Politics</button>
+          <button class="px-3 py-1 rounded-full text-xs font-semibold bg-white border border-slate-200 text-slate-700 whitespace-nowrap hover:bg-slate-50">Sports</button>
+          <button class="px-3 py-1 rounded-full text-xs font-semibold bg-white border border-slate-200 text-slate-700 whitespace-nowrap hover:bg-slate-50">Education</button>
+          <button class="px-3 py-1 rounded-full text-xs font-semibold bg-white border border-slate-200 text-slate-700 whitespace-nowrap hover:bg-slate-50">Jobs</button>
         </div>
 
-        <!-- AdMob / Sponsored Banner Slot -->
-        <div class="mx-3 mt-3 bg-white border border-slate-200 rounded-xl p-2.5 shadow-2xs flex items-center justify-between">
-          <div class="flex items-center space-x-3">
-            <div class="w-10 h-10 rounded-lg bg-sky-100 flex items-center justify-center text-[#0099E6] font-bold text-xs">ADS</div>
+        <!-- Ad Slot 1: Google AdMob Banner -->
+        <div class="mx-3 mt-3 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 flex items-center justify-between text-xs">
+          <div class="flex items-center space-x-2.5">
+            <span class="bg-amber-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded">AdMob</span>
             <div>
-              <div class="text-[10px] font-bold text-amber-600 uppercase tracking-wider">SPONSORED</div>
-              <div class="text-xs font-bold text-slate-800">Dweep Diary Official Ads Slot</div>
+              <div class="font-bold text-slate-800 dark:text-slate-200">Google AdMob Banner Slot</div>
+              <div class="text-[10px] text-slate-400">ca-app-pub-9969872629451816</div>
             </div>
           </div>
-          <button class="text-xs font-bold bg-[#0099E6] text-white px-2.5 py-1 rounded-md">Visit</button>
+          <span class="text-[10px] text-slate-400 uppercase font-semibold">AD</span>
         </div>
 
-        <!-- Latest News List -->
+        <!-- Latest News List with Hybrid Ads -->
         <div class="mt-3 px-3 space-y-3">
           
-          <div class="bg-white rounded-2xl p-3 border border-slate-200/80 shadow-2xs hover:shadow-md transition cursor-pointer" onclick="openArticle(1)">
+          <!-- Article 1 -->
+          <div class="news-card bg-white dark:bg-slate-800 rounded-2xl p-3 border border-slate-200/80 dark:border-slate-700 shadow-2xs hover:shadow-md transition cursor-pointer" onclick="openArticle(1)">
             <div class="flex space-x-3">
               <img src="https://i0.wp.com/dweepdiary.in/wp-content/uploads/2026/11/df-fd.webp?fit=300%2C200" 
                    class="w-24 h-24 rounded-xl object-cover flex-shrink-0">
               <div class="flex-1 flex flex-col justify-between">
                 <div>
                   <span class="text-[10px] font-bold text-[#0099E6] uppercase">POLITICS • AGATTI</span>
-                  <h4 class="text-xs font-bold text-slate-900 leading-snug line-clamp-2 mt-0.5">
+                  <h4 class="text-xs font-bold text-slate-900 dark:text-slate-100 leading-snug line-clamp-2 mt-0.5 malayalam-font">
                     അഗത്തിയിൽ സർവ്വകക്ഷി ഐക്യയോഗത്തിന് പിന്നാലെ 22 പേർക്കെതിരെ പെറ്റി കേസ്
                   </h4>
                 </div>
                 <div class="flex items-center justify-between text-[11px] text-slate-400 mt-2">
                   <span>2 hours ago</span>
-                  <button class="text-emerald-600 font-semibold flex items-center space-x-1" onclick="event.stopPropagation(); shareWhatsApp(1)">
+                  <button class="text-emerald-500 font-semibold flex items-center space-x-1" onclick="event.stopPropagation(); shareWhatsApp(1)">
                     <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
                     <span>Share</span>
                   </button>
@@ -130,20 +137,31 @@
             </div>
           </div>
 
-          <div class="bg-white rounded-2xl p-3 border border-slate-200/80 shadow-2xs hover:shadow-md transition cursor-pointer" onclick="openArticle(2)">
+          <!-- Ad Slot 2: Custom Admin Uploaded Sponsor Ad (Manageable from remote / WordPress) -->
+          <div class="relative bg-gradient-to-r from-sky-600 to-cyan-500 rounded-xl p-3 text-white shadow-sm flex items-center justify-between">
+            <div>
+              <div class="text-[9px] font-black uppercase tracking-widest text-sky-200">UPLOADED SPONSOR BANNER (ADMIN MANAGED)</div>
+              <div class="text-xs font-bold mt-0.5">ദ്വീപ് ഡയറി പ്രത്യേക പരസ്യ വിഭാഗം</div>
+              <div class="text-[10px] text-sky-100">Click to connect on WhatsApp / Website</div>
+            </div>
+            <button class="bg-white text-sky-700 font-bold text-xs px-3 py-1.5 rounded-lg shadow-sm">Contact</button>
+          </div>
+
+          <!-- Article 2 -->
+          <div class="news-card bg-white dark:bg-slate-800 rounded-2xl p-3 border border-slate-200/80 dark:border-slate-700 shadow-2xs hover:shadow-md transition cursor-pointer" onclick="openArticle(2)">
             <div class="flex space-x-3">
               <img src="https://i0.wp.com/dweepdiary.in/wp-content/uploads/2026/11/fad02fc4-be69-4ca7-855c-25ac76435e50.webp?fit=300%2C200" 
                    class="w-24 h-24 rounded-xl object-cover flex-shrink-0">
               <div class="flex-1 flex flex-col justify-between">
                 <div>
                   <span class="text-[10px] font-bold text-[#0099E6] uppercase">NEWS • CHETLAT</span>
-                  <h4 class="text-xs font-bold text-slate-900 leading-snug line-clamp-2 mt-0.5">
+                  <h4 class="text-xs font-bold text-slate-900 dark:text-slate-100 leading-snug line-clamp-2 mt-0.5 malayalam-font">
                     ടൗൺ പ്ലാനിങ് റെഗുലേഷനെതിരെ ചെത്ലത്തിലും പ്രതിഷേധം; ഖാളിമാരുടെ നേതൃത്വത്തിൽ സംഗമം
                   </h4>
                 </div>
                 <div class="flex items-center justify-between text-[11px] text-slate-400 mt-2">
                   <span>4 hours ago</span>
-                  <button class="text-emerald-600 font-semibold flex items-center space-x-1" onclick="event.stopPropagation(); shareWhatsApp(2)">
+                  <button class="text-emerald-500 font-semibold flex items-center space-x-1" onclick="event.stopPropagation(); shareWhatsApp(2)">
                     <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
                     <span>Share</span>
                   </button>
@@ -157,59 +175,73 @@
 
       <!-- View 2: Categories Tab -->
       <div id="view-cats" class="hidden flex-1 overflow-y-auto no-scrollbar p-4 pb-20">
-        <h3 class="text-base font-bold text-slate-900 mb-3">News Categories</h3>
+        <h3 class="text-base font-bold text-slate-900 dark:text-slate-100 mb-3">News Categories</h3>
         <div class="grid grid-cols-2 gap-3">
-          <div class="bg-white p-3.5 rounded-2xl border border-sky-200/80 shadow-2xs cursor-pointer hover:shadow-md transition" onclick="switchTab('home')">
-            <div class="w-9 h-9 rounded-xl bg-sky-100 flex items-center justify-center text-[#0099E6] mb-3">
+          <div class="bg-white dark:bg-slate-800 p-3.5 rounded-2xl border border-sky-200 dark:border-slate-700 shadow-2xs cursor-pointer hover:shadow-md transition" onclick="switchTab('home')">
+            <div class="w-9 h-9 rounded-xl bg-sky-100 dark:bg-sky-900/50 flex items-center justify-center text-[#0099E6] mb-3">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/></svg>
             </div>
-            <div class="font-bold text-slate-800 text-sm">News</div>
+            <div class="font-bold text-slate-800 dark:text-slate-100 text-sm">News</div>
             <div class="text-xs text-sky-600 font-semibold mt-0.5">991 Articles</div>
           </div>
 
-          <div class="bg-white p-3.5 rounded-2xl border border-orange-200/80 shadow-2xs cursor-pointer hover:shadow-md transition" onclick="switchTab('home')">
-            <div class="w-9 h-9 rounded-xl bg-orange-100 flex items-center justify-center text-orange-600 mb-3">
+          <div class="bg-white dark:bg-slate-800 p-3.5 rounded-2xl border border-orange-200 dark:border-slate-700 shadow-2xs cursor-pointer hover:shadow-md transition" onclick="switchTab('home')">
+            <div class="w-9 h-9 rounded-xl bg-orange-100 dark:bg-orange-900/50 flex items-center justify-center text-orange-600 mb-3">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             </div>
-            <div class="font-bold text-slate-800 text-sm">Politics</div>
+            <div class="font-bold text-slate-800 dark:text-slate-100 text-sm">Politics</div>
             <div class="text-xs text-orange-600 font-semibold mt-0.5">77 Articles</div>
           </div>
 
-          <div class="bg-white p-3.5 rounded-2xl border border-emerald-200/80 shadow-2xs cursor-pointer hover:shadow-md transition" onclick="switchTab('home')">
-            <div class="w-9 h-9 rounded-xl bg-emerald-100 flex items-center justify-center text-emerald-600 mb-3">
+          <div class="bg-white dark:bg-slate-800 p-3.5 rounded-2xl border border-emerald-200 dark:border-slate-700 shadow-2xs cursor-pointer hover:shadow-md transition" onclick="switchTab('home')">
+            <div class="w-9 h-9 rounded-xl bg-emerald-100 dark:bg-emerald-900/50 flex items-center justify-center text-emerald-600 mb-3">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>
             </div>
-            <div class="font-bold text-slate-800 text-sm">Features</div>
+            <div class="font-bold text-slate-800 dark:text-slate-100 text-sm">Features</div>
             <div class="text-xs text-emerald-600 font-semibold mt-0.5">42 Articles</div>
           </div>
 
-          <div class="bg-white p-3.5 rounded-2xl border border-purple-200/80 shadow-2xs cursor-pointer hover:shadow-md transition" onclick="switchTab('home')">
-            <div class="w-9 h-9 rounded-xl bg-purple-100 flex items-center justify-center text-purple-600 mb-3">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 14l9-5-9-5-9 5 9 5z"/><path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/></svg>
+          <div class="bg-white dark:bg-slate-800 p-3.5 rounded-2xl border border-purple-200 dark:border-slate-700 shadow-2xs cursor-pointer hover:shadow-md transition" onclick="switchTab('home')">
+            <div class="w-9 h-9 rounded-xl bg-purple-100 dark:bg-purple-900/50 flex items-center justify-center text-purple-600 mb-3">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 14l9-5-9-5-9 5 9 5z"/></svg>
             </div>
-            <div class="font-bold text-slate-800 text-sm">Education</div>
+            <div class="font-bold text-slate-800 dark:text-slate-100 text-sm">Education</div>
             <div class="text-xs text-purple-600 font-semibold mt-0.5">40 Articles</div>
-          </div>
-
-          <div class="bg-white p-3.5 rounded-2xl border border-cyan-200/80 shadow-2xs cursor-pointer hover:shadow-md transition" onclick="switchTab('home')">
-            <div class="w-9 h-9 rounded-xl bg-cyan-100 flex items-center justify-center text-cyan-600 mb-3">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            </div>
-            <div class="font-bold text-slate-800 text-sm">Sports</div>
-            <div class="text-xs text-cyan-600 font-semibold mt-0.5">26 Articles</div>
-          </div>
-
-          <div class="bg-white p-3.5 rounded-2xl border border-amber-200/80 shadow-2xs cursor-pointer hover:shadow-md transition" onclick="switchTab('home')">
-            <div class="w-9 h-9 rounded-xl bg-amber-100 flex items-center justify-center text-amber-600 mb-3">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-            </div>
-            <div class="font-bold text-slate-800 text-sm">Jobs</div>
-            <div class="text-xs text-amber-600 font-semibold mt-0.5">9 Articles</div>
           </div>
         </div>
       </div>
 
-      <!-- View 3: Shorts Mode -->
+      <!-- View 3: Community Discussions Screen -->
+      <div id="view-community" class="hidden flex-1 overflow-y-auto no-scrollbar p-4 pb-20">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="text-base font-bold text-slate-900 dark:text-slate-100">Community Discussions</h3>
+          <span class="text-xs bg-sky-100 dark:bg-sky-900/40 text-sky-600 px-2 py-0.5 rounded-full font-bold">Live Comments</span>
+        </div>
+        <div class="space-y-3">
+          <div class="bg-white dark:bg-slate-800 p-3 rounded-xl border border-slate-200 dark:border-slate-700 shadow-2xs">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-slate-900 dark:text-slate-100">Jamal (Reader)</span>
+              <span class="text-[10px] text-slate-400">Yesterday</span>
+            </div>
+            <p class="text-xs text-slate-700 dark:text-slate-300 mt-1.5 malayalam-font">വളരെ നല്ല വാർത്ത. ലക്ഷദ്വീപിലെ കായിക പ്രതിഭകളെ ഇതുപോലെ പ്രോത്സാഹിപ്പിക്കണം.</p>
+            <div class="mt-2 text-right">
+              <button onclick="openArticle(0)" class="text-[11px] text-[#0099E6] font-bold">Read Article →</button>
+            </div>
+          </div>
+          <div class="bg-white dark:bg-slate-800 p-3 rounded-xl border border-slate-200 dark:border-slate-700 shadow-2xs">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-slate-900 dark:text-slate-100">Athaulla Khan</span>
+              <span class="text-[10px] text-slate-400">3 days ago</span>
+            </div>
+            <p class="text-xs text-slate-700 dark:text-slate-300 mt-1.5 malayalam-font">ദ്വീപ് ജനതയുടെ അവകാശങ്ങൾ സംരക്ഷിക്കാൻ എല്ലാവരും ഒന്നിച്ച് നിൽക്കണം.</p>
+            <div class="mt-2 text-right">
+              <button onclick="openArticle(1)" class="text-[11px] text-[#0099E6] font-bold">Read Article →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- View 4: Shorts Mode -->
       <div id="view-shorts" class="hidden flex-1 bg-black text-white p-4 flex flex-col justify-between pb-24 relative">
         <div class="flex justify-between items-center z-10">
           <span class="bg-[#0099E6] text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full">Shorts • 60 Words</span>
@@ -219,11 +251,11 @@
           <img src="https://i0.wp.com/dweepdiary.in/wp-content/uploads/2026/11/file_000000009d208230a37619cb3f0948ac.webp" class="w-full h-full object-cover">
         </div>
         <div class="relative z-10 mt-auto space-y-3">
-          <h3 class="text-base font-bold leading-snug">
+          <h3 class="text-base font-bold leading-snug malayalam-font">
             ലക്ഷദ്വീപ് ഗെയിംസ്: നീന്തൽ മത്സരത്തിനിടെ അപകടത്തിൽപ്പെട്ട പെൺകുട്ടിയെ രക്ഷപ്പെടുത്തി ഡോ. വാഖിദ്
           </h3>
-          <p class="text-xs text-slate-200 leading-relaxed font-normal">
-            കവരത്തി: 35-ാമത് ലക്ഷദ്വീപ് ഗെയിംസിന്റെ ഭാഗമായി നടന്ന നീന്തൽ മത്സരത്തിനിടെ ദേഹാസ്വാസ്ഥ്യം അനുഭവപ്പെട്ട പെൺകുട്ടിയെ സമയബന്ധിതമായി രക്ഷപ്പെടുത്തി. ഡോ. വാഖിദിന്റെ കൃത്യമായ ഇടപെടൽ വലിയൊരു ദുരന്തം ഒഴിവാക്കി.
+          <p class="text-xs text-slate-200 leading-relaxed font-normal malayalam-font">
+            കവരത്തി: 35-ാമത് ലക്ഷദ്വീപ് ഗെയിംസിന്റെ ഭാഗമായി നടന്ന നീന്തൽ മത്സരത്തിനിടെ ദേഹാസ്വാസ്ഥ്യം അനുഭവപ്പെട്ട പെൺകുട്ടിയെ സമയബന്ധിതമായി രക്ഷപ്പെടുത്തി.
           </p>
           <div class="pt-2">
             <button onclick="openArticle(0)" class="w-full py-2 bg-white/20 backdrop-blur-md rounded-xl text-xs font-bold border border-white/30 text-center hover:bg-white/30 transition">
@@ -234,35 +266,36 @@
         </div>
       </div>
 
-      <!-- View 4: Bookmarks -->
+      <!-- View 5: Bookmarks (Saved) -->
       <div id="view-bookmarks" class="hidden flex-1 overflow-y-auto p-4 pb-24">
-        <h3 class="text-sm font-bold text-slate-800 mb-3">Saved Articles (Offline)</h3>
-        <div class="bg-white rounded-2xl p-3 border border-slate-200/80 shadow-2xs cursor-pointer" onclick="openArticle(0)">
+        <h3 class="text-sm font-bold text-slate-800 dark:text-slate-100 mb-3">Saved Articles (Offline)</h3>
+        <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 border border-slate-200 dark:border-slate-700 shadow-2xs cursor-pointer" onclick="openArticle(0)">
           <div class="flex space-x-3">
             <img src="https://i0.wp.com/dweepdiary.in/wp-content/uploads/2026/11/file_000000009d208230a37619cb3f0948ac.webp" class="w-16 h-16 rounded-xl object-cover">
             <div>
               <span class="text-[9px] font-bold text-[#0099E6]">SAVED</span>
-              <h4 class="text-xs font-bold text-slate-900 line-clamp-2">ലക്ഷദ്വീപ് ഗെയിംസ്: പെൺകുട്ടിയെ രക്ഷപ്പെടുത്തി ഡോ. വാഖിദ്</h4>
+              <h4 class="text-xs font-bold text-slate-900 dark:text-slate-100 line-clamp-2 malayalam-font">ലക്ഷദ്വീപ് ഗെയിംസ്: പെൺകുട്ടിയെ രക്ഷപ്പെടുത്തി ഡോ. വാഖിദ്</h4>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- View 5: Full Article Detail Modal -->
-      <div id="view-detail" class="hidden absolute inset-0 bg-white z-40 flex flex-col overflow-y-auto no-scrollbar pb-20">
-        <div class="sticky top-0 bg-white/95 backdrop-blur-md border-b border-slate-100 px-4 py-2 flex items-center justify-between z-10">
-          <button onclick="closeArticle()" class="p-1 rounded-full hover:bg-slate-100">
-            <svg class="w-5 h-5 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
+      <!-- View 6: Full Article Detail Modal -->
+      <div id="view-detail" class="hidden absolute inset-0 bg-white dark:bg-slate-900 z-40 flex flex-col overflow-y-auto no-scrollbar pb-20">
+        <div class="sticky top-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-100 dark:border-slate-800 px-4 py-2 flex items-center justify-between z-10">
+          <button onclick="closeArticle()" class="p-1 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800">
+            <svg class="w-5 h-5 text-slate-700 dark:text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
           </button>
           <div class="flex items-center space-x-2">
-            <button id="tts-btn" onclick="toggleAudio()" class="px-2.5 py-1 rounded-full bg-sky-50 text-[#0099E6] text-xs font-bold flex items-center space-x-1 border border-sky-200">
+            <!-- Full Article Audio Reading Button -->
+            <button id="tts-btn" onclick="toggleAudio()" class="px-2.5 py-1 rounded-full bg-sky-50 dark:bg-sky-950 text-[#0099E6] text-xs font-bold flex items-center space-x-1 border border-sky-200 dark:border-sky-800">
               <svg id="tts-icon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/></svg>
-              <span id="tts-text">Listen</span>
+              <span id="tts-text">Listen All</span>
             </button>
-            <button onclick="toggleFontSize()" class="p-1.5 rounded-full hover:bg-slate-100 text-slate-700 font-bold text-xs">
+            <button onclick="toggleFontSize()" class="p-1.5 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold text-xs">
               A<sup>+</sup>/A<sup>-</sup>
             </button>
-            <button onclick="shareWhatsApp(0)" class="p-1.5 rounded-full text-emerald-600 hover:bg-emerald-50">
+            <button onclick="shareWhatsApp(0)" class="p-1.5 rounded-full text-emerald-500 hover:bg-emerald-50">
               <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
             </button>
           </div>
@@ -270,56 +303,94 @@
 
         <div class="p-4 space-y-3">
           <div class="flex items-center space-x-2">
-            <span class="bg-sky-100 text-[#0099E6] text-[10px] font-bold px-2 py-0.5 rounded-full">News</span>
-            <span class="text-[11px] text-slate-400">02 Nov 2026</span>
+            <span class="bg-sky-100 dark:bg-sky-900/40 text-[#0099E6] text-[10px] font-bold px-2 py-0.5 rounded-full">News</span>
+            <span class="text-[11px] text-slate-400">03 Nov 2026</span>
           </div>
-          <h2 id="detail-title" class="text-base font-bold text-slate-900 leading-snug">
+          <h2 id="detail-title" class="text-base font-bold text-slate-900 dark:text-slate-100 leading-snug malayalam-font">
             ലക്ഷദ്വീപ് ഗെയിംസ്: നീന്തൽ മത്സരത്തിനിടെ അപകടത്തിൽപ്പെട്ട പെൺകുട്ടിയെ രക്ഷപ്പെടുത്തി ഡോ. വാഖിദ്
           </h2>
           <img id="detail-img" src="https://i0.wp.com/dweepdiary.in/wp-content/uploads/2026/11/file_000000009d208230a37619cb3f0948ac.webp" 
-               class="w-full h-48 rounded-xl object-cover shadow-sm">
+               class="w-full h-44 rounded-xl object-cover shadow-sm">
           
-          <div id="audio-wave" class="hidden bg-sky-50 border border-[#0099E6] rounded-xl p-2.5 flex items-center justify-between text-xs font-bold text-[#0077B6]">
+          <!-- Audio Player Bar with Chunk Progress -->
+          <div id="audio-wave" class="hidden bg-sky-50 dark:bg-sky-950 border border-[#0099E6] rounded-xl p-2.5 flex items-center justify-between text-xs font-bold text-[#0077B6]">
             <div class="flex items-center space-x-2">
               <span class="w-2 h-2 rounded-full bg-[#0099E6] animate-ping"></span>
-              <span>Playing audio story...</span>
+              <span id="audio-status">Reading full article aloud (Section 1 of 4)...</span>
             </div>
             <button onclick="toggleAudio()" class="text-red-500 font-bold">Stop</button>
           </div>
 
-          <p id="detail-content" class="text-xs text-slate-700 leading-relaxed font-normal transition-all duration-200">
+          <!-- Full Article Content in Anek Malayalam Font -->
+          <p id="detail-content" class="text-xs text-slate-700 dark:text-slate-300 leading-relaxed font-normal malayalam-font transition-all duration-200">
             കവരത്തി: 35-ാമത് ലക്ഷദ്വീപ് ഗെയിംസിന്റെ ഭാഗമായി നടന്ന നീന്തൽ മത്സരത്തിനിടെ അപകടത്തിൽപ്പെട്ട പെൺകുട്ടിക്ക് രക്ഷകനായി ഡോ. വാഖിദ്. മത്സരത്തിൽ പങ്കെടുത്തുകൊണ്ടിരിക്കെ വെള്ളത്തിൽ വെച്ച് ദേഹാസ്വാസ്ഥ്യം അനുഭവപ്പെട്ട പെൺകുട്ടിയെ സമയോചിതമായി ഇടപെട്ട് രക്ഷപ്പെടുത്തുകയായിരുന്നു. ലക്ഷദ്വീപ് ഗെയിംസിന്റെ ഭാഗമായി സംഘടിപ്പിച്ച കായികമത്സരത്തിനിടെ മാനുഷികതയും സേവനസന്നദ്ധതയും ഉയർത്തിപ്പിടിച്ച അദ്ദേഹത്തിന്റെ ഇടപെടൽ ശ്രദ്ധേയമായി.
           </p>
 
-          <div class="pt-3">
+          <!-- WhatsApp Share Button -->
+          <div class="pt-2">
             <button onclick="shareWhatsApp(0)" class="w-full py-2.5 bg-[#25D366] text-white rounded-xl text-xs font-bold flex items-center justify-center space-x-2 shadow-sm">
               <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
               <span>Share on WhatsApp</span>
             </button>
           </div>
+
+          <!-- Related Articles Section -->
+          <div class="pt-4 border-t border-slate-200 dark:border-slate-800">
+            <h4 class="text-xs font-bold text-slate-900 dark:text-slate-100 mb-2">Related News</h4>
+            <div class="space-y-2">
+              <div class="flex items-center space-x-2 p-2 bg-slate-50 dark:bg-slate-800 rounded-lg cursor-pointer" onclick="openArticle(1)">
+                <img src="https://i0.wp.com/dweepdiary.in/wp-content/uploads/2026/11/df-fd.webp" class="w-12 h-10 rounded object-cover">
+                <span class="text-[11px] font-semibold text-slate-800 dark:text-slate-200 truncate malayalam-font">അഗത്തിയിൽ സർവ്വകക്ഷി ഐക്യയോഗത്തിന് പിന്നാലെ പെറ്റി കേസ്</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Comments on this Article -->
+          <div class="pt-4 border-t border-slate-200 dark:border-slate-800">
+            <h4 class="text-xs font-bold text-slate-900 dark:text-slate-100 mb-2">Reader Comments</h4>
+            <div class="bg-slate-50 dark:bg-slate-800 p-2.5 rounded-xl border border-slate-200 dark:border-slate-700">
+              <input type="text" id="comment-author" placeholder="Your Name" class="w-full text-xs p-1.5 rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 mb-1.5">
+              <textarea id="comment-input" placeholder="Write your thoughts..." rows="2" class="w-full text-xs p-1.5 rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 mb-2"></textarea>
+              <div class="text-right">
+                <button onclick="addComment()" class="bg-[#0099E6] text-white text-xs font-bold px-3 py-1 rounded-md">Post Comment</button>
+              </div>
+            </div>
+            <div id="comments-container" class="mt-2 space-y-1.5">
+              <div class="p-2 bg-white dark:bg-slate-800 rounded-lg border border-slate-100 dark:border-slate-700 text-[11px]">
+                <div class="font-bold text-slate-900 dark:text-slate-100">Jamal</div>
+                <div class="text-slate-600 dark:text-slate-300 malayalam-font">Very good initiative! Congratulations to Dr. Waqid.</div>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
 
-      <!-- Bottom Navigation Bar (4 English Tabs) -->
-      <nav class="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200/80 px-4 py-2 flex justify-between items-center z-30">
+      <!-- Bottom Navigation Bar (5 English Tabs) -->
+      <nav id="bottom-nav" class="absolute bottom-0 left-0 right-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-t border-slate-200/80 dark:border-slate-800 px-3 py-2 flex justify-between items-center z-30 transition-colors">
         <button id="nav-home" onclick="switchTab('home')" class="flex flex-col items-center space-y-0.5 text-[#0099E6]">
           <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/></svg>
-          <span class="text-[10px] font-bold">News</span>
+          <span class="text-[9px] font-bold">News</span>
         </button>
 
         <button id="nav-cats" onclick="switchTab('cats')" class="flex flex-col items-center space-y-0.5 text-slate-400 hover:text-[#0099E6]">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
-          <span class="text-[10px] font-semibold">Categories</span>
+          <span class="text-[9px] font-semibold">Categories</span>
+        </button>
+
+        <button id="nav-community" onclick="switchTab('community')" class="flex flex-col items-center space-y-0.5 text-slate-400 hover:text-[#0099E6]">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+          <span class="text-[9px] font-semibold">Community</span>
         </button>
 
         <button id="nav-shorts" onclick="switchTab('shorts')" class="flex flex-col items-center space-y-0.5 text-slate-400 hover:text-[#0099E6]">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-          <span class="text-[10px] font-semibold">Shorts</span>
+          <span class="text-[9px] font-semibold">Shorts</span>
         </button>
 
         <button id="nav-bookmarks" onclick="switchTab('bookmarks')" class="flex flex-col items-center space-y-0.5 text-slate-400 hover:text-[#0099E6]">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>
-          <span class="text-[10px] font-semibold">Saved</span>
+          <span class="text-[9px] font-semibold">Saved</span>
         </button>
       </nav>
 
@@ -350,32 +421,55 @@
 
     let currentFontSize = 13;
     let isSpeaking = false;
+    let isDark = false;
+
+    function toggleDarkMode() {
+      isDark = !isDark;
+      const container = document.getElementById('phone-container');
+      const header = document.getElementById('phone-header');
+      const status = document.getElementById('phone-status');
+      const bottomNav = document.getElementById('bottom-nav');
+      const themeIcon = document.getElementById('theme-icon');
+
+      if (isDark) {
+        document.documentElement.classList.add('dark');
+        container.classList.remove('bg-[#F8FAFC]', 'text-slate-800');
+        container.classList.add('bg-slate-900', 'text-slate-100');
+        header.classList.remove('bg-white', 'border-slate-200/80');
+        header.classList.add('bg-slate-900', 'border-slate-800');
+        status.classList.remove('bg-white', 'text-slate-700');
+        status.classList.add('bg-slate-900', 'text-slate-300');
+        themeIcon.innerText = '☀️';
+      } else {
+        document.documentElement.classList.remove('dark');
+        container.classList.add('bg-[#F8FAFC]', 'text-slate-800');
+        container.classList.remove('bg-slate-900', 'text-slate-100');
+        header.classList.add('bg-white', 'border-slate-200/80');
+        header.classList.remove('bg-slate-900', 'border-slate-800');
+        status.classList.add('bg-white', 'text-slate-700');
+        status.classList.remove('bg-slate-900', 'text-slate-300');
+        themeIcon.innerText = '🌙';
+      }
+    }
 
     function switchTab(tab) {
       document.getElementById('view-home').classList.add('hidden');
       document.getElementById('view-cats').classList.add('hidden');
+      document.getElementById('view-community').classList.add('hidden');
       document.getElementById('view-shorts').classList.add('hidden');
       document.getElementById('view-bookmarks').classList.add('hidden');
       document.getElementById('view-detail').classList.add('hidden');
 
-      document.getElementById('nav-home').className = "flex flex-col items-center space-y-0.5 text-slate-400";
-      document.getElementById('nav-cats').className = "flex flex-col items-center space-y-0.5 text-slate-400";
-      document.getElementById('nav-shorts').className = "flex flex-col items-center space-y-0.5 text-slate-400";
-      document.getElementById('nav-bookmarks').className = "flex flex-col items-center space-y-0.5 text-slate-400";
+      const tabs = ['home', 'cats', 'community', 'shorts', 'bookmarks'];
+      tabs.forEach(t => {
+        const btn = document.getElementById('nav-' + t);
+        if (btn) btn.className = "flex flex-col items-center space-y-0.5 text-slate-400";
+      });
 
-      if (tab === 'home') {
-        document.getElementById('view-home').classList.remove('hidden');
-        document.getElementById('nav-home').className = "flex flex-col items-center space-y-0.5 text-[#0099E6]";
-      } else if (tab === 'cats') {
-        document.getElementById('view-cats').classList.remove('hidden');
-        document.getElementById('nav-cats').className = "flex flex-col items-center space-y-0.5 text-[#0099E6]";
-      } else if (tab === 'shorts') {
-        document.getElementById('view-shorts').classList.remove('hidden');
-        document.getElementById('nav-shorts').className = "flex flex-col items-center space-y-0.5 text-[#0099E6]";
-      } else if (tab === 'bookmarks') {
-        document.getElementById('view-bookmarks').classList.remove('hidden');
-        document.getElementById('nav-bookmarks').className = "flex flex-col items-center space-y-0.5 text-[#0099E6]";
-      }
+      const activeView = document.getElementById('view-' + tab);
+      const activeNav = document.getElementById('nav-' + tab);
+      if (activeView) activeView.classList.remove('hidden');
+      if (activeNav) activeNav.className = "flex flex-col items-center space-y-0.5 text-[#0099E6]";
     }
 
     function openArticle(index) {
@@ -393,7 +487,7 @@
 
     function toggleFontSize() {
       const el = document.getElementById('detail-content');
-      currentFontSize = (currentFontSize >= 16) ? 12 : currentFontSize + 2;
+      currentFontSize = (currentFontSize >= 17) ? 12 : currentFontSize + 2;
       el.style.fontSize = currentFontSize + 'px';
     }
 
@@ -406,17 +500,30 @@
         wave.classList.remove('hidden');
         text.innerText = 'Stop';
         if ('speechSynthesis' in window) {
-          const ut = new SpeechSynthesisUtterance(document.getElementById('detail-title').innerText);
+          const ut = new SpeechSynthesisUtterance(document.getElementById('detail-title').innerText + ". " + document.getElementById('detail-content').innerText);
           ut.rate = 0.9;
           window.speechSynthesis.speak(ut);
         }
       } else {
         wave.classList.add('hidden');
-        text.innerText = 'Listen';
+        text.innerText = 'Listen All';
         if ('speechSynthesis' in window) {
           window.speechSynthesis.cancel();
         }
       }
+    }
+
+    function addComment() {
+      const name = document.getElementById('comment-author').value.trim() || 'Reader';
+      const text = document.getElementById('comment-input').value.trim();
+      if (!text) return alert('Please enter your comment');
+      const container = document.getElementById('comments-container');
+      const div = document.createElement('div');
+      div.className = "p-2 bg-white dark:bg-slate-800 rounded-lg border border-slate-100 dark:border-slate-700 text-[11px]";
+      div.innerHTML = `<div class="font-bold text-slate-900 dark:text-slate-100">${name}</div><div class="text-slate-600 dark:text-slate-300 malayalam-font">${text}</div>`;
+      container.prepend(div);
+      document.getElementById('comment-input').value = '';
+      alert('Comment posted!');
     }
 
     function shareWhatsApp(index) {

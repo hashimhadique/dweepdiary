@@ -70,16 +70,18 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: isDark ? AppColors.darkBackground : AppColors.background,
       appBar: AppBar(
-        backgroundColor: AppColors.surface,
+        backgroundColor: isDark ? AppColors.darkSurface : AppColors.surface,
         elevation: 0.8,
-        title: const Text(
+        title: Text(
           'Categories',
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            color: AppColors.textPrimary,
+            color: isDark ? AppColors.darkTextPrimary : AppColors.textPrimary,
           ),
         ),
       ),
@@ -92,11 +94,18 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(Icons.category_outlined, size: 60, color: AppColors.textSecondary),
+                      Icon(
+                        Icons.category_outlined,
+                        size: 60,
+                        color: isDark ? Colors.white38 : AppColors.textSecondary,
+                      ),
                       const SizedBox(height: 12),
-                      const Text(
+                      Text(
                         'Unable to load categories',
-                        style: TextStyle(color: AppColors.textSecondary, fontSize: 16),
+                        style: TextStyle(
+                          color: isDark ? AppColors.darkTextSecondary : AppColors.textSecondary,
+                          fontSize: 16,
+                        ),
                       ),
                       const SizedBox(height: 16),
                       ElevatedButton(
@@ -139,12 +148,14 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                         borderRadius: BorderRadius.circular(16),
                         child: Container(
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: isDark ? AppColors.darkSurface : Colors.white,
                             borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: catColor.withOpacity(0.2)),
+                            border: Border.all(
+                              color: isDark ? const Color(0xFF334155) : catColor.withOpacity(0.2),
+                            ),
                             boxShadow: [
                               BoxShadow(
-                                color: catColor.withOpacity(0.08),
+                                color: catColor.withOpacity(isDark ? 0.15 : 0.08),
                                 blurRadius: 10,
                                 offset: const Offset(0, 4),
                               ),
@@ -168,10 +179,12 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                 children: [
                                   Text(
                                     cat.displayName,
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 15,
-                                      color: AppColors.textPrimary,
+                                      color: isDark
+                                          ? AppColors.darkTextPrimary
+                                          : AppColors.textPrimary,
                                     ),
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,

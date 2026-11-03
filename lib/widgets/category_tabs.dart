@@ -16,6 +16,8 @@ class CategoryTabs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       height: 44,
       margin: const EdgeInsets.symmetric(vertical: 8),
@@ -28,8 +30,10 @@ class CategoryTabs extends StatelessWidget {
           if (index == 0) {
             final isAllSelected = selectedCategoryId == null;
             return _buildChip(
+              context: context,
               label: 'All',
               isSelected: isAllSelected,
+              isDark: isDark,
               onTap: () => onSelectCategory(null),
             );
           }
@@ -38,8 +42,10 @@ class CategoryTabs extends StatelessWidget {
           final isSelected = selectedCategoryId == category.id;
 
           return _buildChip(
+            context: context,
             label: category.displayName,
             isSelected: isSelected,
+            isDark: isDark,
             onTap: () => onSelectCategory(category.id),
           );
         },
@@ -48,8 +54,10 @@ class CategoryTabs extends StatelessWidget {
   }
 
   Widget _buildChip({
+    required BuildContext context,
     required String label,
     required bool isSelected,
+    required bool isDark,
     required VoidCallback onTap,
   }) {
     return InkWell(
@@ -59,10 +67,14 @@ class CategoryTabs extends StatelessWidget {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.primary : AppColors.surface,
+          color: isSelected
+              ? AppColors.primary
+              : (isDark ? AppColors.darkSurface : AppColors.surface),
           borderRadius: BorderRadius.circular(22),
           border: Border.all(
-            color: isSelected ? AppColors.primary : AppColors.divider,
+            color: isSelected
+                ? AppColors.primary
+                : (isDark ? const Color(0xFF334155) : AppColors.divider),
             width: 1.2,
           ),
           boxShadow: isSelected
@@ -79,7 +91,9 @@ class CategoryTabs extends StatelessWidget {
         child: Text(
           label,
           style: TextStyle(
-            color: isSelected ? Colors.white : AppColors.textPrimary,
+            color: isSelected
+                ? Colors.white
+                : (isDark ? AppColors.darkTextPrimary : AppColors.textPrimary),
             fontSize: 13,
             fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
           ),

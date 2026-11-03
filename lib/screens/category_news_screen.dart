@@ -89,16 +89,25 @@ class _CategoryNewsScreenState extends State<CategoryNewsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: isDark ? AppColors.darkBackground : AppColors.background,
       appBar: AppBar(
-        backgroundColor: AppColors.surface,
+        backgroundColor: isDark ? AppColors.darkSurface : AppColors.surface,
         elevation: 0.8,
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: isDark ? AppColors.darkTextPrimary : AppColors.textPrimary,
+          ),
+          onPressed: () => Navigator.pop(context),
+        ),
         title: Text(
           widget.category.displayName,
-          style: const TextStyle(
+          style: TextStyle(
             fontWeight: FontWeight.bold,
-            color: AppColors.textPrimary,
+            color: isDark ? AppColors.darkTextPrimary : AppColors.textPrimary,
           ),
         ),
       ),
@@ -113,12 +122,18 @@ class _CategoryNewsScreenState extends State<CategoryNewsScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(Icons.inbox_rounded, size: 60, color: AppColors.textSecondary),
+                        Icon(
+                          Icons.inbox_rounded,
+                          size: 60,
+                          color: isDark ? Colors.white38 : AppColors.textSecondary,
+                        ),
                         const SizedBox(height: 12),
                         Text(
                           'No articles found in ${widget.category.displayName}',
-                          style: const TextStyle(fontSize: 16, color: AppColors.textSecondary),
-                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: isDark ? AppColors.darkTextSecondary : AppColors.textSecondary,
+                          ),
                         ),
                       ],
                     ),
@@ -132,11 +147,12 @@ class _CategoryNewsScreenState extends State<CategoryNewsScreen> {
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     itemCount: _posts.length + (_posts.length ~/ 5) + (_isLoadingMore ? 1 : 0),
                     itemBuilder: (context, index) {
-                      if (_isLoadingMore && index == _posts.length + (_posts.length ~/ 5)) {
+                      if (_isLoadingMore &&
+                          index == _posts.length + (_posts.length ~/ 5)) {
                         return const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 16),
+                          padding: EdgeInsets.all(16.0),
                           child: Center(
-                            child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.primary),
+                            child: CircularProgressIndicator(color: AppColors.primary),
                           ),
                         );
                       }

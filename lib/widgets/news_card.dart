@@ -13,17 +13,20 @@ class NewsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final formattedDate = DateFormat('dd MMM yyyy, hh:mm a').format(post.date);
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: isDark ? AppColors.darkSurface : AppColors.surface,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.divider.withOpacity(0.6)),
+        border: Border.all(
+          color: isDark ? const Color(0xFF334155) : AppColors.divider.withOpacity(0.6),
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withOpacity(isDark ? 0.2 : 0.04),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -57,7 +60,9 @@ class NewsCard extends StatelessWidget {
                         fit: BoxFit.cover,
                         placeholder: (context, url) => Container(
                           height: 200,
-                          color: AppColors.primaryLight.withOpacity(0.5),
+                          color: isDark
+                              ? const Color(0xFF1E293B)
+                              : AppColors.primaryLight.withOpacity(0.5),
                           child: const Center(
                             child: CircularProgressIndicator(
                               strokeWidth: 2,
@@ -67,7 +72,7 @@ class NewsCard extends StatelessWidget {
                         ),
                         errorWidget: (context, url, error) => Container(
                           height: 140,
-                          color: AppColors.primaryLight,
+                          color: isDark ? const Color(0xFF1E293B) : AppColors.primaryLight,
                           child: const Icon(
                             Icons.newspaper_rounded,
                             size: 48,
@@ -85,7 +90,7 @@ class NewsCard extends StatelessWidget {
                             borderRadius: BorderRadius.circular(20),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.2),
+                                color: Colors.black.withOpacity(0.25),
                                 blurRadius: 4,
                               ),
                             ],
@@ -110,15 +115,15 @@ class NewsCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Title in Clean Malayalam
+                    // Title in Clean Malayalam (Anek Malayalam font applied via Theme)
                     Text(
                       post.cleanTitle,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.w700,
-                        color: AppColors.textPrimary,
+                        color: isDark ? AppColors.darkTextPrimary : AppColors.textPrimary,
                         height: 1.4,
                       ),
                     ),
@@ -130,9 +135,9 @@ class NewsCard extends StatelessWidget {
                         post.cleanExcerpt,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 13,
-                          color: AppColors.textSecondary,
+                          color: isDark ? AppColors.darkTextSecondary : AppColors.textSecondary,
                           height: 1.4,
                         ),
                       ),
@@ -145,17 +150,17 @@ class NewsCard extends StatelessWidget {
                       children: [
                         Row(
                           children: [
-                            const Icon(
+                            Icon(
                               Icons.access_time_rounded,
                               size: 14,
-                              color: AppColors.textSecondary,
+                              color: isDark ? AppColors.darkTextSecondary : AppColors.textSecondary,
                             ),
                             const SizedBox(width: 4),
                             Text(
                               formattedDate,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 11,
-                                color: AppColors.textSecondary,
+                                color: isDark ? AppColors.darkTextSecondary : AppColors.textSecondary,
                               ),
                             ),
                           ],
@@ -163,7 +168,7 @@ class NewsCard extends StatelessWidget {
                         InkWell(
                           onTap: () {
                             Share.share(
-                              '${post.cleanTitle}\n\nകൂടുതൽ വായിക്കാം: ${post.link}\n\nതത്സമയ വാർത്തകൾക്ക് Dweep Diary മൊബൈൽ ആപ്പ് ഉപയോഗിക്കൂ.',
+                              '${post.cleanTitle}\n\nRead more: ${post.link}\n\nDownload Dweep Diary Mobile App: https://dweepdiary.in',
                             );
                           },
                           borderRadius: BorderRadius.circular(20),

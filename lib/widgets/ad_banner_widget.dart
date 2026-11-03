@@ -4,18 +4,36 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../constants/app_colors.dart';
 import '../constants/app_constants.dart';
+import '../services/ad_service.dart';
+
+enum AdBannerType {
+  adMob,
+  customSponsor,
+  auto,
+}
 
 class AdBannerWidget extends StatefulWidget {
-  final bool useAdMob;
-  final String? customAdImageUrl;
-  final String? customAdRedirectUrl;
+  final AdBannerType type;
+  final String? customImageUrl;
+  final String? customRedirectUrl;
 
   const AdBannerWidget({
     super.key,
-    this.useAdMob = true,
-    this.customAdImageUrl,
-    this.customAdRedirectUrl,
+    this.type = AdBannerType.auto,
+    this.customImageUrl,
+    this.customRedirectUrl,
   });
+
+  const AdBannerWidget.adMob({super.key})
+      : type = AdBannerType.adMob,
+        customImageUrl = null,
+        customRedirectUrl = null;
+
+  const AdBannerWidget.customSponsor({
+    super.key,
+    this.customImageUrl,
+    this.customRedirectUrl,
+  }) : type = AdBannerType.customSponsor;
 
   @override
   State<AdBannerWidget> createState() => _AdBannerWidgetState();
@@ -23,12 +41,12 @@ class AdBannerWidget extends StatefulWidget {
 
 class _AdBannerWidgetState extends State<AdBannerWidget> {
   BannerAd? _bannerAd;
-  bool _isAdLoaded = false;
+  bool _isAdMobLoaded = false;
 
   @override
   void initState() {
     super.initState();
-    if (widget.useAdMob) {
+    if (widget.type == AdBannerType.adMob || widget.type == AdBannerType.auto) {
       _loadBannerAd();
     }
   }
@@ -42,7 +60,7 @@ class _AdBannerWidgetState extends State<AdBannerWidget> {
         onAdLoaded: (ad) {
           if (mounted) {
             setState(() {
-              _isAdLoaded = true;
+              _isAdMobLoaded = true;
             });
           }
         },
@@ -50,7 +68,7 @@ class _AdBannerWidgetState extends State<AdBannerWidget> {
           ad.dispose();
           if (mounted) {
             setState(() {
-              _isAdLoaded = false;
+              _isAdMobLoaded = false;
             });
           }
         },
@@ -67,8 +85,17 @@ class _AdBannerWidgetState extends State<AdBannerWidget> {
 
   @override
   Widget build(BuildContext context) {
-    // 1. Google AdMob Banner
-    if (widget.useAdMob && _isAdLoaded && _bannerAd != null) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    // If strictly custom sponsor or auto fallback when AdMob not loaded
+    if (widget.type == AdBannerType.customSponsor ||
+        (!_isAdMobLoaded && widget.type == AdBannerType.auto) ||
+        widget.type == AdBannerType.customSponsor) {
+      return _buildCustomSponsorBanner(isDark);
+    }
+
+    // Google AdMob Banner
+    if (_isAdMobLoaded && _bannerAd != null) {
       return Container(
         alignment: Alignment.center,
         width: _bannerAd!.size.width.toDouble(),
@@ -78,17 +105,31 @@ class _AdBannerWidgetState extends State<AdBannerWidget> {
       );
     }
 
-    // 2. Custom Sponsored Banner Fallback (Local Advertisements)
-    final imageUrl = widget.customAdImageUrl ?? AppConstants.defaultSponsoredAdUrl;
+    // Default to Custom Sponsor Banner
+    return _buildCustomSponsorBanner(isDark);
+  }
+
+  Widget _buildCustomSponsorBanner(bool isDark) {
+    final remoteAd = AdService().customSponsorAd;
+    final imageUrl = widget.customImageUrl ??
+        remoteAd?['imageUrl'] ??
+        AppConstants.defaultSponsoredAdUrl;
+    final redirectUrl = widget.customRedirectUrl ??
+        remoteAd?['redirectUrl'] ??
+        AppConstants.websiteUrl;
+    final sponsorLabel = remoteAd?['sponsoredText'] ?? 'SPONSORED';
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: isDark ? AppColors.darkSurface : AppColors.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.divider),
+        border: Border.all(
+          color: isDark ? const Color(0xFF334155) : AppColors.divider,
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withOpacity(isDark ? 0.2 : 0.04),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -98,8 +139,7 @@ class _AdBannerWidgetState extends State<AdBannerWidget> {
         borderRadius: BorderRadius.circular(12),
         child: InkWell(
           onTap: () async {
-            final target = widget.customAdRedirectUrl ?? AppConstants.websiteUrl;
-            final uri = Uri.parse(target);
+            final uri = Uri.parse(redirectUrl);
             if (await canLaunchUrl(uri)) {
               await launchUrl(uri, mode: LaunchMode.externalApplication);
             }
@@ -111,15 +151,17 @@ class _AdBannerWidgetState extends State<AdBannerWidget> {
                 fit: BoxFit.cover,
                 width: double.infinity,
                 placeholder: (context, url) => Container(
-                  height: 70,
-                  color: AppColors.primaryLight,
-                  child: const Center(
+                  height: 68,
+                  color: isDark
+                      ? const Color(0xFF1E293B)
+                      : AppColors.primaryLight,
+                  child: Center(
                     child: Text(
                       'ADVERTISEMENT',
                       style: TextStyle(
                         fontSize: 11,
                         letterSpacing: 1.2,
-                        color: AppColors.primary,
+                        color: isDark ? Colors.white70 : AppColors.primary,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -128,17 +170,17 @@ class _AdBannerWidgetState extends State<AdBannerWidget> {
                 errorWidget: (context, url, error) => const SizedBox.shrink(),
               ),
               Positioned(
-                top: 4,
-                right: 6,
+                top: 6,
+                right: 8,
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.6),
+                    color: Colors.black.withOpacity(0.65),
                     borderRadius: BorderRadius.circular(4),
                   ),
-                  child: const Text(
-                    'SPONSORED',
-                    style: TextStyle(
+                  child: Text(
+                    sponsorLabel,
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 9,
                       fontWeight: FontWeight.bold,

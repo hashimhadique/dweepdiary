@@ -3,13 +3,14 @@ import '../constants/app_colors.dart';
 import '../models/post_model.dart';
 import '../models/category_model.dart';
 import '../services/api_service.dart';
+import '../services/theme_service.dart';
 import '../widgets/featured_slider.dart';
 import '../widgets/category_tabs.dart';
 import '../widgets/breaking_news_ticker.dart';
 import '../widgets/news_card.dart';
 import '../widgets/ad_banner_widget.dart';
-import 'bookmarks_screen.dart';
 import 'search_screen.dart';
+import 'community_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -20,12 +21,14 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final ApiService _apiService = ApiService();
+  final ThemeService _themeService = ThemeService();
 
   List<PostModel> _allPosts = [];
   List<CategoryModel> _categories = [];
   int? _selectedCategoryId;
   bool _isLoading = true;
   bool _isLoadingMore = false;
+  bool _isOfflineData = false;
   int _currentPage = 1;
 
   final ScrollController _scrollController = ScrollController();
@@ -45,7 +48,11 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _loadInitialData() async {
-    setState(() => _isLoading = true);
+    setState(() {
+      _isLoading = true;
+      _isOfflineData = false;
+    });
+
     try {
       final futures = await Future.wait([
         _apiService.fetchLatestPosts(page: 1, perPage: 12),
@@ -61,12 +68,20 @@ class _HomeScreenState extends State<HomeScreen> {
         });
       }
     } catch (_) {
-      if (mounted) setState(() => _isLoading = false);
+      // Try offline cached posts
+      final cached = await _apiService.getCachedPosts();
+      if (mounted) {
+        setState(() {
+          _allPosts = cached;
+          _isLoading = false;
+          _isOfflineData = cached.isNotEmpty;
+        });
+      }
     }
   }
 
   Future<void> _loadMorePosts() async {
-    if (_isLoadingMore) return;
+    if (_isLoadingMore || _isOfflineData) return;
     setState(() => _isLoadingMore = true);
 
     try {
@@ -129,10 +144,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: isDark ? AppColors.darkBackground : AppColors.background,
       appBar: AppBar(
-        backgroundColor: AppColors.surface,
+        backgroundColor: isDark ? AppColors.darkSurface : AppColors.surface,
         elevation: 0.8,
         titleSpacing: 16,
         title: Row(
@@ -141,14 +158,14 @@ class _HomeScreenState extends State<HomeScreen> {
               'assets/images/logo.png',
               height: 36,
               fit: BoxFit.contain,
-              errorBuilder: (context, error, stackTrace) => const Row(
+              errorBuilder: (context, error, stackTrace) => Row(
                 children: [
-                  Icon(Icons.newspaper_rounded, color: AppColors.primary, size: 28),
-                  SizedBox(width: 8),
+                  const Icon(Icons.newspaper_rounded, color: AppColors.primary, size: 28),
+                  const SizedBox(width: 8),
                   Text(
                     'Dweep Diary',
                     style: TextStyle(
-                      color: AppColors.primaryDark,
+                      color: isDark ? Colors.white : AppColors.primaryDark,
                       fontWeight: FontWeight.w900,
                       fontSize: 20,
                     ),
@@ -159,9 +176,30 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
         actions: [
+          // Community Discussions Shortcut
+          IconButton(
+            tooltip: 'Community Discussions',
+            icon: Icon(
+              Icons.forum_outlined,
+              color: isDark ? AppColors.darkTextPrimary : AppColors.textPrimary,
+              size: 22,
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const CommunityScreen()),
+              );
+            },
+          ),
+
+          // Search News
           IconButton(
             tooltip: 'Search',
-            icon: const Icon(Icons.search_rounded, color: AppColors.textPrimary, size: 24),
+            icon: Icon(
+              Icons.search_rounded,
+              color: isDark ? AppColors.darkTextPrimary : AppColors.textPrimary,
+              size: 23,
+            ),
             onPressed: () {
               Navigator.push(
                 context,
@@ -169,14 +207,17 @@ class _HomeScreenState extends State<HomeScreen> {
               );
             },
           ),
+
+          // Dark/Light Mode Toggle
           IconButton(
-            tooltip: 'Saved Articles',
-            icon: const Icon(Icons.bookmark_outline_rounded, color: AppColors.textPrimary, size: 24),
+            tooltip: isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode',
+            icon: Icon(
+              isDark ? Icons.light_mode_rounded : Icons.dark_mode_outlined,
+              color: isDark ? Colors.amber : AppColors.textPrimary,
+              size: 22,
+            ),
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const BookmarksScreen()),
-              );
+              _themeService.toggleTheme();
             },
           ),
         ],
@@ -192,20 +233,26 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(Icons.wifi_off_rounded, size: 64, color: AppColors.textSecondary),
+                        Icon(
+                          Icons.wifi_off_rounded,
+                          size: 64,
+                          color: isDark ? Colors.white38 : AppColors.textSecondary,
+                        ),
                         const SizedBox(height: 16),
-                        const Text(
+                        Text(
                           'Unable to load news',
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
-                            color: AppColors.textPrimary,
+                            color: isDark ? AppColors.darkTextPrimary : AppColors.textPrimary,
                           ),
                         ),
                         const SizedBox(height: 8),
-                        const Text(
+                        Text(
                           'Please check your internet connection',
-                          style: TextStyle(color: AppColors.textSecondary),
+                          style: TextStyle(
+                            color: isDark ? AppColors.darkTextSecondary : AppColors.textSecondary,
+                          ),
                         ),
                         const SizedBox(height: 20),
                         ElevatedButton.icon(
@@ -231,6 +278,27 @@ class _HomeScreenState extends State<HomeScreen> {
                     controller: _scrollController,
                     physics: const AlwaysScrollableScrollPhysics(),
                     slivers: [
+                      // Offline banner if showing cached data
+                      if (_isOfflineData)
+                        SliverToBoxAdapter(
+                          child: Container(
+                            color: Colors.amber.shade800,
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                            child: const Row(
+                              children: [
+                                Icon(Icons.cloud_off_rounded, color: Colors.white, size: 18),
+                                SizedBox(width: 8),
+                                Expanded(
+                                  child: Text(
+                                    'Offline Mode — Showing saved articles',
+                                    style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+
                       // 1. Breaking News Ticker
                       if (_allPosts.isNotEmpty)
                         SliverToBoxAdapter(
@@ -256,21 +324,25 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
 
-                      // 4. Sponsored Top Banner Ad
+                      // 4. Top Ad Slot: Google AdMob Banner
                       const SliverToBoxAdapter(
-                        child: AdBannerWidget(),
+                        child: AdBannerWidget.adMob(),
                       ),
 
-                      // 5. News List Items with Periodic Ads
+                      // 5. News List Items with Alternating Hybrid Ads
+                      // Slot A: AdMob Banner | Slot B: Custom Uploaded Sponsor Ad
                       SliverList(
                         delegate: SliverChildBuilderDelegate(
                           (context, index) {
+                            // After every 5 news articles, inject an ad
                             if (index > 0 && index % 5 == 0) {
-                              return const Column(
-                                children: [
-                                  AdBannerWidget(),
-                                ],
-                              );
+                              final adPosition = index ~/ 5;
+                              // Even ad slots: Google AdMob | Odd ad slots: Custom Uploaded Sponsor Ad
+                              final isCustomAd = adPosition % 2 != 0;
+
+                              return isCustomAd
+                                  ? const AdBannerWidget.customSponsor()
+                                  : const AdBannerWidget.adMob();
                             }
 
                             final postIndex = index - (index ~/ 5);

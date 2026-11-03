@@ -1,33 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'constants/app_colors.dart';
 import 'constants/app_constants.dart';
 import 'services/notification_service.dart';
-import 'screens/main_navigation_screen.dart';
+import 'services/theme_service.dart';
+import 'screens/splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Set system status bar style to match Sky Blue & White theme
+  // Set initial system overlay style
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.dark,
-      statusBarBrightness: Brightness.light,
       systemNavigationBarColor: Colors.white,
       systemNavigationBarIconBrightness: Brightness.dark,
     ),
   );
 
+  // Initialize Theme Service
+  await ThemeService().init();
+
   // Initialize OneSignal Push Notifications
   await NotificationService().initialize();
 
-  // Initialize Google Mobile Ads SDK (safely caught for offline/dev)
+  // Initialize Google Mobile Ads SDK safely
   try {
     await MobileAds.instance.initialize();
   } catch (e) {
-    debugPrint('Google Mobile Ads initialization warning: $e');
+    debugPrint('Google Mobile Ads initialization notice: $e');
   }
 
   runApp(const DweepDiaryApp());
@@ -38,39 +42,87 @@ class DweepDiaryApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: AppConstants.appName,
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        useMaterial3: true,
-        scaffoldBackgroundColor: AppColors.background,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: AppColors.primary,
-          primary: AppColors.primary,
-          surface: AppColors.surface,
-          brightness: Brightness.light,
-        ),
-        appBarTheme: const AppBarTheme(
-          backgroundColor: AppColors.surface,
-          surfaceTintColor: Colors.transparent,
-          elevation: 0.5,
-          centerTitle: false,
-          iconTheme: IconThemeData(color: AppColors.textPrimary),
-          titleTextStyle: TextStyle(
-            color: AppColors.textPrimary,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
+    return ValueListenableBuilder<ThemeMode>(
+      valueListenable: ThemeService().themeModeNotifier,
+      builder: (context, currentThemeMode, _) {
+        return MaterialApp(
+          title: AppConstants.appName,
+          debugShowCheckedModeBanner: false,
+          themeMode: currentThemeMode,
+
+          // Light Theme with Anek Malayalam Font
+          theme: ThemeData(
+            useMaterial3: true,
+            brightness: Brightness.light,
+            scaffoldBackgroundColor: AppColors.background,
+            textTheme: GoogleFonts.anekMalayalamTextTheme(
+              ThemeData.light().textTheme,
+            ),
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: AppColors.primary,
+              primary: AppColors.primary,
+              surface: AppColors.surface,
+              brightness: Brightness.light,
+            ),
+            appBarTheme: const AppBarTheme(
+              backgroundColor: AppColors.surface,
+              surfaceTintColor: Colors.transparent,
+              elevation: 0.5,
+              centerTitle: false,
+              iconTheme: IconThemeData(color: AppColors.textPrimary),
+              titleTextStyle: TextStyle(
+                color: AppColors.textPrimary,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            cardTheme: CardTheme(
+              color: AppColors.surface,
+              elevation: 2,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+            ),
           ),
-        ),
-        cardTheme: CardTheme(
-          color: AppColors.surface,
-          elevation: 2,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
+
+          // Dark Theme with Anek Malayalam Font
+          darkTheme: ThemeData(
+            useMaterial3: true,
+            brightness: Brightness.dark,
+            scaffoldBackgroundColor: AppColors.darkBackground,
+            textTheme: GoogleFonts.anekMalayalamTextTheme(
+              ThemeData.dark().textTheme,
+            ),
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: AppColors.primary,
+              primary: AppColors.primary,
+              surface: AppColors.darkSurface,
+              brightness: Brightness.dark,
+            ),
+            appBarTheme: const AppBarTheme(
+              backgroundColor: AppColors.darkSurface,
+              surfaceTintColor: Colors.transparent,
+              elevation: 0.5,
+              centerTitle: false,
+              iconTheme: IconThemeData(color: AppColors.darkTextPrimary),
+              titleTextStyle: TextStyle(
+                color: AppColors.darkTextPrimary,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            cardTheme: CardTheme(
+              color: AppColors.darkSurface,
+              elevation: 2,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+            ),
           ),
-        ),
-      ),
-      home: const MainNavigationScreen(),
+
+          home: const SplashScreen(),
+        );
+      },
     );
   }
 }

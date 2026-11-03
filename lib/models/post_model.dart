@@ -7,6 +7,7 @@ class PostModel {
   final String content;
   final String excerpt;
   final String cleanExcerpt;
+  String get cleanContent => _stripHtml(content);
   final String link;
   final DateTime date;
   final String? featuredImageUrl;

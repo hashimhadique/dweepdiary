@@ -12,14 +12,17 @@ class BreakingNewsTicker extends StatelessWidget {
   Widget build(BuildContext context) {
     if (posts.isEmpty) return const SizedBox.shrink();
     final firstPost = posts.first;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       decoration: BoxDecoration(
-        color: AppColors.primaryLight,
+        color: isDark ? const Color(0xFF1E293B) : AppColors.primaryLight,
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: AppColors.primary.withOpacity(0.3)),
+        border: Border.all(
+          color: isDark ? const Color(0xFF334155) : AppColors.primary.withOpacity(0.3),
+        ),
       ),
       child: InkWell(
         onTap: () {
@@ -54,17 +57,17 @@ class BreakingNewsTicker extends StatelessWidget {
                 firstPost.cleanTitle,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  color: AppColors.primaryDark,
+                style: TextStyle(
+                  color: isDark ? AppColors.darkTextPrimary : AppColors.primaryDark,
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
                 ),
               ),
             ),
-            const Icon(
+            Icon(
               Icons.chevron_right_rounded,
               size: 18,
-              color: AppColors.primaryDark,
+              color: isDark ? AppColors.primary : AppColors.primaryDark,
             ),
           ],
         ),

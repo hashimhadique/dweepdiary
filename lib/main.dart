@@ -43,8 +43,38 @@ void main() async {
   runApp(const DweepDiaryApp());
 }
 
-class DweepDiaryApp extends StatelessWidget {
+class DweepDiaryApp extends StatefulWidget {
   const DweepDiaryApp({super.key});
+
+  @override
+  State<DweepDiaryApp> createState() => _DweepDiaryAppState();
+}
+
+class _DweepDiaryAppState extends State<DweepDiaryApp> with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  Future<bool> didPushRouteInformation(RouteInformation routeInformation) {
+    final uri = routeInformation.uri;
+    DeepLinkService().handleUri(uri);
+    return Future.value(true);
+  }
+
+  @override
+  Future<bool> didPushRoute(String route) {
+    DeepLinkService().handleRawRoute(route);
+    return Future.value(true);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +86,16 @@ class DweepDiaryApp extends StatelessWidget {
           title: AppConstants.appName,
           debugShowCheckedModeBanner: false,
           themeMode: currentThemeMode,
+          onGenerateInitialRoutes: (initialRoute) {
+            if (initialRoute.isNotEmpty && initialRoute != '/') {
+              Future.delayed(const Duration(milliseconds: 1200), () {
+                DeepLinkService().handleRawRoute(initialRoute);
+              });
+            }
+            return [
+              MaterialPageRoute(builder: (context) => const SplashScreen()),
+            ];
+          },
 
           // Light Theme with Anek Malayalam Font
           theme: ThemeData(
@@ -126,8 +166,6 @@ class DweepDiaryApp extends StatelessWidget {
               ),
             ),
           ),
-
-          home: const SplashScreen(),
         );
       },
     );

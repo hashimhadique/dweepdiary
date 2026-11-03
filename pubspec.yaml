@@ -32,9 +32,6 @@ dependencies:
   # Push Notifications
   onesignal_flutter: ^5.2.0
 
-  # Deep Linking (open news links from WhatsApp/Browser in app)
-  app_links: ^6.2.2
-
   # Monetization (Google Mobile Ads)
   google_mobile_ads: ^5.1.0
 

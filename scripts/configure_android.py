@@ -89,7 +89,7 @@ if os.path.exists(manifest_file):
         content = content.replace('<application', perms + '    <application')
 
     deep_link_filters = '''            <!-- Deep Linking for dweepdiary.in and www.dweepdiary.in -->
-            <intent-filter android:autoVerify="true">
+            <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />

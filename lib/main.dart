@@ -27,20 +27,17 @@ void main() async {
   // Initialize Theme Service
   await ThemeService().init();
 
-  // Initialize Deep Link Service (for WhatsApp & Browser news links)
-  DeepLinkService().init(rootNavigatorKey);
-
-  // Initialize OneSignal Push Notifications
-  await NotificationService().initialize();
-
-  // Initialize Google Mobile Ads SDK safely
-  try {
-    await MobileAds.instance.initialize();
-  } catch (e) {
-    debugPrint('Google Mobile Ads initialization notice: $e');
-  }
-
+  // Run the app immediately so the UI is NEVER blocked by network or permissions
   runApp(const DweepDiaryApp());
+
+  // Non-blocking background initializations after first frame
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    DeepLinkService().init(rootNavigatorKey);
+    NotificationService().initialize();
+    MobileAds.instance.initialize().catchError((e) {
+      debugPrint('AdMob notice: $e');
+    });
+  });
 }
 
 class DweepDiaryApp extends StatefulWidget {
@@ -86,16 +83,7 @@ class _DweepDiaryAppState extends State<DweepDiaryApp> with WidgetsBindingObserv
           title: AppConstants.appName,
           debugShowCheckedModeBanner: false,
           themeMode: currentThemeMode,
-          onGenerateInitialRoutes: (initialRoute) {
-            if (initialRoute.isNotEmpty && initialRoute != '/') {
-              Future.delayed(const Duration(milliseconds: 1200), () {
-                DeepLinkService().handleRawRoute(initialRoute);
-              });
-            }
-            return [
-              MaterialPageRoute(builder: (context) => const SplashScreen()),
-            ];
-          },
+          home: const SplashScreen(),
 
           // Light Theme with Anek Malayalam Font
           theme: ThemeData(

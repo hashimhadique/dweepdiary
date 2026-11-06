@@ -3,6 +3,7 @@ import '../constants/app_colors.dart';
 import '../models/category_model.dart';
 import '../services/api_service.dart';
 import 'category_news_screen.dart';
+import 'contact_us_screen.dart';
 
 class CategoriesScreen extends StatefulWidget {
   const CategoriesScreen({super.key});
@@ -84,6 +85,22 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
             color: isDark ? AppColors.darkTextPrimary : AppColors.textPrimary,
           ),
         ),
+        actions: [
+          IconButton(
+            tooltip: 'Contact Us & Editorial',
+            icon: Icon(
+              Icons.contact_support_outlined,
+              color: isDark ? AppColors.darkTextPrimary : AppColors.textPrimary,
+              size: 22,
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ContactUsScreen()),
+              );
+            },
+          ),
+        ],
       ),
       body: _isLoading
           ? const Center(

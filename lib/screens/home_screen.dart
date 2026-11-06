@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../constants/app_colors.dart';
 import '../models/post_model.dart';
 import '../models/category_model.dart';
@@ -13,6 +14,7 @@ import 'search_screen.dart';
 import 'community_screen.dart';
 import 'ship_updates_screen.dart';
 import 'submit_news_screen.dart';
+import 'contact_us_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -150,10 +152,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       backgroundColor: isDark ? AppColors.darkBackground : AppColors.background,
+      drawer: _buildDrawer(context, isDark),
       appBar: AppBar(
         backgroundColor: isDark ? AppColors.darkSurface : AppColors.surface,
         elevation: 0.8,
-        titleSpacing: 16,
+        titleSpacing: 0,
         title: Row(
           children: [
             Container(
@@ -189,6 +192,22 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
         actions: [
+          // Contact Us & Editorial Desk (Required by Google Play News Policy)
+          IconButton(
+            tooltip: 'Contact Us & Editorial',
+            icon: Icon(
+              Icons.contact_support_outlined,
+              color: isDark ? AppColors.darkTextPrimary : AppColors.textPrimary,
+              size: 22,
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ContactUsScreen()),
+              );
+            },
+          ),
+
           // Community Discussions Shortcut
           IconButton(
             tooltip: 'Community Discussions',
@@ -546,6 +565,182 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
                 ),
+    );
+  }
+
+  Widget _buildDrawer(BuildContext context, bool isDark) {
+    return Drawer(
+      backgroundColor: isDark ? AppColors.darkSurface : Colors.white,
+      child: Column(
+        children: [
+          // Drawer Header
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.only(top: 50, bottom: 20, left: 20, right: 20),
+            decoration: BoxDecoration(
+              color: isDark ? AppColors.darkBackground : AppColors.primary,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: 60,
+                  height: 60,
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                  ),
+                  padding: const EdgeInsets.all(6),
+                  child: Image.asset(
+                    'assets/images/app_icon.png',
+                    fit: BoxFit.contain,
+                    errorBuilder: (_, __, ___) => const Icon(
+                      Icons.newspaper_rounded,
+                      color: AppColors.primary,
+                      size: 32,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                const Text(
+                  'Dweep Diary',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  'Lakshadweep News Portal (dweepdiary.in)',
+                  style: TextStyle(
+                    color: Colors.white.withOpacity(0.85),
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // Drawer Navigation Items
+          Expanded(
+            child: ListView(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              children: [
+                ListTile(
+                  leading: const Icon(Icons.home_rounded, color: AppColors.primary),
+                  title: const Text('Latest News', style: TextStyle(fontWeight: FontWeight.w600)),
+                  onTap: () => Navigator.pop(context),
+                ),
+                ListTile(
+                  leading: const Icon(Icons.send_rounded, color: Color(0xFF25D366)),
+                  title: const Text('Submit News & Photos', style: TextStyle(fontWeight: FontWeight.w600)),
+                  subtitle: const Text('Send directly to WhatsApp Desk', style: TextStyle(fontSize: 11)),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const SubmitNewsScreen()),
+                    );
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.directions_boat_rounded, color: Colors.blueAccent),
+                  title: const Text('Ship Updates & Alerts', style: TextStyle(fontWeight: FontWeight.w600)),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const ShipUpdatesScreen()),
+                    );
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.forum_outlined, color: Colors.purpleAccent),
+                  title: const Text('Community Discussions', style: TextStyle(fontWeight: FontWeight.w600)),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const CommunityScreen()),
+                    );
+                  },
+                ),
+
+                const Divider(height: 24),
+
+                // REQUIRED BY GOOGLE PLAY NEWS POLICY
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 12),
+                  decoration: BoxDecoration(
+                    color: AppColors.primary.withOpacity(0.08),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: ListTile(
+                    leading: const Icon(Icons.contact_support_rounded, color: AppColors.primary),
+                    title: const Text(
+                      'Contact Us & Editorial',
+                      style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.primary),
+                    ),
+                    subtitle: const Text(
+                      'dweepdiary@gmail.com\n+91 8289883750',
+                      style: TextStyle(fontSize: 11.5, height: 1.3),
+                    ),
+                    isThreeLine: true,
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const ContactUsScreen()),
+                      );
+                    },
+                  ),
+                ),
+
+                const SizedBox(height: 8),
+
+                ListTile(
+                  leading: const Icon(Icons.language_rounded, color: AppColors.textSecondary),
+                  title: const Text('Visit Website (dweepdiary.in)'),
+                  onTap: () async {
+                    Navigator.pop(context);
+                    final uri = Uri.parse('https://dweepdiary.in');
+                    if (await canLaunchUrl(uri)) {
+                      await launchUrl(uri, mode: LaunchMode.externalApplication);
+                    }
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.privacy_tip_outlined, color: AppColors.textSecondary),
+                  title: const Text('Privacy Policy'),
+                  onTap: () async {
+                    Navigator.pop(context);
+                    final uri = Uri.parse('https://dweepdiary.in/privacy-policy/');
+                    if (await canLaunchUrl(uri)) {
+                      await launchUrl(uri, mode: LaunchMode.externalApplication);
+                    }
+                  },
+                ),
+              ],
+            ),
+          ),
+
+          // Drawer Footer
+          Container(
+            padding: const EdgeInsets.all(16),
+            child: Text(
+              'Dweep Diary News App\nVersion 1.0.4 (Build 5)\nKavaratti, Lakshadweep',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 11,
+                color: isDark ? Colors.white38 : Colors.black38,
+                height: 1.4,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

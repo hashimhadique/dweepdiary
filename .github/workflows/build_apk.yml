@@ -42,6 +42,7 @@ jobs:
           mkdir -p android/app
           cp keystore/upload-keystore.jks android/app/upload-keystore.jks || true
           cp keystore/upload-keystore.jks android/upload-keystore.jks || true
+          cp google-services.json android/app/google-services.json || true
           mkdir -p android/app/src/main/res/mipmap-hdpi
           mkdir -p android/app/src/main/res/mipmap-mdpi
           mkdir -p android/app/src/main/res/mipmap-xhdpi
@@ -62,8 +63,8 @@ jobs:
 
       - name: Build Optimized Split APKs & Play Store AAB
         run: |
-          flutter build apk --release --split-per-abi --build-number=3 --build-name=1.0.2
-          flutter build appbundle --release --build-number=3 --build-name=1.0.2
+          flutter build apk --release --split-per-abi --build-number=4 --build-name=1.0.3
+          flutter build appbundle --release --build-number=4 --build-name=1.0.3
 
       - name: Verify Play Store AAB Package Name & Signature
         run: |

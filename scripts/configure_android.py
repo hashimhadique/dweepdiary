@@ -17,9 +17,12 @@ if os.path.exists(settings_file):
     if new_content == content:
         new_content = re.sub(r'version\s*["\']1\.[0-9]+\.[0-9]+["\']', 'version "1.9.24"', content)
         
+    if 'com.google.gms.google-services' not in new_content:
+        new_content = new_content.replace('plugins {', 'plugins {\n    id "com.google.gms.google-services" version "4.4.2" apply false')
+
     with open(settings_file, 'w', encoding='utf-8') as f:
         f.write(new_content)
-    print("SUCCESS: android/settings.gradle updated with Kotlin 1.9.24")
+    print("SUCCESS: android/settings.gradle updated with Kotlin 1.9.24 and Google Services plugin")
 
 # 2. Update android/build.gradle to force stdlib resolution and skip metadata check
 build_gradle = os.path.join('android', 'build.gradle')
@@ -55,6 +58,9 @@ app_gradle = os.path.join('android', 'app', 'build.gradle')
 if os.path.exists(app_gradle):
     with open(app_gradle, 'r', encoding='utf-8') as f:
         content = f.read()
+
+    if 'com.google.gms.google-services' not in content:
+        content = content.replace('plugins {', 'plugins {\n    id "com.google.gms.google-services"')
 
     content = re.sub(r'minSdkVersion\s*=\s*flutter\.minSdkVersion', 'minSdkVersion = 24', content)
     content = re.sub(r'minSdk\s*=\s*flutter\.minSdkVersion', 'minSdk = 24', content)

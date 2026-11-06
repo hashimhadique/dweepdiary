@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "456219701913",
+    "project_id": "dweep-diary-353fb",
+    "storage_bucket": "dweep-diary-353fb.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:456219701913:android:0e0deea41d7e4292167e08",
+        "android_client_info": {
+          "package_name": "in.dweepdiary.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9exSU0CoDRZ5zWDVIpiPOks_v9nVYHJo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

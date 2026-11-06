@@ -27,6 +27,17 @@ class NotificationService {
       // Request push notification permissions from user
       await OneSignal.Notifications.requestPermission(true);
 
+      // Explicitly opt-in to push notifications
+      OneSignal.User.pushSubscription.optIn();
+
+      // Debug subscription status
+      debugPrint('OneSignal: Push Subscription ID = ${OneSignal.User.pushSubscription.id}');
+      debugPrint('OneSignal: Push Opted In = ${OneSignal.User.pushSubscription.optedIn}');
+
+      OneSignal.User.pushSubscription.addObserver((state) {
+        debugPrint('OneSignal: Subscription state changed -> ID: ${state.current.id}, Opted In: ${state.current.optedIn}');
+      });
+
       // Handle notification clicks
       OneSignal.Notifications.addClickListener((event) {
         debugPrint('NOTIFICATION CLICK LISTENER FIRED: ${event.notification.jsonRepresentation()}');

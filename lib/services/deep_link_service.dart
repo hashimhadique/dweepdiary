@@ -51,6 +51,14 @@ class DeepLinkService {
     if (segments.isNotEmpty) {
       final slugOrKeyword = Uri.decodeComponent(segments.last);
       try {
+        // 3a. Try exact slug fetch first
+        final postBySlug = await _apiService.fetchPostBySlug(slugOrKeyword);
+        if (postBySlug != null) {
+          _navigateToDetail(postBySlug);
+          return;
+        }
+
+        // 3b. Fallback to keyword search
         final posts = await _apiService.searchPosts(query: slugOrKeyword, page: 1);
         if (posts.isNotEmpty) {
           _navigateToDetail(posts.first);

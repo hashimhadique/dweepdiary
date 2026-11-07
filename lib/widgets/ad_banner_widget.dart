@@ -117,7 +117,7 @@ class _AdBannerWidgetState extends State<AdBannerWidget> {
     final redirectUrl = widget.customRedirectUrl ??
         remoteAd?['redirectUrl'] ??
         AppConstants.websiteUrl;
-    final sponsorLabel = remoteAd?['sponsoredText'] ?? 'SPONSORED';
+    final sponsorLabel = remoteAd?['sponsoredText'] ?? 'Ad';
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -157,7 +157,7 @@ class _AdBannerWidgetState extends State<AdBannerWidget> {
                       : AppColors.primaryLight,
                   child: Center(
                     child: Text(
-                      'ADVERTISEMENT',
+                      'Ad',
                       style: TextStyle(
                         fontSize: 11,
                         letterSpacing: 1.2,

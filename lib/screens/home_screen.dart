@@ -15,6 +15,7 @@ import 'community_screen.dart';
 import 'ship_updates_screen.dart';
 import 'submit_news_screen.dart';
 import 'contact_us_screen.dart';
+import 'categories_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -192,22 +193,6 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
         actions: [
-          // Contact Us & Editorial Desk (Required by Google Play News Policy)
-          IconButton(
-            tooltip: 'Contact Us & Editorial',
-            icon: Icon(
-              Icons.contact_support_outlined,
-              color: isDark ? AppColors.darkTextPrimary : AppColors.textPrimary,
-              size: 22,
-            ),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const ContactUsScreen()),
-              );
-            },
-          ),
-
           // Community Discussions Shortcut
           IconButton(
             tooltip: 'Community Discussions',
@@ -634,6 +619,17 @@ class _HomeScreenState extends State<HomeScreen> {
                   onTap: () => Navigator.pop(context),
                 ),
                 ListTile(
+                  leading: const Icon(Icons.grid_view_rounded, color: Colors.orangeAccent),
+                  title: const Text('Categories', style: TextStyle(fontWeight: FontWeight.w600)),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const CategoriesScreen()),
+                    );
+                  },
+                ),
+                ListTile(
                   leading: const Icon(Icons.send_rounded, color: Color(0xFF25D366)),
                   title: const Text('Submit News & Photos', style: TextStyle(fontWeight: FontWeight.w600)),
                   subtitle: const Text('Send directly to WhatsApp Desk', style: TextStyle(fontSize: 11)),
@@ -716,7 +712,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   title: const Text('Privacy Policy'),
                   onTap: () async {
                     Navigator.pop(context);
-                    final uri = Uri.parse('https://dweepdiary.in/privacy-policy/');
+                    final uri = Uri.parse(AppConstants.privacyPolicyUrl);
                     if (await canLaunchUrl(uri)) {
                       await launchUrl(uri, mode: LaunchMode.externalApplication);
                     }
@@ -730,7 +726,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Container(
             padding: const EdgeInsets.all(16),
             child: Text(
-              'Dweep Diary News App\nVersion 1.0.4 (Build 5)\nKavaratti, Lakshadweep',
+              'Dweep Diary News App\nVersion 1.0.6 (Build 7)\nKiltan Island, Lakshadweep - 682558',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 11,

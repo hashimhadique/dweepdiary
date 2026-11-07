@@ -120,7 +120,7 @@ class ContactUsScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: const Text(
-                      'Official News Organization',
+                      'News Organization',
                       style: TextStyle(
                         fontSize: 11,
                         fontWeight: FontWeight.bold,
@@ -245,7 +245,7 @@ class ContactUsScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          'Kavaratti Island,\nUnion Territory of Lakshadweep - 682555,\nIndia',
+                          'Kiltan Island,\nUnion Territory of Lakshadweep - 682558,\nIndia',
                           style: TextStyle(
                             fontSize: 13,
                             height: 1.4,
@@ -313,7 +313,7 @@ class ContactUsScreen extends StatelessWidget {
               child: Column(
                 children: [
                   Text(
-                    'App Version 1.0.4 (Build 5)',
+                    'App Version 1.0.6 (Build 7)',
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
@@ -326,7 +326,7 @@ class ContactUsScreen extends StatelessWidget {
                     spacing: 16,
                     children: [
                       TextButton(
-                        onPressed: () => _launchUri(context, 'https://dweepdiary.in/privacy-policy/'),
+                        onPressed: () => _launchUri(context, AppConstants.privacyPolicyUrl),
                         child: const Text('Privacy Policy', style: TextStyle(fontSize: 12)),
                       ),
                       TextButton(

@@ -3,6 +3,7 @@ class AppConstants {
   static const String appName = 'Dweep Diary';
   static const String appTagline = 'Lakshadweep News Portal';
   static const String websiteUrl = 'https://dweepdiary.in';
+  static const String privacyPolicyUrl = 'https://dweepdiary.in/?page_id=417';
   
   // WordPress REST API Endpoint for dweepdiary.in
   static const String apiBaseUrl = 'https://dweepdiary.in/index.php?rest_route=/wp/v2';

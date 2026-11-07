@@ -152,7 +152,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: const Text(
-                        'ലക്ഷദ്വീപിന്റെ ആദ്യ ഓൺലൈൻ ദിനപത്രം',
+                        'ലക്ഷദ്വീപിലെ ആദ്യ ഓൺലൈൻ ന്യൂസ് പോർട്ടൽ',
                         style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,

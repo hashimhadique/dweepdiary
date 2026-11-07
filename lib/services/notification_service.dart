@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import '../constants/app_constants.dart';
+import 'deep_link_service.dart';
 
 class NotificationService {
   static final NotificationService _instance = NotificationService._internal();
@@ -38,14 +39,22 @@ class NotificationService {
         debugPrint('OneSignal: Subscription state changed -> ID: ${state.current.id}, Opted In: ${state.current.optedIn}');
       });
 
-      // Handle notification clicks
+      // Handle notification clicks: Prevent browser opening and route directly into app
       OneSignal.Notifications.addClickListener((event) {
         debugPrint('NOTIFICATION CLICK LISTENER FIRED: ${event.notification.jsonRepresentation()}');
         
+        // Prevent default browser opening by OneSignal
+        event.preventDefault();
+
         // Extract launch URL or custom data attached to the notification
         final launchUrl = event.notification.launchUrl;
         final additionalData = event.notification.additionalData;
         final targetUrl = launchUrl ?? (additionalData?['post_url'] as String?);
+
+        if (targetUrl != null && targetUrl.isNotEmpty) {
+          debugPrint('Routing notification target URL into app: $targetUrl');
+          DeepLinkService().handleRawRoute(targetUrl);
+        }
 
         onNotificationClicked?.call(targetUrl);
       });

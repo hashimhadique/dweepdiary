@@ -6,6 +6,7 @@ import 'constants/app_colors.dart';
 import 'constants/app_constants.dart';
 import 'services/deep_link_service.dart';
 import 'services/notification_service.dart';
+import 'services/ad_service.dart';
 import 'services/theme_service.dart';
 import 'screens/splash_screen.dart';
 
@@ -34,8 +35,11 @@ void main() async {
   WidgetsBinding.instance.addPostFrameCallback((_) {
     DeepLinkService().init(rootNavigatorKey);
     NotificationService().initialize();
-    MobileAds.instance.initialize().catchError((e) {
+    MobileAds.instance.initialize().then((_) {
+      AdService().init();
+    }).catchError((e) {
       debugPrint('AdMob notice: $e');
+      AdService().init();
     });
   });
 }

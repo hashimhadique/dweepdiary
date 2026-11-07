@@ -154,6 +154,26 @@ class ApiService {
     return null;
   }
 
+  /// Fetch single post by slug (for opening from URL / OneSignal push notification clicks)
+  Future<PostModel?> fetchPostBySlug(String slug) async {
+    final cleanSlug = slug.trim().replaceAll('/', '');
+    final url = _buildUrl(AppConstants.postsEndpoint, {
+      'slug': cleanSlug,
+      '_embed': '',
+    });
+
+    try {
+      final response = await http.get(Uri.parse(url), headers: _headers);
+      if (response.statusCode == 200) {
+        final List<dynamic> data = jsonDecode(response.body);
+        if (data.isNotEmpty) {
+          return PostModel.fromJson(data.first);
+        }
+      }
+    } catch (_) {}
+    return null;
+  }
+
   /// Fetch categories with active post counts
   Future<List<CategoryModel>> fetchCategories() async {
     final url = _buildUrl(AppConstants.categoriesEndpoint, {
@@ -252,30 +272,32 @@ class ApiService {
     return [];
   }
 
-  /// Post a new comment to WordPress
+  /// Post a new comment to WordPress using the official web form endpoint
   Future<bool> postComment({
     required int postId,
     required String authorName,
     required String authorEmail,
     required String content,
   }) async {
-    final url = _commentsEndpoint;
+    const url = 'https://dweepdiary.in/wp-comments-post.php';
     try {
       final response = await http.post(
         Uri.parse(url),
         headers: {
           ..._headers,
           'Content-Type': 'application/x-www-form-urlencoded',
+          'Referer': 'https://dweepdiary.in',
         },
         body: {
-          'post': postId.toString(),
-          'author_name': authorName,
-          'author_email': authorEmail.isEmpty ? 'reader@dweepdiary.in' : authorEmail,
-          'content': content,
+          'comment_post_ID': postId.toString(),
+          'author': authorName.trim(),
+          'email': authorEmail.trim().isEmpty ? 'reader@dweepdiary.in' : authorEmail.trim(),
+          'comment': content.trim(),
         },
       );
 
-      return response.statusCode == 200 || response.statusCode == 201;
+      // WordPress redirects to comment anchor upon success (302 Found) or 200 OK
+      return response.statusCode == 200 || response.statusCode == 302;
     } catch (_) {
       return false;
     }

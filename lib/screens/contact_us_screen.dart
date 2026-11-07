@@ -152,9 +152,9 @@ class ContactUsScreen extends StatelessWidget {
               icon: Icons.email_rounded,
               iconColor: Colors.redAccent,
               title: 'Official Email Address',
-              subtitle: 'dweepdiary@gmail.com',
+              subtitle: 'thedweepdiary@gmail.com',
               actionLabel: 'Send Email',
-              onTap: () => _launchUri(context, 'mailto:dweepdiary@gmail.com?subject=Dweep%20Diary%20Inquiry'),
+              onTap: () => _launchUri(context, 'mailto:thedweepdiary@gmail.com?subject=Dweep%20Diary%20Inquiry'),
             ),
 
             const SizedBox(height: 10),
@@ -295,7 +295,7 @@ class ContactUsScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    'Dweep Diary adheres to the highest standards of independent, fact-checked, and ethical journalism. For any news corrections, clarifications, copyright notices, or editorial feedback, please write directly to our editorial team at dweepdiary@gmail.com.',
+                    'Dweep Diary adheres to the highest standards of independent, fact-checked, and ethical journalism. For any news corrections, clarifications, copyright notices, or editorial feedback, please write directly to our editorial team at thedweepdiary@gmail.com.',
                     style: TextStyle(
                       fontSize: 12.5,
                       height: 1.45,

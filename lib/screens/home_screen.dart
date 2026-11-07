@@ -684,7 +684,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.primary),
                     ),
                     subtitle: const Text(
-                      'dweepdiary@gmail.com\n+91 8289883750',
+                      'thedweepdiary@gmail.com\n+91 8289883750',
                       style: TextStyle(fontSize: 11.5, height: 1.3),
                     ),
                     isThreeLine: true,

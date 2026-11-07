@@ -9,6 +9,11 @@ class AppConstants {
   static const String postsEndpoint = '$apiBaseUrl/posts';
   static const String categoriesEndpoint = '$apiBaseUrl/categories';
 
+  // Official Contact Information (Play Store News Policy)
+  static const String officialEmail = 'thedweepdiary@gmail.com';
+  static const String officialPhone = '+918289883750';
+  static const String officialPhoneDisplay = '+91 8289883750';
+
   // OneSignal Push Notification App ID
   static const String oneSignalAppId = '2e9f508d-8921-4b81-9e4a-a553ac2ce8b4';
 

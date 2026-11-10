@@ -318,7 +318,7 @@ class ApiService {
           final catId = cat['id'] as int;
           final posts = await fetchPostsByCategory(categoryId: catId, perPage: 10);
           for (final p in posts) {
-            if (p.featuredImage.isNotEmpty) {
+            if (p.featuredImageUrl != null && p.featuredImageUrl!.isNotEmpty) {
               String redirect = AppConstants.websiteUrl;
               final match = RegExp(r'https?://[^\s<>"]+').firstMatch(p.content);
               if (match != null) {
@@ -326,7 +326,7 @@ class ApiService {
               }
               adsList.add({
                 'title': p.cleanTitle,
-                'imageUrl': p.featuredImage,
+                'imageUrl': p.featuredImageUrl!,
                 'redirectUrl': redirect,
                 'sponsoredText': 'Ad',
                 'active': true,

@@ -63,8 +63,8 @@ jobs:
 
       - name: Build Optimized Split APKs & Play Store AAB
         run: |
-          flutter build apk --release --split-per-abi --build-number=10 --build-name=1.0.9
-          flutter build appbundle --release --build-number=10 --build-name=1.0.9
+          flutter build apk --release --split-per-abi --build-number=11 --build-name=1.0.10
+          flutter build appbundle --release --build-number=11 --build-name=1.0.10
 
       - name: Verify Play Store AAB Package Name & Signature
         run: |

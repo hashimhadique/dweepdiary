@@ -72,11 +72,6 @@
             </intent-filter>
         </activity>
 
-        <!-- Disable OneSignal automatic browser opening on notification clicks -->
-        <meta-data
-            android:name="com.onesignal.NotificationOpened.DEFAULT"
-            android:value="DISABLE" />
-        
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />

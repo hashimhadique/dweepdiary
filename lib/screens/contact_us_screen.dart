@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../constants/app_colors.dart';
 import '../constants/app_constants.dart';
+import 'privacy_policy_screen.dart';
 
 class ContactUsScreen extends StatelessWidget {
   const ContactUsScreen({super.key});
@@ -9,18 +10,28 @@ class ContactUsScreen extends StatelessWidget {
   Future<void> _launchUri(BuildContext context, String urlString) async {
     final uri = Uri.parse(urlString);
     try {
-      if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+      if (urlString.startsWith('http')) {
+        if (!await launchUrl(uri, mode: LaunchMode.inAppBrowserView)) {
+          await launchUrl(uri, mode: LaunchMode.inAppWebView);
+        }
+      } else {
+        if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Could not open: $urlString')),
+            );
+          }
+        }
+      }
+    } catch (_) {
+      try {
+        await launchUrl(uri, mode: LaunchMode.inAppWebView);
+      } catch (_) {
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Could not open: $urlString')),
           );
         }
-      }
-    } catch (_) {
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Could not open: $urlString')),
-        );
       }
     }
   }
@@ -313,7 +324,7 @@ class ContactUsScreen extends StatelessWidget {
               child: Column(
                 children: [
                   Text(
-                    'App Version 1.0.6 (Build 7)',
+                    'App Version 1.0.10 (Build 11)',
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
@@ -326,7 +337,12 @@ class ContactUsScreen extends StatelessWidget {
                     spacing: 16,
                     children: [
                       TextButton(
-                        onPressed: () => _launchUri(context, AppConstants.privacyPolicyUrl),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const PrivacyPolicyScreen()),
+                          );
+                        },
                         child: const Text('Privacy Policy', style: TextStyle(fontSize: 12)),
                       ),
                       TextButton(

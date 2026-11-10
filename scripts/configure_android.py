@@ -130,9 +130,8 @@ if os.path.exists(manifest_file):
     if 'com.google.android.gms.ads.APPLICATION_ID' not in content:
         content = content.replace('</application>', admob_tag + '    </application>')
 
-    onesignal_tag = '        <meta-data android:name="com.onesignal.NotificationOpened.DEFAULT" android:value="DISABLE"/>\n'
-    if 'com.onesignal.NotificationOpened.DEFAULT' not in content:
-        content = content.replace('</application>', onesignal_tag + '    </application>')
+    # Ensure OneSignal default notification launcher is NOT disabled
+    content = re.sub(r'\s*<meta-data\s+android:name="com\.onesignal\.NotificationOpened\.DEFAULT"[^>]*/>', '', content)
 
     perms = '''    <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
@@ -196,12 +195,55 @@ if os.path.exists(manifest_file):
         f.write(content)
     print("SUCCESS: AndroidManifest.xml updated with AdMob, permissions, and Deep Links")
 
-# 5. Ensure MainActivity.kt is located in in/dweepdiary/app
+# 5. Ensure MainActivity.kt is located in in/dweepdiary/app with DeepLink MethodChannel
 kt_target_dir = os.path.join('android', 'app', 'src', 'main', 'kotlin', 'in', 'dweepdiary', 'app')
 os.makedirs(kt_target_dir, exist_ok=True)
 kt_file = os.path.join(kt_target_dir, 'MainActivity.kt')
+main_activity_code = """package `in`.dweepdiary.app
+
+import android.content.Intent
+import android.os.Bundle
+import io.flutter.embedding.android.FlutterActivity
+import io.flutter.embedding.engine.FlutterEngine
+import io.flutter.plugin.common.MethodChannel
+
+class MainActivity: FlutterActivity() {
+    private val CHANNEL = "in.dweepdiary.app/deeplink"
+    private var initialUrl: String? = null
+    private var methodChannel: MethodChannel? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (intent?.action == Intent.ACTION_VIEW) {
+            initialUrl = intent?.dataString
+        }
+    }
+
+    override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
+        super.configureFlutterEngine(flutterEngine)
+        methodChannel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL)
+        methodChannel?.setMethodCallHandler { call, result ->
+            if (call.method == "getInitialUrl") {
+                result.success(initialUrl)
+                initialUrl = null
+            } else {
+                result.notImplemented()
+            }
+        }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        val url = intent.dataString
+        if (url != null) {
+            methodChannel?.invokeMethod("onDeepLink", url)
+        }
+    }
+}
+"""
 with open(kt_file, 'w', encoding='utf-8') as f:
-    f.write("package `in`.dweepdiary.app\n\nimport io.flutter.embedding.android.FlutterActivity\n\nclass MainActivity: FlutterActivity()\n")
+    f.write(main_activity_code)
 
 wrong_kt_dir = os.path.join('android', 'app', 'src', 'main', 'kotlin', 'in', 'dweepdiary', 'dweepdiary')
 if os.path.exists(wrong_kt_dir):

@@ -17,6 +17,7 @@ import 'ship_updates_screen.dart';
 import 'submit_news_screen.dart';
 import 'contact_us_screen.dart';
 import 'categories_screen.dart';
+import 'privacy_policy_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -740,7 +741,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     Navigator.pop(context);
                     final uri = Uri.parse(AppConstants.websiteUrl);
                     try {
-                      await launchUrl(uri, mode: LaunchMode.externalApplication);
+                      if (!await launchUrl(uri, mode: LaunchMode.inAppBrowserView)) {
+                        await launchUrl(uri, mode: LaunchMode.inAppWebView);
+                      }
                     } catch (_) {
                       try {
                         await launchUrl(uri, mode: LaunchMode.inAppWebView);
@@ -751,16 +754,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 ListTile(
                   leading: const Icon(Icons.privacy_tip_outlined, color: AppColors.textSecondary),
                   title: const Text('Privacy Policy'),
-                  onTap: () async {
+                  onTap: () {
                     Navigator.pop(context);
-                    final uri = Uri.parse(AppConstants.privacyPolicyUrl);
-                    try {
-                      await launchUrl(uri, mode: LaunchMode.externalApplication);
-                    } catch (_) {
-                      try {
-                        await launchUrl(uri, mode: LaunchMode.inAppWebView);
-                      } catch (_) {}
-                    }
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const PrivacyPolicyScreen()),
+                    );
                   },
                 ),
               ],
@@ -771,7 +770,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Container(
             padding: const EdgeInsets.all(16),
             child: Text(
-              'Dweep Diary News App\nVersion 1.0.6 (Build 7)\nKiltan Island, Lakshadweep - 682558',
+              'Dweep Diary News App\nVersion 1.0.10 (Build 11)\nKiltan Island, Lakshadweep - 682558',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 11,

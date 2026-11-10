@@ -34,15 +34,15 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
 
-            <!-- Deep Linking for dweepdiary.in and www.dweepdiary.in -->
-            <intent-filter>
+            <!-- Android App Links with autoVerify for direct in-app opening from WhatsApp & Web -->
+            <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="http" android:host="dweepdiary.in" />
-                <data android:scheme="https" android:host="dweepdiary.in" />
-                <data android:scheme="http" android:host="www.dweepdiary.in" />
-                <data android:scheme="https" android:host="www.dweepdiary.in" />
+                <data android:scheme="http" />
+                <data android:scheme="https" />
+                <data android:host="dweepdiary.in" />
+                <data android:host="www.dweepdiary.in" />
             </intent-filter>
             <!-- Custom scheme deep link: dweepdiary://... -->
             <intent-filter>
@@ -52,6 +52,11 @@
                 <data android:scheme="dweepdiary" />
             </intent-filter>
         </activity>
+
+        <!-- Disable OneSignal automatic browser opening on notification clicks -->
+        <meta-data
+            android:name="com.onesignal.NotificationOpened.DEFAULT"
+            android:value="DISABLE" />
         
         <meta-data
             android:name="flutterEmbedding"

@@ -17,10 +17,9 @@ class ThemeService {
       final mode = prefs.getString(_themeKey);
       if (mode == 'dark') {
         themeModeNotifier.value = ThemeMode.dark;
-      } else if (mode == 'light') {
-        themeModeNotifier.value = ThemeMode.light;
       } else {
-        themeModeNotifier.value = ThemeMode.system;
+        // Default strictly to Light (Day) Mode for all new installs
+        themeModeNotifier.value = ThemeMode.light;
       }
     } catch (_) {}
   }

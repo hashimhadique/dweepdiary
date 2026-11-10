@@ -1,4 +1,6 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
@@ -82,6 +84,38 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
         _isBookmarked = status;
       });
     }
+  }
+
+  Future<void> _shareArticle() async {
+    final shareText = '''${widget.post.cleanTitle}
+
+Read more: ${widget.post.link}
+
+📲 Download Dweep Diary Mobile App:
+https://play.google.com/store/apps/details?id=in.dweepdiary.app''';
+
+    try {
+      final imgUrl = widget.post.featuredImageUrl;
+      if (imgUrl != null && imgUrl.isNotEmpty) {
+        final uri = Uri.parse(imgUrl);
+        final response = await http.get(uri);
+        if (response.statusCode == 200) {
+          final tempDir = Directory.systemTemp;
+          final file = File('${tempDir.path}/dweepdiary_share_${widget.post.id}.jpg');
+          await file.writeAsBytes(response.bodyBytes);
+          await Share.shareXFiles(
+            [XFile(file.path, mimeType: 'image/jpeg')],
+            text: shareText,
+          );
+          return;
+        }
+      }
+    } catch (e) {
+      debugPrint('Share image error: $e');
+    }
+
+    // Fallback if image download fails or device is offline
+    await Share.share(shareText);
   }
 
   Future<void> _toggleBookmark() async {
@@ -352,11 +386,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
               Icons.share_rounded,
               color: isDark ? AppColors.darkTextPrimary : AppColors.textPrimary,
             ),
-            onPressed: () {
-              Share.share(
-                '${widget.post.cleanTitle}\n\nRead more: ${widget.post.link}\n\nDownload Dweep Diary Mobile App: https://dweepdiary.in',
-              );
-            },
+            onPressed: _shareArticle,
           ),
         ],
       ),
@@ -540,11 +570,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                       'Share on WhatsApp',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    onPressed: () {
-                      Share.share(
-                        '${widget.post.cleanTitle}\n\nRead more: ${widget.post.link}\n\nDownload Dweep Diary Mobile App: https://dweepdiary.in',
-                      );
-                    },
+                    onPressed: _shareArticle,
                   ),
                 ],
               ),
@@ -649,6 +675,10 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
               ),
               const SizedBox(height: 24),
             ],
+
+            // Bottom In-Article Ad Banner (Before Reader Comments)
+            const AdBannerWidget(),
+            const SizedBox(height: 24),
 
             // Comments Section Header
             Row(

@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import '../constants/app_constants.dart';
@@ -13,19 +14,28 @@ class AdService {
   int _articleOpenCounter = 0;
   DateTime? _lastInterstitialShownTime;
 
-  Map<String, dynamic>? _customSponsorAd;
-  Map<String, dynamic>? get customSponsorAd => _customSponsorAd;
+  List<Map<String, dynamic>> _customSponsorAds = [];
+  List<Map<String, dynamic>> get customSponsorAds => _customSponsorAds;
+
+  /// Returns a random sponsor ad from all active ads (rotating across slots)
+  Map<String, dynamic>? get customSponsorAd {
+    if (_customSponsorAds.isEmpty) return null;
+    return _customSponsorAds[Random().nextInt(_customSponsorAds.length)];
+  }
+
+  Map<String, dynamic>? getRandomSponsorAd() => customSponsorAd;
 
   Future<void> init() async {
     _loadInterstitialAd();
-    _fetchCustomSponsorAd();
+    _fetchCustomSponsorAds();
   }
 
-  Future<void> _fetchCustomSponsorAd() async {
+  Future<void> _fetchCustomSponsorAds() async {
     try {
-      final ad = await ApiService().fetchCustomSponsorAd();
-      if (ad != null && ad['active'] == true) {
-        _customSponsorAd = ad;
+      final ads = await ApiService().fetchAllSponsorAds();
+      if (ads.isNotEmpty) {
+        _customSponsorAds = ads;
+        debugPrint('AdService: Loaded ${_customSponsorAds.length} active sponsor ads.');
       }
     } catch (_) {}
   }
@@ -51,8 +61,8 @@ class AdService {
           _interstitialAd = null;
           _isInterstitialLoading = false;
           debugPrint('AdService: InterstitialAd failed to load: $error');
-          // Retry after 15 seconds
-          Future.delayed(const Duration(seconds: 15), () {
+          // Retry loading after 20 seconds
+          Future.delayed(const Duration(seconds: 20), () {
             if (_interstitialAd == null) _loadInterstitialAd();
           });
         },
@@ -80,7 +90,7 @@ class AdService {
   void onArticleOpened() {
     _articleOpenCounter++;
 
-    // Check if cooldown elapsed
+    // Check if cooldown elapsed (e.g. 60 seconds)
     final now = DateTime.now();
     final canShowByTime = _lastInterstitialShownTime == null ||
         now.difference(_lastInterstitialShownTime!).inSeconds >=
@@ -98,7 +108,6 @@ class AdService {
     if (_interstitialAd != null) {
       _lastInterstitialShownTime = DateTime.now();
       _interstitialAd!.show();
-      _interstitialAd = null;
     } else {
       _loadInterstitialAd();
     }

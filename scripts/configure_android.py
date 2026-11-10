@@ -130,6 +130,10 @@ if os.path.exists(manifest_file):
     if 'com.google.android.gms.ads.APPLICATION_ID' not in content:
         content = content.replace('</application>', admob_tag + '    </application>')
 
+    onesignal_tag = '        <meta-data android:name="com.onesignal.NotificationOpened.DEFAULT" android:value="DISABLE"/>\n'
+    if 'com.onesignal.NotificationOpened.DEFAULT' not in content:
+        content = content.replace('</application>', onesignal_tag + '    </application>')
+
     perms = '''    <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
@@ -142,15 +146,15 @@ if os.path.exists(manifest_file):
     content = re.sub(r'\s*<uses-permission android:name="android\.permission\.READ_EXTERNAL_STORAGE"\s*/>', '', content)
     content = re.sub(r'\s*<uses-permission android:name="android\.permission\.WRITE_EXTERNAL_STORAGE"\s*/>', '', content)
 
-    deep_link_filters = '''            <!-- Deep Linking for dweepdiary.in and www.dweepdiary.in -->
-            <intent-filter>
+    deep_link_filters = '''            <!-- Android App Links with autoVerify for direct in-app opening from WhatsApp & Web -->
+            <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="http" android:host="dweepdiary.in" />
-                <data android:scheme="https" android:host="dweepdiary.in" />
-                <data android:scheme="http" android:host="www.dweepdiary.in" />
-                <data android:scheme="https" android:host="www.dweepdiary.in" />
+                <data android:scheme="http" />
+                <data android:scheme="https" />
+                <data android:host="dweepdiary.in" />
+                <data android:host="www.dweepdiary.in" />
             </intent-filter>
             <!-- Custom scheme deep link: dweepdiary://... -->
             <intent-filter>

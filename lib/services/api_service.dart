@@ -303,14 +303,68 @@ class ApiService {
     }
   }
 
-  /// Fetch remotely configured custom sponsor ad (updated by admin)
-  Future<Map<String, dynamic>?> fetchCustomSponsorAd() async {
+  /// Fetch multiple custom sponsor ads from WordPress category 'sponsors' / 'ads'
+  /// and fallback to remote GitHub config
+  Future<List<Map<String, dynamic>>> fetchAllSponsorAds() async {
+    final List<Map<String, dynamic>> adsList = [];
+
+    // 1. Fetch from WordPress category 'sponsors' or 'ads'
+    try {
+      final catUrl = _buildUrl(AppConstants.categoriesEndpoint, {'slug': 'sponsors,ads'});
+      final catRes = await http.get(Uri.parse(catUrl), headers: _headers);
+      if (catRes.statusCode == 200) {
+        final List<dynamic> cats = jsonDecode(catRes.body);
+        for (final cat in cats) {
+          final catId = cat['id'] as int;
+          final posts = await fetchPostsByCategory(categoryId: catId, perPage: 10);
+          for (final p in posts) {
+            if (p.featuredImage.isNotEmpty) {
+              String redirect = AppConstants.websiteUrl;
+              final match = RegExp(r'https?://[^\s<>"]+').firstMatch(p.content);
+              if (match != null) {
+                redirect = match.group(0)!;
+              }
+              adsList.add({
+                'title': p.cleanTitle,
+                'imageUrl': p.featuredImage,
+                'redirectUrl': redirect,
+                'sponsoredText': 'Ad',
+                'active': true,
+              });
+            }
+          }
+        }
+      }
+    } catch (_) {}
+
+    // 2. Also merge with remote custom_ads.json config
     try {
       final response = await http.get(Uri.parse(_customAdConfigUrl), headers: _headers);
       if (response.statusCode == 200) {
-        return jsonDecode(response.body) as Map<String, dynamic>;
+        final dynamic data = jsonDecode(response.body);
+        if (data is Map<String, dynamic>) {
+          if (data['ads'] is List) {
+            for (final item in data['ads']) {
+              if (item is Map<String, dynamic> && item['active'] != false) {
+                adsList.add(item);
+              }
+            }
+          } else if (data['active'] != false && data['imageUrl'] != null) {
+            adsList.add(data);
+          }
+        }
       }
     } catch (_) {}
+
+    return adsList;
+  }
+
+  /// Fetch remotely configured custom sponsor ad (updated by admin)
+  Future<Map<String, dynamic>?> fetchCustomSponsorAd() async {
+    final ads = await fetchAllSponsorAds();
+    if (ads.isNotEmpty) {
+      return ads.first;
+    }
     return null;
   }
 }

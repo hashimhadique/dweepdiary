@@ -1,6 +1,14 @@
 {
   "active": true,
-  "title": "Dweep Diary Special Sponsor",
+  "ads": [
+    {
+      "active": true,
+      "title": "Dweep Diary Official",
+      "imageUrl": "https://dweepdiary.in/wp-content/uploads/2026/07/Dweep-diary-ads.webp",
+      "redirectUrl": "https://dweepdiary.in",
+      "sponsoredText": "Ad"
+    }
+  ],
   "imageUrl": "https://dweepdiary.in/wp-content/uploads/2026/07/Dweep-diary-ads.webp",
   "redirectUrl": "https://dweepdiary.in",
   "sponsoredText": "Ad"

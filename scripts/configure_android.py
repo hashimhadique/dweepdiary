@@ -114,11 +114,14 @@ if os.path.exists(app_gradle):
         f.write("storePassword=dweepdiary2026\nkeyPassword=dweepdiary2026\nkeyAlias=upload\nstoreFile=upload-keystore.jks\n")
     print("SUCCESS: android/key.properties written")
 
-# 4. Update AndroidManifest.xml for AdMob and Permissions
+# 4. Update AndroidManifest.xml for AdMob, Permissions, and App Launcher Name
 manifest_file = os.path.join('android', 'app', 'src', 'main', 'AndroidManifest.xml')
 if os.path.exists(manifest_file):
     with open(manifest_file, 'r', encoding='utf-8') as f:
         content = f.read()
+
+    # Ensure App Name is permanently "Dweep Diary" on the launcher
+    content = re.sub(r'android:label="[^"]*"', 'android:label="Dweep Diary"', content)
 
     if 'android:usesCleartextTraffic' not in content:
         content = content.replace('<application', '<application\n        android:usesCleartextTraffic="true"')

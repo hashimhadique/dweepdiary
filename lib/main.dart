@@ -25,16 +25,21 @@ void main() async {
     ),
   );
 
+  // Initialize DeepLinkService early with navigator key
+  DeepLinkService().init(rootNavigatorKey);
+
   // Initialize Theme Service
   await ThemeService().init();
 
-  // Run the app immediately so the UI is NEVER blocked by network or permissions
+  // Initialize OneSignal EARLY before runApp so click listeners are registered
+  // before the native OS can open an external browser
+  await NotificationService().initialize();
+
+  // Run the app immediately
   runApp(const DweepDiaryApp());
 
   // Non-blocking background initializations after first frame
   WidgetsBinding.instance.addPostFrameCallback((_) {
-    DeepLinkService().init(rootNavigatorKey);
-    NotificationService().initialize();
     MobileAds.instance.initialize().then((_) {
       AdService().init();
     }).catchError((e) {

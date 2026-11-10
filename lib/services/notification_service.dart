@@ -25,6 +25,46 @@ class NotificationService {
       // Initialize OneSignal
       OneSignal.initialize(AppConstants.oneSignalAppId);
 
+      // Handle notification clicks: Prevent browser opening and route directly into app
+      OneSignal.Notifications.addClickListener((event) {
+        debugPrint('NOTIFICATION CLICK LISTENER FIRED: ${event.notification.jsonRepresentation()}');
+        
+        // Prevent default external browser opening by OneSignal SDK
+        event.preventDefault();
+
+        // Extract launch URL or custom data attached to the notification
+        final launchUrl = event.notification.launchUrl;
+        final additionalData = event.notification.additionalData;
+
+        int? postId;
+        if (additionalData != null) {
+          if (additionalData['post_id'] != null) {
+            postId = int.tryParse(additionalData['post_id'].toString());
+          } else if (additionalData['id'] != null) {
+            postId = int.tryParse(additionalData['id'].toString());
+          }
+        }
+
+        if (postId != null && postId > 0) {
+          debugPrint('Routing notification post ID into app: $postId');
+          DeepLinkService().openPostById(postId);
+          onNotificationClicked?.call(postId.toString());
+          return;
+        }
+
+        final targetUrl = launchUrl ??
+            (additionalData?['post_url'] as String?) ??
+            (additionalData?['url'] as String?) ??
+            (additionalData?['custom_url'] as String?);
+
+        if (targetUrl != null && targetUrl.isNotEmpty) {
+          debugPrint('Routing notification target URL into app: $targetUrl');
+          DeepLinkService().handleRawRoute(targetUrl);
+        }
+
+        onNotificationClicked?.call(targetUrl);
+      });
+
       // Request push notification permissions from user
       await OneSignal.Notifications.requestPermission(true);
 
@@ -37,26 +77,6 @@ class NotificationService {
 
       OneSignal.User.pushSubscription.addObserver((state) {
         debugPrint('OneSignal: Subscription state changed -> ID: ${state.current.id}, Opted In: ${state.current.optedIn}');
-      });
-
-      // Handle notification clicks: Prevent browser opening and route directly into app
-      OneSignal.Notifications.addClickListener((event) {
-        debugPrint('NOTIFICATION CLICK LISTENER FIRED: ${event.notification.jsonRepresentation()}');
-        
-        // Prevent default browser opening by OneSignal
-        event.preventDefault();
-
-        // Extract launch URL or custom data attached to the notification
-        final launchUrl = event.notification.launchUrl;
-        final additionalData = event.notification.additionalData;
-        final targetUrl = launchUrl ?? (additionalData?['post_url'] as String?);
-
-        if (targetUrl != null && targetUrl.isNotEmpty) {
-          debugPrint('Routing notification target URL into app: $targetUrl');
-          DeepLinkService().handleRawRoute(targetUrl);
-        }
-
-        onNotificationClicked?.call(targetUrl);
       });
     } catch (e) {
       debugPrint('OneSignal initialization error: $e');

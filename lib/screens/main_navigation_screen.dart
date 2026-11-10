@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../constants/app_colors.dart';
+import '../services/deep_link_service.dart';
 import 'home_screen.dart';
 import 'categories_screen.dart';
 import 'community_screen.dart';
@@ -23,6 +24,14 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     ShortsNewsScreen(),
     BookmarksScreen(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      DeepLinkService().markAppReady();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -45,17 +45,25 @@ class NotificationService {
           }
         }
 
+        final targetUrl = launchUrl ??
+            (additionalData?['post_url'] as String?) ??
+            (additionalData?['url'] as String?) ??
+            (additionalData?['custom_url'] as String?);
+
+        // Also extract post ID directly from targetUrl if present (e.g. ?p=4343 or &p=4343)
+        if (postId == null && targetUrl != null) {
+          final pMatch = RegExp(r'[?&](?:p|id)=(\d+)').firstMatch(targetUrl);
+          if (pMatch != null) {
+            postId = int.tryParse(pMatch.group(1)!);
+          }
+        }
+
         if (postId != null && postId > 0) {
           debugPrint('Routing notification post ID into app: $postId');
           DeepLinkService().openPostById(postId);
           onNotificationClicked?.call(postId.toString());
           return;
         }
-
-        final targetUrl = launchUrl ??
-            (additionalData?['post_url'] as String?) ??
-            (additionalData?['url'] as String?) ??
-            (additionalData?['custom_url'] as String?);
 
         if (targetUrl != null && targetUrl.isNotEmpty) {
           debugPrint('Routing notification target URL into app: $targetUrl');

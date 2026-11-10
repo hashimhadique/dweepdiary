@@ -146,6 +146,28 @@ if os.path.exists(manifest_file):
     content = re.sub(r'\s*<uses-permission android:name="android\.permission\.READ_EXTERNAL_STORAGE"\s*/>', '', content)
     content = re.sub(r'\s*<uses-permission android:name="android\.permission\.WRITE_EXTERNAL_STORAGE"\s*/>', '', content)
 
+    queries_block = '''    <queries>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="https" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="http" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="tel" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="mailto" />
+        </intent>
+    </queries>
+'''
+    if '<queries>' not in content:
+        content = content.replace('<application', queries_block + '    <application')
+
     deep_link_filters = '''            <!-- Android App Links with autoVerify for direct in-app opening from WhatsApp & Web -->
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />

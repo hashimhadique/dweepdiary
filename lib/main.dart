@@ -61,6 +61,15 @@ class _DweepDiaryAppState extends State<DweepDiaryApp> with WidgetsBindingObserv
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+
+    // Capture initial launch link on cold start (from WhatsApp / App Links)
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final initialRoute = WidgetsBinding.instance.platformDispatcher.defaultRouteName;
+      debugPrint('COLD START DEFAULT ROUTE: $initialRoute');
+      if (initialRoute != '/' && initialRoute.isNotEmpty) {
+        DeepLinkService().handleRawRoute(initialRoute);
+      }
+    });
   }
 
   @override

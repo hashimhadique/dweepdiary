@@ -27,9 +27,19 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     setState(() => _isLoading = true);
     try {
       final categories = await _apiService.fetchCategories();
+      final filtered = categories.where((c) {
+        final s = c.slug.toLowerCase().trim();
+        final n = c.name.toLowerCase().trim();
+        return !s.contains('sponsor') &&
+            !s.contains('ad') &&
+            !n.contains('sponsor') &&
+            !n.contains('സ്പോൺസർ') &&
+            !n.contains('പരസ്യം');
+      }).toList();
+
       if (mounted) {
         setState(() {
-          _categories = categories;
+          _categories = filtered;
           _isLoading = false;
         });
       }

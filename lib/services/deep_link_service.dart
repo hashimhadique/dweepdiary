@@ -24,35 +24,57 @@ class DeepLinkService {
   /// Called once MainNavigationScreen is fully mounted
   void markAppReady() {
     isAppReady = true;
+    debugPrint('DeepLinkService: App is marked ready. Checking pending routes...');
+
     if (_pendingPost != null) {
       final post = _pendingPost!;
       _pendingPost = null;
-      Future.delayed(const Duration(milliseconds: 350), () {
+      Future.delayed(const Duration(milliseconds: 300), () {
         _navigateToDetail(post);
       });
     } else if (_pendingPostId != null) {
       final id = _pendingPostId!;
       _pendingPostId = null;
-      Future.delayed(const Duration(milliseconds: 350), () {
+      Future.delayed(const Duration(milliseconds: 300), () {
         openPostById(id);
       });
     } else if (_pendingRawUrl != null) {
       final raw = _pendingRawUrl!;
       _pendingRawUrl = null;
-      Future.delayed(const Duration(milliseconds: 350), () {
+      Future.delayed(const Duration(milliseconds: 300), () {
         handleRawRoute(raw);
       });
     }
   }
 
   Future<void> handleRawRoute(String rawUrl) async {
+    String cleanUrl = rawUrl.trim();
+    while (cleanUrl.startsWith('/http')) {
+      cleanUrl = cleanUrl.substring(1);
+    }
+
+    if (cleanUrl.isEmpty || cleanUrl == '/') return;
+
     if (!isAppReady) {
-      _pendingRawUrl = rawUrl;
+      debugPrint('DeepLinkService: App not ready yet. Storing pending route: $cleanUrl');
+      _pendingRawUrl = cleanUrl;
       return;
     }
 
+    debugPrint('DeepLinkService: Processing route: $cleanUrl');
+
     try {
-      final uri = Uri.parse(rawUrl);
+      // Direct regex match for ?p=123 or &p=123 or ?id=123
+      final pMatch = RegExp(r'[?&](?:p|id)=(\d+)').firstMatch(cleanUrl);
+      if (pMatch != null) {
+        final id = int.tryParse(pMatch.group(1)!);
+        if (id != null && id > 0) {
+          await openPostById(id);
+          return;
+        }
+      }
+
+      final uri = Uri.parse(cleanUrl);
       await handleUri(uri);
     } catch (e) {
       debugPrint('Error parsing raw route for deep link: $e');
@@ -66,12 +88,37 @@ class DeepLinkService {
     }
 
     try {
+      debugPrint('DeepLinkService: Fetching post by ID $postId...');
       final post = await _apiService.fetchPostById(postId);
       if (post != null) {
+        debugPrint('DeepLinkService: Post loaded successfully: ${post.title}');
         _navigateToDetail(post);
+      } else {
+        debugPrint('DeepLinkService: Post with ID $postId was not found on server.');
       }
     } catch (e) {
       debugPrint('Error fetching post for deep link: $e');
+    }
+  }
+
+  Future<void> openPostBySlug(String slugOrKeyword) async {
+    final cleanSlug = Uri.decodeComponent(slugOrKeyword).trim().replaceAll('/', '');
+    if (cleanSlug.isEmpty) return;
+
+    try {
+      debugPrint('DeepLinkService: Fetching post by slug "$cleanSlug"...');
+      final postBySlug = await _apiService.fetchPostBySlug(cleanSlug);
+      if (postBySlug != null) {
+        _navigateToDetail(postBySlug);
+        return;
+      }
+
+      final posts = await _apiService.searchPosts(query: cleanSlug, page: 1);
+      if (posts.isNotEmpty) {
+        _navigateToDetail(posts.first);
+      }
+    } catch (e) {
+      debugPrint('DeepLink slug error: $e');
     }
   }
 
@@ -114,21 +161,8 @@ class DeepLinkService {
     // 4. Slug or Search by Path
     final segments = uri.pathSegments.where((s) => s.isNotEmpty).toList();
     if (segments.isNotEmpty) {
-      final slugOrKeyword = Uri.decodeComponent(segments.last);
-      try {
-        // 4a. Try exact slug fetch first
-        final postBySlug = await _apiService.fetchPostBySlug(slugOrKeyword);
-        if (postBySlug != null) {
-          _navigateToDetail(postBySlug);
-          return;
-        }
-
-        // 4b. Fallback to keyword search
-        final posts = await _apiService.searchPosts(query: slugOrKeyword, page: 1);
-        if (posts.isNotEmpty) {
-          _navigateToDetail(posts.first);
-        }
-      } catch (_) {}
+      final lastSegment = segments.last;
+      await openPostBySlug(lastSegment);
     }
   }
 
@@ -138,12 +172,21 @@ class DeepLinkService {
       return;
     }
 
+    void doPush() {
+      final nav = navigatorKey?.currentState;
+      if (nav != null) {
+        nav.push(
+          MaterialPageRoute(
+            builder: (context) => NewsDetailScreen(post: post),
+          ),
+        );
+      }
+    }
+
     if (navigatorKey?.currentState != null) {
-      navigatorKey!.currentState!.push(
-        MaterialPageRoute(
-          builder: (context) => NewsDetailScreen(post: post),
-        ),
-      );
+      doPush();
+    } else {
+      Future.delayed(const Duration(milliseconds: 350), doPush);
     }
   }
 }

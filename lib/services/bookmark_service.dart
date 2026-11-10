@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/post_model.dart';
 
@@ -8,18 +9,24 @@ class BookmarkService {
   factory BookmarkService() => _instance;
   BookmarkService._internal();
 
-  /// Retrieve all bookmarked posts from local storage
+  final ValueNotifier<List<PostModel>> bookmarksNotifier = ValueNotifier<List<PostModel>>([]);
+
+  /// Retrieve all bookmarked posts from local storage and update notifier
   Future<List<PostModel>> getBookmarkedPosts() async {
     final prefs = await SharedPreferences.getInstance();
     final jsonString = prefs.getString(_bookmarkKey);
     if (jsonString == null || jsonString.isEmpty) {
+      bookmarksNotifier.value = [];
       return [];
     }
 
     try {
       final List<dynamic> decoded = jsonDecode(jsonString);
-      return decoded.map((item) => PostModel.fromLocalMap(item)).toList();
+      final list = decoded.map((item) => PostModel.fromLocalMap(item)).toList();
+      bookmarksNotifier.value = list;
+      return list;
     } catch (_) {
+      bookmarksNotifier.value = [];
       return [];
     }
   }
@@ -48,6 +55,7 @@ class BookmarkService {
 
     final encoded = jsonEncode(list.map((p) => p.toLocalMap()).toList());
     await prefs.setString(_bookmarkKey, encoded);
+    bookmarksNotifier.value = List.from(list);
     return isNowSaved;
   }
 }

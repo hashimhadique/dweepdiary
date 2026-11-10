@@ -191,7 +191,18 @@ class ApiService {
 
       if (response.statusCode == 200) {
         final List<dynamic> jsonList = jsonDecode(response.body);
-        final categories = jsonList.map((item) => CategoryModel.fromJson(item)).toList();
+        final categories = jsonList
+            .map((item) => CategoryModel.fromJson(item))
+            .where((cat) {
+              final s = cat.slug.toLowerCase().trim();
+              final n = cat.name.toLowerCase().trim();
+              return !s.contains('sponsor') &&
+                  !s.contains('ad') &&
+                  !n.contains('sponsor') &&
+                  !n.contains('സ്പോൺസർ') &&
+                  !n.contains('പരസ്യം');
+            })
+            .toList();
         
         // Custom Priority: News (1) -> Politics (2) -> Jobs (3) -> Others by post count
         int getCategoryPriority(CategoryModel cat) {

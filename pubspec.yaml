@@ -1,7 +1,7 @@
 name: dweepdiary
 description: Official Mobile Application for Dweep Diary News Portal (www.dweepdiary.in)
 publish_to: "none"
-version: 1.0.8+9
+version: 1.0.9+10
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
@@ -46,3 +46,4 @@ flutter:
   assets:
     - assets/images/logo.png
     - assets/images/app_icon.png
+    - assets/images/drawer_logo.png

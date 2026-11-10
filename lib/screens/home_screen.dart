@@ -53,6 +53,26 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  bool _isCleanNews(PostModel p) {
+    final cat = p.categoryName.toLowerCase();
+    final title = p.title.toLowerCase();
+    return !cat.contains('sponsor') &&
+        !cat.contains('സ്പോൺസർ') &&
+        !cat.contains('പരസ്യം') &&
+        !title.contains('[ad]') &&
+        !title.contains('[sponsor]');
+  }
+
+  bool _isCleanCat(CategoryModel c) {
+    final s = c.slug.toLowerCase().trim();
+    final n = c.name.toLowerCase().trim();
+    return !s.contains('sponsor') &&
+        !s.contains('ad') &&
+        !n.contains('sponsor') &&
+        !n.contains('സ്പോൺസർ') &&
+        !n.contains('പരസ്യം');
+  }
+
   Future<void> _loadInitialData() async {
     setState(() {
       _isLoading = true;
@@ -66,9 +86,11 @@ class _HomeScreenState extends State<HomeScreen> {
       ]);
 
       if (mounted) {
+        final rawPosts = futures[0] as List<PostModel>;
+        final rawCats = futures[1] as List<CategoryModel>;
         setState(() {
-          _allPosts = futures[0] as List<PostModel>;
-          _categories = futures[1] as List<CategoryModel>;
+          _allPosts = rawPosts.where(_isCleanNews).toList();
+          _categories = rawCats.where(_isCleanCat).toList();
           _isLoading = false;
           _currentPage = 1;
         });
@@ -78,7 +100,7 @@ class _HomeScreenState extends State<HomeScreen> {
       final cached = await _apiService.getCachedPosts();
       if (mounted) {
         setState(() {
-          _allPosts = cached;
+          _allPosts = cached.where(_isCleanNews).toList();
           _isLoading = false;
           _isOfflineData = cached.isNotEmpty;
         });
@@ -104,9 +126,11 @@ class _HomeScreenState extends State<HomeScreen> {
         );
       }
 
+      final filtered = newPosts.where(_isCleanNews).toList();
+
       if (mounted) {
         setState(() {
-          _allPosts.addAll(newPosts);
+          _allPosts.addAll(filtered);
           _currentPage = nextPage;
           _isLoadingMore = false;
         });
@@ -131,9 +155,11 @@ class _HomeScreenState extends State<HomeScreen> {
         posts = await _apiService.fetchPostsByCategory(categoryId: categoryId, page: 1, perPage: 12);
       }
 
+      final filtered = posts.where(_isCleanNews).toList();
+
       if (mounted) {
         setState(() {
-          _allPosts = posts;
+          _allPosts = filtered;
           _isLoading = false;
         });
       }
@@ -570,20 +596,30 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  width: 60,
-                  height: 60,
+                  width: 68,
+                  height: 68,
                   decoration: const BoxDecoration(
                     color: Colors.white,
                     shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black12,
+                        blurRadius: 8,
+                        offset: Offset(0, 2),
+                      ),
+                    ],
                   ),
-                  padding: const EdgeInsets.all(6),
-                  child: Image.asset(
-                    'assets/images/app_icon.png',
-                    fit: BoxFit.contain,
-                    errorBuilder: (_, __, ___) => const Icon(
-                      Icons.newspaper_rounded,
-                      color: AppColors.primary,
-                      size: 32,
+                  child: ClipOval(
+                    child: Image.asset(
+                      'assets/images/drawer_logo.png',
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) => Padding(
+                        padding: const EdgeInsets.all(6),
+                        child: Image.asset(
+                          'assets/images/logo.png',
+                          fit: BoxFit.contain,
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -702,9 +738,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   title: const Text('Visit Website (dweepdiary.in)'),
                   onTap: () async {
                     Navigator.pop(context);
-                    final uri = Uri.parse('https://dweepdiary.in');
-                    if (await canLaunchUrl(uri)) {
+                    final uri = Uri.parse(AppConstants.websiteUrl);
+                    try {
                       await launchUrl(uri, mode: LaunchMode.externalApplication);
+                    } catch (_) {
+                      try {
+                        await launchUrl(uri, mode: LaunchMode.inAppWebView);
+                      } catch (_) {}
                     }
                   },
                 ),
@@ -714,8 +754,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   onTap: () async {
                     Navigator.pop(context);
                     final uri = Uri.parse(AppConstants.privacyPolicyUrl);
-                    if (await canLaunchUrl(uri)) {
+                    try {
                       await launchUrl(uri, mode: LaunchMode.externalApplication);
+                    } catch (_) {
+                      try {
+                        await launchUrl(uri, mode: LaunchMode.inAppWebView);
+                      } catch (_) {}
                     }
                   },
                 ),

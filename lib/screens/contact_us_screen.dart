@@ -324,7 +324,7 @@ class ContactUsScreen extends StatelessWidget {
               child: Column(
                 children: [
                   Text(
-                    'App Version 1.0.10 (Build 11)',
+                    'App Version 1.0.11 (Build 12)',
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
@@ -332,24 +332,15 @@ class ContactUsScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  Wrap(
-                    alignment: WrapAlignment.center,
-                    spacing: 16,
-                    children: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => const PrivacyPolicyScreen()),
-                          );
-                        },
-                        child: const Text('Privacy Policy', style: TextStyle(fontSize: 12)),
-                      ),
-                      TextButton(
-                        onPressed: () => _launchUri(context, 'https://dweepdiary.in/'),
-                        child: const Text('News Portal', style: TextStyle(fontSize: 12)),
-                      ),
-                    ],
+                  TextButton.icon(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const PrivacyPolicyScreen()),
+                      );
+                    },
+                    icon: const Icon(Icons.privacy_tip_outlined, size: 16),
+                    label: const Text('Privacy Policy', style: TextStyle(fontSize: 12)),
                   ),
                 ],
               ),

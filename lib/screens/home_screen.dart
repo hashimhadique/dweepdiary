@@ -735,23 +735,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 const SizedBox(height: 8),
 
                 ListTile(
-                  leading: const Icon(Icons.language_rounded, color: AppColors.textSecondary),
-                  title: const Text('Visit Website (dweepdiary.in)'),
-                  onTap: () async {
-                    Navigator.pop(context);
-                    final uri = Uri.parse(AppConstants.websiteUrl);
-                    try {
-                      if (!await launchUrl(uri, mode: LaunchMode.inAppBrowserView)) {
-                        await launchUrl(uri, mode: LaunchMode.inAppWebView);
-                      }
-                    } catch (_) {
-                      try {
-                        await launchUrl(uri, mode: LaunchMode.inAppWebView);
-                      } catch (_) {}
-                    }
-                  },
-                ),
-                ListTile(
                   leading: const Icon(Icons.privacy_tip_outlined, color: AppColors.textSecondary),
                   title: const Text('Privacy Policy'),
                   onTap: () {
@@ -770,7 +753,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Container(
             padding: const EdgeInsets.all(16),
             child: Text(
-              'Dweep Diary News App\nVersion 1.0.10 (Build 11)\nKiltan Island, Lakshadweep - 682558',
+              'Dweep Diary News App\nVersion 1.0.11 (Build 12)\nKiltan Island, Lakshadweep - 682558',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 11,

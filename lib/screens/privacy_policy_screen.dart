@@ -1,29 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 import '../constants/app_colors.dart';
 import '../constants/app_constants.dart';
 
 class PrivacyPolicyScreen extends StatelessWidget {
   const PrivacyPolicyScreen({super.key});
-
-  Future<void> _openInBrowser(BuildContext context) async {
-    final uri = Uri.parse(AppConstants.privacyPolicyUrl);
-    try {
-      if (!await launchUrl(uri, mode: LaunchMode.inAppBrowserView)) {
-        await launchUrl(uri, mode: LaunchMode.inAppWebView);
-      }
-    } catch (_) {
-      try {
-        await launchUrl(uri, mode: LaunchMode.inAppWebView);
-      } catch (_) {
-        if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Could not open browser')),
-          );
-        }
-      }
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,13 +30,6 @@ class PrivacyPolicyScreen extends StatelessWidget {
           ),
           onPressed: () => Navigator.pop(context),
         ),
-        actions: [
-          IconButton(
-            tooltip: 'Open in Browser',
-            icon: const Icon(Icons.open_in_browser_rounded, color: AppColors.primary),
-            onPressed: () => _openInBrowser(context),
-          ),
-        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 20),
@@ -116,7 +89,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'Official News Portal of Lakshadweep (www.dweepdiary.in)',
+                    'First Online News Portal from Lakshadweep (www.dweepdiary.in)',
                     style: TextStyle(
                       color: Colors.white.withOpacity(0.9),
                       fontSize: 12,
@@ -247,21 +220,6 @@ class PrivacyPolicyScreen extends StatelessWidget {
                       fontSize: 12,
                       height: 1.4,
                       color: isDark ? AppColors.darkTextSecondary : AppColors.textSecondary,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  SizedBox(
-                    width: double.infinity,
-                    child: OutlinedButton.icon(
-                      style: OutlinedButton.styleFrom(
-                        side: const BorderSide(color: AppColors.primary),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      onPressed: () => _openInBrowser(context),
-                      icon: const Icon(Icons.open_in_new_rounded, size: 16),
-                      label: const Text('View on Official Website'),
                     ),
                   ),
                 ],

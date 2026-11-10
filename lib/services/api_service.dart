@@ -66,7 +66,12 @@ class ApiService {
 
       if (response.statusCode == 200) {
         final List<dynamic> jsonList = jsonDecode(response.body);
-        final posts = jsonList.map((item) => PostModel.fromJson(item)).toList();
+        final posts = jsonList
+            .map((item) => PostModel.fromJson(item))
+            .where((p) =>
+                !p.categoryName.toLowerCase().contains('sponsor') &&
+                !p.categoryName.toLowerCase().contains('പരസ്യം'))
+            .toList();
         if (page == 1 && posts.isNotEmpty) {
           cachePosts(posts);
         }
